@@ -1,0 +1,19 @@
+name: ci-publish-test
+# Tiny check that a workflow can commit results to the ci-results branch.
+on: { workflow_dispatch: {} }
+permissions:
+  contents: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Try to publish
+        run: |
+          set +e
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          rm -rf /tmp/pub; OUT=$(git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub 2>&1) || { echo "::error::clone failed: $OUT"; exit 1; }
+          cd /tmp/pub
+          if git ls-remote --exit-code --heads origin ci-results >/dev/null 2>&1; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . >/dev/null 2>&1; fi
+          mkdir -p runs/test && echo ok > runs/test/ok.txt && git add -A && git commit -qm "ci publish test" || { echo "::error::commit failed"; exit 1; }
+          OUT=$(git push origin ci-results 2>&1) || { echo "::error::push failed: $OUT"; exit 1; }
+          echo "::notice::pushed ok"
