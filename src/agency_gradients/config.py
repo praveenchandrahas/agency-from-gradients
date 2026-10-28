@@ -106,11 +106,17 @@ FACTORS = ("scarcity", "heredity", "mortality", "succession")
 SELECTIONS = ("persistence", "entropy", "task", "drift")
 
 
-def v2_config(**kw) -> Config:
+def v2_config(scale: int = 1, **kw) -> Config:
     """World v2 with a ~2,000-gene recurrent policy, many generations and a
     two-scale mutation model (frequent small point mutations, rare large ones).
     Mutation settings are fixed before any v2 confirmatory run."""
     base = dict(world_v2=True, policy="recurrent", steps=100_000,
                 mut_rate=0.02, mut_sigma=0.10, mut_big_p=0.0005, mut_big_sigma=1.0)
+    if scale > 1:
+        # same densities on a bigger torus: more individuals, so more mutational supply
+        # and less drift for a ~2,000-gene genome. Area grows by scale**2.
+        a = scale * scale
+        base.update(size=32 * scale, max_pop=200 * a, init_pop=60 * a, n_tier1=12 * a, n_tier2=4 * a,
+                    n_patches=18 * a, n_walls=8 * a, n_danger=3 * a)
     base.update(kw)
     return Config(**base)

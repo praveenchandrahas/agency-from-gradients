@@ -32,7 +32,7 @@ METRICS = ["entropy_rate", "share_tier2", "share_tier1", "t2_reached", "signal_r
 def _run(job):
     kw = dict(job["kw"])
     oracle = kw.pop("_oracle", False)
-    w = make_world(v2_config(steps=job["steps"], **kw), job["seed"])
+    w = make_world(v2_config(scale=job.get("scale", 1), steps=job["steps"], **kw), job["seed"])
     if oracle:
         w.policy = oracle_policy
     w.run()
@@ -51,12 +51,13 @@ def _run(job):
 def main(argv=None):
     ap = base_parser(__doc__.splitlines()[0])
     ap.add_argument("--long-steps", type=int, default=100_000)
+    ap.add_argument("--scale", type=int, default=1, help="torus scale (area x scale^2)")
     ap.add_argument("--only", type=str, default=None, help="comma-separated variant name substrings")
     args = ap.parse_args(argv)
     steps = 1500 if args.smoke else args.long_steps
     seeds = list(range(args.seed0, args.seed0 + (2 if args.smoke else args.seeds)))
     names = [n for n in VARIANTS if not args.only or any(o in n for o in args.only.split(","))]
-    jobs = [dict(name=n, kw=VARIANTS[n], seed=sd, steps=steps) for n in names for sd in seeds]
+    jobs = [dict(name=n, kw=VARIANTS[n], seed=sd, steps=steps, scale=args.scale) for n in names for sd in seeds]
     with ProcessPoolExecutor(max_workers=args.workers) as ex:
         rows = []
         for i, r in enumerate(ex.map(_run, jobs, chunksize=1)):
@@ -64,7 +65,7 @@ def main(argv=None):
             print(f"  {i + 1}/{len(jobs)}", flush=True)
     write_csv(rows, f"{args.out}/s7_runs.csv")
     by = {n: [x for x in rows if x["variant"] == n] for n in names}
-    L = ["# S7 - complex world (v2)", "", f"seeds: {len(seeds)}, steps: {steps}", "",
+    L = ["# S7 - complex world (v2)", "", f"seeds: {len(seeds)}, steps: {steps}, scale: {args.scale}", "",
          "| variant | " + " | ".join(METRICS) + " |", "|---|" + "---|" * len(METRICS)]
     for n in names:
         L.append(f"| {n} | " + " | ".join(
