@@ -43,19 +43,19 @@ Full details, the metrics and the accounting caveats are in [`docs/DESIGN.md`](d
 
 `webapp/index.html` is a single self-contained file. Open it in any browser, no install and no server. It runs the same world in JavaScript, in real time, and explains what you are seeing in plain language: a headline that narrates the current state, a "sunshine used or wasted" bar, where the creatures' energy comes from, and a panel of the creatures' average instincts. To host it, enable GitHub Pages on the `/webapp` folder.
 
-Four presets: **Survival only** (random creatures, selected by who survives and reproduces), **Hand-coded expert** (fixed rules we wrote, to show what success could look like), **Reward for burning energy**, and **Random parents** (a control).
+Four presets: **Natural selection** (random creatures; those with spare energy have children), **Random parents** (a control), **Reward burning energy** (entropy used as the reward), and **A hand-coded expert** (fixed rules we wrote, to show what success could look like).
 
 <p align="center"><img src="docs/screenshots/01-early-random-creatures.png" alt="Web app at day 60: creatures wander at random and get 98% of their energy from grass" width="100%"></p>
 
-**Day 60, survival-only world.** Every creature starts with random instincts. 98% of their energy is grass, and the instinct bars hover near zero. Large amounts of energy are still wasted.
+**Day 60, natural-selection world.** Every creature starts with random instincts. 98% of their energy is grass, and the instinct bars hover near zero. Large amounts of energy are still wasted.
 
 <p align="center"><img src="docs/screenshots/02-hand-coded-expert.png" alt="Web app with the hand-coded expert at day 2,500: 50% of energy from big deposits" width="100%"></p>
 
 **Hand-coded expert, day ~2,500.** Rules we wrote by hand walk toward food and glow and pay energy to open deposits. Here 50% of their energy comes from big deposits, and several creatures stand on each big deposit keeping it open. This is the positive control: it shows the world has headroom. Nothing evolves here.
 
-<p align="center"><img src="docs/screenshots/03-survival-only-evolved.png" alt="Web app after 30,000 days of survival-only evolution: some creatures have learned to open deposits" width="100%"></p>
+<p align="center"><img src="docs/screenshots/03-natural-selection-evolved.png" alt="Web app after 30,000 days of natural-selection evolution: some creatures have learned to open deposits" width="100%"></p>
 
-**Survival-only, day ~30,000.** In this run, inheritance has shifted the instincts: the "opens big deposits" bar moved right and 9% of energy now comes from big deposits. This is one stochastic example. In other runs, evolved creatures never use the deposits (we saw this in an earlier capture of the same preset), which is exactly why the confirmatory experiments use 30 seeds per condition rather than a picture.
+**Natural-selection, day ~30,000.** In this run, inheritance has shifted the instincts: the "opens big deposits" bar moved right and 9% of energy now comes from big deposits. This is one stochastic example. In other runs, evolved creatures never use the deposits (we saw this in an earlier capture of the same preset), which is exactly why the confirmatory experiments use 30 seeds per condition rather than a picture.
 
 <p align="center"><img src="docs/screenshots/04-random-parents-control.png" alt="Web app, random-parents control at day 30,000: all energy from grass" width="100%"></p>
 
