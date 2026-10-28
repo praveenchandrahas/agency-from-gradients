@@ -5,7 +5,7 @@ Same world, four ways of deciding who reproduces:
   entropy     : reproduce by burning energy (entropy used AS a reward - the control
                 that the thesis argues against; expected to breed furnaces)
   task        : reproduce by eating commons (a conventional task reward)
-  drift       : neutral births, independent of behaviour (null)
+  drift       : random-parents births (fecundity selection removed; viability selection remains)
 
 H1: persistence beats drift on entropy_rate without entropy ever being rewarded.
 H4: entropy-as-reward does not beat persistence on tier-2 access.

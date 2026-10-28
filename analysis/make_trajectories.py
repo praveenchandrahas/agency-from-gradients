@@ -23,7 +23,7 @@ from agency_gradients import Config, World  # noqa: E402
 from agency_gradients.controls import oracle_policy  # noqa: E402
 
 CONDS = [("Survival only (evolving)", dict(selection="persistence"), None, BLUE),
-         ("No selection (neutral)", dict(selection="drift"), None, MUTED),
+         ("Random parents (control)", dict(selection="drift"), None, MUTED),
          ("Hand-coded forager", dict(selection="persistence"), oracle_policy, VIOLET)]
 
 
@@ -54,7 +54,7 @@ def draw_snapshot(ax, s, cfg, title):
     L = cfg.size
     ax.imshow(s["commons"], cmap="Greens", vmin=0, vmax=1.3, interpolation="nearest")
     for (x, y) in np.argwhere(s["ttype"] == 1):
-        live = s["stock"][x, y] > cfg.depletedAt
+        live = s["stock"][x, y] > cfg.depleted_at
         ax.scatter([y], [x], marker="s", s=60, facecolors="none", edgecolors="#c98500" if live else MUTED, linewidths=1.6)
     for (x, y) in np.argwhere(s["ttype"] == 2):
         ax.scatter([y], [x], marker="D", s=150, facecolors=VIOLET if s["open"][x, y] > 0.5 else "none", edgecolors=VIOLET, linewidths=1.8, alpha=0.9)

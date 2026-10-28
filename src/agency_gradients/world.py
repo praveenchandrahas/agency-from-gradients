@@ -395,7 +395,7 @@ class World:
         elif cfg.selection == "task":
             ok = (self.commons_acc[a] >= cfg.repro_thresh) & viable
         elif cfg.selection == "drift":
-            # neutral model: births restore the population towards init_pop, parents
+            # random-parents model (not fully neutral: starvation still filters genomes): births restore the population towards init_pop, parents
             # chosen uniformly among the living, independent of energy or behaviour
             lam = cfg.drift_restore * max(cfg.init_pop - len(a), 0)
             nb = min(int(self.rng.poisson(lam)), len(a))

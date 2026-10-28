@@ -25,9 +25,9 @@ SURF, INK, INK2, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#898780", "#e6e
 BLUE, ORANGE, AQUA, VIOLET = "#2a78d6", "#eb6834", "#1baf7a", "#6250d6"
 SEL = {"persistence": BLUE, "entropy": ORANGE, "task": AQUA, "drift": MUTED,
        "oracle (hand-coded)": VIOLET, "evolved from random": BLUE, "neutral drift": MUTED}
-NICE = {"persistence": "Survival only\n(persistence)", "entropy": "Rewarded for\nburning energy", "task": "Rewarded for\neating grass",
-        "drift": "No selection\n(neutral)", "oracle (hand-coded)": "Hand-coded\nforager", "evolved from random": "Evolved\nfrom random",
-        "neutral drift": "No selection\n(neutral)"}
+NICE = {"persistence": "Survival\nonly", "entropy": "Reward:\nburn energy", "task": "Reward:\neat grass",
+        "drift": "Random\nparents", "oracle (hand-coded)": "Hand-coded\nforager", "evolved from random": "Evolved\nfrom random",
+        "neutral drift": "Random\nparents"}
 FACTORS = ("scarcity", "heredity", "mortality", "succession")
 FACTOR_NICE = {"scarcity": "Food is scarce", "heredity": "Children inherit instincts", "mortality": "Starvation is fatal", "succession": "Big deposits form where small run dry"}
 
@@ -145,7 +145,7 @@ def fig_s2_heatmap(rows, out):
         ax.set_xticks(range(4))
         ax.set_xticklabels([f"{'fatal' if mo else 'safe'}\n{'succession' if su else 'no succ.'}" for mo, su in cs], fontsize=8.5)
         ax.set_yticks(range(4))
-        ax.set_yticklabels([f"{'scarce' if sc else 'abundant'}, {'inherit' if he else 'no inherit'}" for sc, he in rs], fontsize=8.5)
+        ax.set_yticklabels([f"{'scarce' if sc else 'abundant'}, {'inherit' if he else 'no inherit'}" for sc, he in rs] if m == "t2_reached" else [], fontsize=8.5)
         ax.set_title(t, loc="left", fontsize=11, color=INK)
         ax.grid(False)
         for s in ax.spines.values():
@@ -186,7 +186,7 @@ def fig_s4(rows, out):
     ax.set_title("Recovery after displacement (raw gap includes survivorship bias)", loc="left", fontsize=11, color=INK)
     ax.grid(axis="y", visible=False)
     d, lo, hi = bootstrap_diff_ci(col(rows, "delta_recovered", variant="full"), col(rows, "delta_recovered", variant="no heredity"))
-    ax.text(0.99, 0.04, f"H3: full minus no-heredity = {d:.3f} [{lo:.3f}, {hi:.3f}]", transform=ax.transAxes, ha="right", fontsize=9, color=INK2)
+    ax.text(0.99, 0.42, f"H3: full minus no-heredity = {d:.3f} [{lo:.3f}, {hi:.3f}]", transform=ax.transAxes, ha="right", va="top", fontsize=9, color=INK2)
     save(fig, out, "s4_recovery.png")
 
 

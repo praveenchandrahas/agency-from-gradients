@@ -18,26 +18,13 @@ Selection is by persistence and reproduction only. Entropy production is measure
 |---|---|
 | World engine (gradient ladder, asynchronous population, closed energy ledger) | Implemented, 29 tests |
 | S0: re-analysis of earlier Study 2 genome trajectories | Implemented against an **assumed** JSON schema; never run on the real files |
-| S1: selection criterion comparison | Implemented; pilot only (4 seeds) |
-| S2: 16-condition factorial ablation | Implemented; **not yet run** |
-| S3: passive baseline, no-ladder control, accounting check | Implemented; **not yet run** |
-| S4: agency probe (viability restoration) | Implemented; **not yet run** |
-| Positive control (hand-coded forager) | Implemented; pilot only |
+| S1: selection criterion comparison | **Confirmatory run done** (30 seeds per cell) |
+| S2: 16-condition factorial ablation | **Confirmatory run done** (30 seeds per cell) |
+| S3: passive baseline, no-ladder control, accounting check | **Confirmatory run done** |
+| S4: agency probe (viability restoration) | **Confirmatory run done** |
+| Positive control (hand-coded forager) | **Confirmatory run done** |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | Predictive-information probe | **Not implemented** |
-| Confirmatory results | **None.** Nothing in this repo is a finding yet |
-
-## The world, briefly
-
-A torus with a population that lives, eats, invests, reproduces and dies, with no generations and no scoring step.
-
-- **Tier 0, the commons:** a diffuse, renewable, patchy energy field. Weak gradient, so directed foraging can be selected in small steps.
-- **Tier 1:** 12 reservoirs that stay open only while agents keep investing in them.
-- **Tier 2:** 4 large reservoirs that need several agents investing at once to open fully.
-- **Succession (when on):** a Tier 2 site forms only where a Tier 1 site has been drained.
-- **Agents** are small policies with a heritable genome. Their actions are move, stay and invest. Nothing tells them what to maximise.
-
-Full details, the metrics and the accounting caveats are in [`docs/DESIGN.md`](docs/DESIGN.md).
 
 ## Try it live
 
@@ -94,12 +81,41 @@ python -m agency_gradients.experiments.s0_reanalysis 'data/evo_*.json' --tier2-t
 
 Each experiment writes a CSV of every run and a Markdown report to `results/` (git-ignored).
 
-## What a pilot has and hasn't shown (seeds 1000-1003, not confirmatory)
+## Confirmatory results (seeds 0-29, 20,000 steps, as preregistered)
 
-- The ledger closes and the world is not degenerate. A hand-coded forager reaches Tier 2 in every run and gets about 40% more entropy production than the random-parents control (35.8 vs 25.3).
-- Evolved-from-random populations land in between (30.2), with Tier 2 reached in 2 of 4 runs. The confidence intervals overlap heavily at 4 seeds. This is a reason to run the real experiment, not a result.
-- Entropy-as-reward did **not** produce more entropy than persistence in the pilot (27.4 vs 30.2, overlapping CIs). I had expected it might breed "furnaces"; the pilot doesn't support that, and the preregistration doesn't claim it.
-- The world went through ten design changes because early pilots showed null results. They are listed in [`docs/DESIGN.md`](docs/DESIGN.md#design-history-forced-by-pilots). Readers should weigh that: a design tuned until selection beats drift tends to make selection beat drift.
+Raw per-run CSVs and the generated reports are in [`docs/results/`](docs/results/). The commit and environment are in `RUN_INFO.txt`. Intervals are 95% bootstrap CIs. **The headline: the thesis as preregistered is only partly supported in this world, and its central ablation prediction (H2) failed.**
+
+| | Prediction | Result | Verdict |
+|---|---|---|---|
+| **H1** | Persistence selection raises entropy production over random parents | +2.34 [1.08, 3.66] (27.3 vs 24.9) | **Supported**, small effect |
+| **H2** | Scarcity, heredity and mortality are each needed for big-deposit access | All-on minus factor-off: scarcity -0.27 [-0.50, -0.03], heredity -0.73 [-0.90, -0.57], mortality -0.53 [-0.73, -0.33], succession -0.10 [-0.33, 0.13] | **Falsified** for all three: removing any of them *raised* big-deposit access. Succession: not shown |
+| **H3** | Heredity contributes to recovery from displacement | Full minus no-heredity: +0.220 [0.189, 0.249] | **Supported**, with a caveat below |
+| **H4** | Rewarding entropy directly does not beat persistence on big-deposit access | -0.10 [-0.30, 0.10] | **Not falsified** (absence of a difference is not evidence of none) |
+| **H5** | Accounting check: capture ratio with kappa = 1 in 0.7-1.15 | 1.080 [1.017, 1.143] | **Passes**, barely inside at the upper CI |
+
+<p align="center"><img src="figures/s2_leave_one_out.png" alt="H2 leave-one-out: every removable condition has a negative effect" width="100%"></p>
+
+### What the results do and do not say
+
+- **The world is not degenerate, and there is headroom.** The hand-coded forager reaches big deposits in 100% of runs and gets 50% of its energy from them, with an entropy rate of 37.1. Evolved populations reach big deposits in 27% of runs, get 2% of their energy from them, and reach 27.3. Selection moved things a little way (H1), and left most of the available gain unused.
+- **H1 is weaker than it looks.** The random-parents control still has viability selection (see limitation 6), so H1 measures fecundity selection on top of it. Rewarding grass-eating (26.5) also appears to beat random parents (no interval computed for that contrast), so the gain is not specific to persistence. Persistence versus task reward was not a preregistered contrast.
+- **H2 failed, and the likely reason is a free-rider problem. This explanation is post hoc and untested.** Opening a deposit costs the investor energy, and the payoff is shared with everyone on the square. When starvation is fatal and genomes are inherited, evolution appears to select against paying that cost: in the one evolved world we inspected, the instincts avoided deposits. The data are consistent with this: with scarcity and mortality on, fresh random genomes reach big deposits in 100% of runs versus 27-37% for inherited ones. Removing mortality (bailouts) lifts the tier-2 energy share from about 4% to 30-35% under scarcity. But `t2_reached` only means a site was ever fully open, not that it was used steadily, and the tier-2 energy share is low in every mortal cell (1.4-5.9%). Treat the mechanism as a hypothesis for the next experiment, not a finding.
+- **Entropy rate is not comparable across S2 cells.** Abundant-food and no-mortality cells fill the population cap (200) and so have entropy rates of 90-130 against 27-33 in the scarce, mortal cells. That is population size, not agency.
+- **H3 is narrower than "agency".** The recovery gain needs heredity (full minus no-heredity = 0.22). But random-parents selection gives almost the same gain (0.259 vs 0.270 for persistence): what is inherited is mostly better grass-foraging filtered by starvation. It does not require selection by surplus. The raw evolved-minus-random gap is also inflated by survivorship, which is why the contrast is the preregistered quantity.
+- **Succession did not help.** The ladder without succession had a higher entropy rate (33.0) than the full ladder (27.3) and a nominally higher big-deposit rate (0.37 vs 0.27), though the preregistered succession effect on `t2_reached` is not shown (CI includes zero).
+- **Not tested:** whether any of this transfers to Earth, whether a less-biased policy class would behave differently (the generic MLP did not evolve), Barrow's miniaturisation counter-argument (S5), or prediction.
+
+<p align="center"><img src="figures/s1_selection.png" alt="S1: four selection rules compared" width="100%"></p>
+<p align="center"><img src="figures/trajectories.png" alt="Entropy production and big-deposit share over time" width="100%"></p>
+<p align="center"><img src="figures/s2_heatmap.png" alt="All 16 combinations of the four conditions" width="100%"></p>
+<p align="center"><img src="figures/s4_recovery.png" alt="S4: recovery after displacement" width="100%"></p>
+<p align="center"><img src="figures/s3_accounting.png" alt="S3: accounting and ladder controls" width="100%"></p>
+<p align="center"><img src="figures/world_snapshots.png" alt="World snapshots" width="100%"></p>
+
+## Notes from the pilot (seeds 1000-1003, not confirmatory)
+
+- The world went through ten design changes because early pilots showed null results. They are listed in [`docs/DESIGN.md`](docs/DESIGN.md#design-history-forced-by-pilots). A design tuned until selection beats random parents tends to make selection beat random parents, so weigh H1 with that in mind. H2 failing despite this tuning is some evidence the tuning did not simply guarantee the thesis.
+- The pilot suggested entropy-as-reward would not breed more entropy than persistence. The confirmatory run agrees (H4 not falsified).
 
 ## Known limitations
 
@@ -113,7 +129,7 @@ Each experiment writes a CSV of every run and a Markdown report to `results/` (g
 
 ## Roadmap
 
-- Run S1 to S4 confirmatory, publish the report whatever it says.
+- Test the free-rider explanation for H2 directly (for example, make deposit benefits private or kin-shared, and see whether big-deposit access recovers under heredity and mortality).
 - S5: add an efficiency pathway and deplete gradients, to see whether populations go thermodynamically quiet (Barrow's miniaturisation counter-argument).
 - Predictive-information probe, which needs the MLP policy to evolve (or a memory-bearing equivariant variant).
 - Run S0 on the real Study 2 trajectories.

@@ -62,7 +62,7 @@ class Config:
     mut_sigma: float = 0.30
     mut_rate: float = 0.10         # fraction of genome entries perturbed per birth
     selection: str = "persistence"  # persistence | entropy | task | drift
-    drift_restore: float = 0.05    # neutral-model birth rate per missing individual
+    drift_restore: float = 0.05    # random-parents birth rate per missing individual
     entropy_repro_spent: float = 12.0  # entropy mode: energy burned per child
 
     # --- accounting assumption (see docs/DESIGN.md) ------------------------------
