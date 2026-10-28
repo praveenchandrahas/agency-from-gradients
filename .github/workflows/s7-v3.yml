@@ -1,0 +1,38 @@
+name: s7-v3
+# Confirmatory S7-v3 comparison (PREREGISTRATION_S7.md). Trigger: Actions -> s7-v3 -> Run workflow.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: ["A:", "B:", "C:", "D:"]
+        seed0: [0, 5, 10, 15]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run
+        run: python -m agency_gradients.experiments.s7_v3 --seed0 ${{ matrix.seed0 }} --seeds 5 --only "${{ matrix.variant }}" --workers 4 --out out
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          V=$(echo "${{ matrix.variant }}" | tr -d ':')
+          D="s7v3/${GITHUB_RUN_ID}-${V}-${{ matrix.seed0 }}"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }

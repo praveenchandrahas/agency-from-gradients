@@ -80,6 +80,16 @@ class Config:
     signal_cost: float = 0.02      # energy cost of emitting a signal (heat)
     mut_big_p: float = 0.0         # v2: per-gene chance of a rare large-effect mutation per birth
     mut_big_sigma: float = 1.0
+    # --- WORLD v3 additions (opt-in on top of world_v2; all default off) --------------
+    recomb: bool = False           # sexual recombination: child = block crossover of parent and a nearby mate
+    xo_block: int = 48             # genes per crossover block
+    mate_radius: float = 3.0       # cells (Chebyshev) within which a mate is drawn
+    day_night: bool = False        # night: commons regrow x night_regrow, danger x night_danger; phase is observed
+    day_period: int = 500
+    night_regrow: float = 0.5
+    night_danger: float = 3.0
+    field_drift_every: int = 0     # >0: the fertile patches shift one cell every this many steps
+    danger_walk_every: int = 0     # >0: danger zones random-walk one cell every this many steps
     drift_restore: float = 0.05    # random-parents birth rate per missing individual
     entropy_repro_spent: float = 12.0  # entropy mode: energy burned per child
 
@@ -120,3 +130,14 @@ def v2_config(scale: int = 1, **kw) -> Config:
                     n_patches=18 * a, n_walls=8 * a, n_danger=3 * a)
     base.update(kw)
     return Config(**base)
+
+
+def v3_config(scale: int = 3, **kw) -> Config:
+    """World v3: v2 plus recombination, a low mutation rate, a big population, a larger
+    recurrent genome (hidden 48, ~5,300 genes), day/night, drifting fertility and wandering
+    danger. Settings fixed in PREREGISTRATION_S7.md before the confirmatory run."""
+    base = dict(policy="recurrent:48", steps=200_000, recomb=True,
+                mut_rate=0.004, mut_sigma=0.05, mut_big_p=0.0001, mut_big_sigma=0.5,
+                day_night=True, field_drift_every=400, danger_walk_every=50)
+    base.update(kw)
+    return v2_config(scale=scale, **base)

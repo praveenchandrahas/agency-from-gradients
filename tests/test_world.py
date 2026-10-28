@@ -191,3 +191,35 @@ def test_v2_config_many_genes_and_generations():
     assert s["n_genes"] > 2000
     assert s["gen_mean"] > 10          # many generations of descent
     assert abs(w.ledger_residual()) < 1e-6
+
+
+def test_v3_ledger_closes_and_genes_are_many():
+    from agency_gradients.config import v3_config
+    from agency_gradients.world import make_world, n_params
+    assert n_params("recurrent:48") > 5000
+    w = make_world(v3_config(scale=1, steps=1200), 4)
+    for _ in range(1200):
+        w.step()
+        assert abs(w.ledger_residual()) < 1e-6
+    assert w.summary()["gen_mean"] > 1
+
+
+def test_crossover_mixes_two_parents():
+    import numpy as np
+    from agency_gradients.config import v3_config
+    from agency_gradients.world import make_world
+    w = make_world(v3_config(scale=1, steps=10), 2)
+    a = np.flatnonzero(w.alive)
+    w.genome[:] = -1.0
+    w.genome[a[0]] = 1.0
+    w.pos[a[1]] = w.pos[a[0]]
+    child = w._crossover(np.array([a[0]]), a)[0]
+    assert (child == 1.0).any() and (child == -1.0).any()
+
+
+def test_v3_flags_off_leave_v2_unchanged():
+    from agency_gradients.config import Config
+    from agency_gradients.world import make_world
+    a = make_world(Config(world_v2=True, policy="recurrent", steps=400), 1).run().summary()
+    b = make_world(Config(world_v2=True, policy="recurrent", steps=400, recomb=False, day_night=False), 1).run().summary()
+    assert a == b

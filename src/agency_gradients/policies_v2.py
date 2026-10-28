@@ -22,8 +22,21 @@ P_REC = N_OBS2 * H2 + H2 * H2 + H2 + H2 * N_ACT2 + N_ACT2
 P_MLP2 = N_OBS2 * H2 + H2 + H2 * N_ACT2 + N_ACT2
 
 
+N_OBS3 = N_OBS2 + 2                 # + day/night phase sin/cos
+
+
+def parse(policy: str):
+    """'recurrent' -> ('recurrent', 24, 54);  'recurrent:48' -> ('recurrent', 48, 56)."""
+    kind, _, h = policy.partition(":")
+    return kind, (int(h) if h else H2), (N_OBS3 if h else N_OBS2)
+
+
 def _policy_len(policy: str) -> int:
-    return {"recurrent": P_REC, "mlp2": P_MLP2, "equivariant2": P_EQ}[policy]
+    kind, H, NO = parse(policy)
+    if kind == "equivariant2":
+        return P_EQ
+    n = NO * H + H + H * N_ACT2 + N_ACT2
+    return n + (H * H if kind == "recurrent" else 0)
 
 
 def n_params_v2(policy: str) -> int:
@@ -32,12 +45,13 @@ def n_params_v2(policy: str) -> int:
 
 def random_genomes_v2(rng: np.random.Generator, n: int, policy: str) -> np.ndarray:
     g = np.zeros((n, n_params_v2(policy)))
-    if policy == "equivariant2":
+    kind, H2, N_OBS2 = parse(policy)
+    if kind == "equivariant2":
         g[:, :P_EQ] = rng.normal(0.0, 1.0, (n, P_EQ))
     else:
         i = 0
         g[:, i:i + N_OBS2 * H2] = rng.normal(0, 1 / np.sqrt(N_OBS2), (n, N_OBS2 * H2)); i += N_OBS2 * H2
-        if policy == "recurrent":
+        if kind == "recurrent":
             g[:, i:i + H2 * H2] = rng.normal(0, 0.5 / np.sqrt(H2), (n, H2 * H2)); i += H2 * H2
         i += H2                                    # hidden bias = 0
         g[:, i:i + H2 * N_ACT2] = rng.normal(0, 1 / np.sqrt(H2), (n, H2 * N_ACT2))
@@ -54,17 +68,18 @@ def traits(genomes: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 def forward(genomes: np.ndarray, obs: np.ndarray, h: np.ndarray, policy: str):
     """-> (logits (n, 7), new hidden state (n, H2))."""
     n = len(genomes)
-    if policy == "equivariant2":
+    kind, H2, N_OBS2 = parse(policy)
+    if kind == "equivariant2":
         lg = policy_logits(genomes[:, :P_EQ], obs[:, :N_CH * 5 + 2], "equivariant")
         return np.concatenate([lg, np.full((n, 1), -1e9)], axis=1), h
     i = 0
     w1 = genomes[:, i:i + N_OBS2 * H2].reshape(n, N_OBS2, H2); i += N_OBS2 * H2
     pre = np.einsum("ni,nih->nh", obs, w1)
-    if policy == "recurrent":
+    if kind == "recurrent":
         wh = genomes[:, i:i + H2 * H2].reshape(n, H2, H2); i += H2 * H2
         pre = pre + np.einsum("nh,nhk->nk", h, wh)
     b1 = genomes[:, i:i + H2]; i += H2
     w2 = genomes[:, i:i + H2 * N_ACT2].reshape(n, H2, N_ACT2); i += H2 * N_ACT2
     b2 = genomes[:, i:i + N_ACT2]
     hn = np.tanh(pre + b1)
-    return np.einsum("nh,nha->na", hn, w2) + b2, (hn if policy == "recurrent" else h)
+    return np.einsum("nh,nha->na", hn, w2) + b2, (hn if kind == "recurrent" else h)

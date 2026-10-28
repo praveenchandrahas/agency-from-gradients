@@ -11,7 +11,7 @@ from __future__ import annotations
 import numpy as np
 
 from .config import Config
-from .policies_v2 import N_ACT2, N_OBS2, H2, forward, random_genomes_v2, traits
+from .policies_v2 import N_ACT2, N_OBS2, H2, forward, parse, random_genomes_v2, traits
 from .world import DIRS, LOOK, World, random_genomes
 
 DIRS7 = np.vstack([DIRS, [[0, 0]]]).astype(np.int64)   # action 6 = signal (no movement)
@@ -20,12 +20,14 @@ DIRS7 = np.vstack([DIRS, [[0, 0]]]).astype(np.int64)   # action 6 = signal (no m
 class WorldV2(World):
     def __init__(self, cfg: Config, seed: int, n_agents: int | None = None):
         assert cfg.world_v2, "WorldV2 requires cfg.world_v2=True"
-        assert cfg.policy in ("recurrent", "mlp2", "equivariant2"), \
-            "world v2 needs a v2 policy: recurrent | mlp2 | equivariant2"
+        kind, hid, nobs = parse(cfg.policy)
+        assert kind in ("recurrent", "mlp2", "equivariant2"), \
+            "world v2 needs a v2 policy: recurrent | mlp2 | equivariant2 (optionally kind:H)"
+        assert (nobs == N_OBS2) or cfg.day_night, "policies of the form kind:H need day_night=True (56 inputs)"
         super().__init__(cfg, seed, n_agents)
         L = cfg.size
         m = cfg.max_pop
-        self.h = np.zeros((m, H2))
+        self.h = np.zeros((m, parse(cfg.policy)[1]))
         self.gen = np.zeros(m, dtype=np.int64)
         self.signal = np.zeros((L, L))
         self.wall = self._make_walls()
@@ -59,9 +61,15 @@ class WorldV2(World):
         cfg = self.cfg
         L = cfg.size
         ax = np.arange(L)
+        self._dc = self.rng.integers(0, L, (cfg.n_danger, 2))
+        return self._danger_from_centers()
+
+    def _danger_from_centers(self) -> np.ndarray:
+        cfg = self.cfg
+        L = cfg.size
+        ax = np.arange(L)
         d = np.zeros((L, L))
-        for _ in range(cfg.n_danger):
-            x, y = self.rng.integers(0, L, 2)
+        for x, y in self._dc:
             dx = np.minimum(np.abs(ax - x), L - np.abs(ax - x))[:, None]
             dy = np.minimum(np.abs(ax - y), L - np.abs(ax - y))[None, :]
             d = np.maximum(d, (np.sqrt(dx**2 + dy**2) <= cfg.danger_radius).astype(float))
@@ -89,7 +97,8 @@ class WorldV2(World):
             self.signal[xs, ys],
             np.full((len(idx), 1), np.sin(ph)),
             np.full((len(idx), 1), np.cos(ph)),
-        ], axis=1)
+        ] + ([np.full((len(idx), 1), np.sin(2 * np.pi * self.t / cfg.day_period)),
+              np.full((len(idx), 1), np.cos(2 * np.pi * self.t / cfg.day_period))] if cfg.day_night else []), axis=1)
         return np.concatenate([base, extra], axis=1)
 
     def _act(self, idx: np.ndarray, obs: np.ndarray) -> np.ndarray:
@@ -111,7 +120,15 @@ class WorldV2(World):
         cfg = self.cfg
         L = cfg.size
         # seasons modulate commons regrowth (injection is counted from self.field)
-        self.field = self._field0 * (1.0 + cfg.season_amp * np.sin(2 * np.pi * self.t / cfg.season_period))
+        if cfg.field_drift_every and self.t > 0 and self.t % cfg.field_drift_every == 0:
+            f = np.roll(self._field0, 1, axis=1) * (~self.wall)
+            self._field0 = f / f.mean()
+        if cfg.danger_walk_every and self.t > 0 and self.t % cfg.danger_walk_every == 0:
+            self._dc = (self._dc + self.rng.integers(-1, 2, self._dc.shape)) % L
+            self.danger = self._danger_from_centers()
+        night = cfg.day_night and ((self.t % cfg.day_period) >= cfg.day_period // 2)
+        self.field = self._field0 * (1.0 + cfg.season_amp * np.sin(2 * np.pi * self.t / cfg.season_period)) \
+            * (cfg.night_regrow if night else 1.0)
         leak, _ = self._environment_update()
         self._update_signal()
         idx = np.flatnonzero(self.alive)
@@ -189,7 +206,7 @@ class WorldV2(World):
 
             dead = self.energy[idx] <= 0.0
             if cfg.mortality:
-                p_die = cfg.hazard + cfg.danger_hazard * self.danger[x, y]
+                p_die = cfg.hazard + cfg.danger_hazard * (cfg.night_danger if night else 1.0) * self.danger[x, y]
                 dead = dead | (self.rng.random(n) < p_die)
             if dead.any():
                 di = idx[dead]
@@ -248,8 +265,11 @@ class WorldV2(World):
             return 0
         if cfg.heredity:
             P = self.genome.shape[1]
+            base = self.genome[parents]
+            if cfg.recomb:
+                base = self._crossover(parents, a)
             mask = self.rng.random((k, P)) < cfg.mut_rate
-            kids = self.genome[parents] + mask * cfg.mut_sigma * self.rng.standard_normal((k, P))
+            kids = base + mask * cfg.mut_sigma * self.rng.standard_normal((k, P))
             if cfg.mut_big_p > 0:
                 big = self.rng.random((k, P)) < cfg.mut_big_p
                 kids = kids + big * cfg.mut_big_sigma * self.rng.standard_normal((k, P))
@@ -272,6 +292,24 @@ class WorldV2(World):
         self.gen[s] = self.gen[parents] + 1
         self.lineage[s] = self.lineage[parents]
         return k
+
+    def _crossover(self, parents: np.ndarray, alive_idx: np.ndarray) -> np.ndarray:
+        """Child = block crossover of a parent and a random living neighbour (within
+        mate_radius cells); a parent with no neighbour reproduces asexually."""
+        cfg = self.cfg
+        L = cfg.size
+        P = self.genome.shape[1]
+        pos = self.pos[alive_idx]
+        mates = parents.copy()
+        for i, p in enumerate(parents):
+            d = np.abs(pos - self.pos[p])
+            d = np.minimum(d, L - d).max(axis=1)
+            cand = alive_idx[(d <= cfg.mate_radius) & (alive_idx != p)]
+            if len(cand):
+                mates[i] = cand[self.rng.integers(len(cand))]
+        nb = -(-P // cfg.xo_block)
+        take = np.repeat(self.rng.random((len(parents), nb)) < 0.5, cfg.xo_block, axis=1)[:, :P]
+        return np.where(take, self.genome[parents], self.genome[mates])
 
     def summary(self, passive_rate: float | None = None) -> dict:
         out = super().summary(passive_rate)

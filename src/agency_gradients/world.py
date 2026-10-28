@@ -35,7 +35,7 @@ V2_POLICIES = ("recurrent", "mlp2", "equivariant2")
 
 
 def n_params(policy: str) -> int:
-    if policy in V2_POLICIES:
+    if policy.partition(":")[0] in V2_POLICIES:
         from .policies_v2 import n_params_v2
         return n_params_v2(policy)
     if policy == "equivariant":
@@ -50,7 +50,7 @@ LOOK = DIRS[:5]
 
 
 def random_genomes(rng: np.random.Generator, n: int, policy: str = "equivariant") -> np.ndarray:
-    if policy in V2_POLICIES:
+    if policy.partition(":")[0] in V2_POLICIES:
         from .policies_v2 import random_genomes_v2
         return random_genomes_v2(rng, n, policy)
     if policy == "equivariant":
