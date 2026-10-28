@@ -1,0 +1,838 @@
+<title>Agency From Gradients</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout concept: one live world beside a plain-language narrator; rules and experiments underneath. */
+:root {
+  color-scheme: dark;
+  --bg: #0a0f1f;
+  --panel: #111a33;
+  --panel-2: #16213f;
+  --line: #26345c;
+  --fg: #e9edf8;
+  --muted: #9fabcb;
+  --canvas: #070b17;
+  --grass: #3ecf8e;
+  --amber: #f5a524;
+  --violet: #b690ff;
+  --hunger: #ff6b6b;
+  --accent: #8fb0ff;
+  --accent-ink: #0a1230;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); }
+body {
+  margin: 0; color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.6vw, 44px); line-height: 1.08; }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+a { color: var(--accent); }
+.lede { color: var(--muted); font-size: 18px; max-width: 62ch; margin-top: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.worldcard { padding: 12px; }
+#world { width: 100%; aspect-ratio: 1; display: block; background: var(--canvas); border-radius: 6px; touch-action: manipulation; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+button, select { font: inherit; color: var(--fg); }
+.btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; min-height: 40px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { padding: 8px 12px; cursor: pointer; background: var(--panel-2); font-size: 14px; min-height: 40px; display: flex; align-items: center; border-right: 1px solid var(--line); }
+.seg label:last-child { border-right: 0; }
+.seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.seg input:focus-visible + label { outline: 2px solid var(--fg); outline-offset: -3px; }
+.inspect { font-family: var(--mono); font-size: 12.5px; color: var(--muted); min-height: 1.5em; margin-top: 10px; }
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 16px; margin-top: 12px; font-size: 14px; color: var(--muted); }
+.legend div { display: flex; gap: 10px; align-items: flex-start; }
+.legend b { color: var(--fg); font-weight: 600; }
+.sw { flex: none; width: 16px; height: 16px; margin-top: 3px; }
+.sw.grass { background: var(--grass); opacity: .7; border-radius: 2px; }
+.sw.amber { border: 2px solid var(--amber); border-radius: 2px; }
+.sw.violet { border: 2px solid var(--violet); transform: rotate(45deg) scale(.8); }
+.sw.dot { border-radius: 50%; background: linear-gradient(90deg, var(--hunger), #f4f6ff); }
+.sw.ring { border-radius: 50%; border: 2px solid var(--fg); }
+.sw.glow { border-radius: 50%; background: radial-gradient(circle, rgba(245,165,36,.7), rgba(182,144,255,.0) 70%); }
+.narr .headline { font-family: var(--display); font-size: 21px; line-height: 1.25; font-weight: 700; text-wrap: balance; }
+.narr .body { color: var(--muted); margin-top: 8px; }
+.narr .day { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.bars { display: flex; flex-direction: column; gap: 14px; }
+.bar-label { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; margin-bottom: 4px; }
+.bar-label span:last-child { font-family: var(--mono); color: var(--muted); font-size: 12.5px; text-align: right; }
+.bar { display: flex; height: 16px; border-radius: 4px; overflow: hidden; background: var(--canvas); border: 1px solid var(--line); }
+.bar i { display: block; height: 100%; transition: width .25s linear; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 12px; }
+.chart h3 { font-size: 13px; font-family: var(--body); font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.chart canvas { width: 100%; height: 84px; display: block; }
+.inst { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 6px 12px; align-items: center; font-size: 14px; }
+.inst .track { position: relative; height: 12px; background: var(--canvas); border: 1px solid var(--line); border-radius: 3px; }
+.inst .track::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); opacity: .6; }
+.inst .fill { position: absolute; top: 0; bottom: 0; transition: all .25s linear; }
+.small { font-size: 13.5px; color: var(--muted); }
+.events { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.events li { display: flex; gap: 10px; }
+.events time { font-family: var(--mono); font-size: 12px; color: var(--muted); flex: none; padding-top: 2px; min-width: 64px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.rule { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.rule:last-child { border-bottom: 0; }
+.rule input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.rule label { cursor: pointer; }
+.rule b { display: block; font-weight: 600; }
+.rule span { color: var(--muted); font-size: 14px; }
+.presets { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.preset { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+.preset:hover { border-color: var(--accent); }
+.preset b { font-family: var(--display); font-size: 16px; }
+.preset span { color: var(--muted); font-size: 14px; }
+.explain { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.explain p { color: var(--muted); }
+.explain h3 { margin-bottom: 6px; color: var(--fg); }
+.notice { border-left: 3px solid var(--amber); padding: 10px 14px; background: var(--panel); border-radius: 0 8px 8px 0; color: var(--muted); }
+.notice b { color: var(--fg); }
+.skip { height: 6px; background: var(--canvas); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.skip i { display: block; height: 100%; width: 0; background: var(--accent); }
+footer { color: var(--muted); font-size: 14px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .bar i, .inst .fill { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">A small world, running live</div>
+    <h1>Agency from gradients</h1>
+    <p class="lede">Stars burn energy fast, yet most of it spills into empty space. This world asks what happens when creatures are never told what to want, only that those who run out of energy die and those with spare energy have children.</p>
+  </header>
+
+  <section class="stage" aria-label="Simulation">
+    <div class="col">
+      <div class="card worldcard">
+        <canvas id="world" width="640" height="640" role="img" aria-label="Live view of the simulated world: green grass, amber and violet energy deposits, and small creatures moving between them"></canvas>
+        <div class="inspect" id="inspect">Hover over the world to inspect a square.</div>
+        <div class="controls">
+          <button class="btn primary" id="play" type="button" aria-pressed="true">Pause</button>
+          <div class="seg" role="radiogroup" aria-label="Speed">
+            <input type="radio" name="speed" id="sp0" value="0"><label for="sp0">Slow</label>
+            <input type="radio" name="speed" id="sp1" value="1" checked><label for="sp1">Normal</label>
+            <input type="radio" name="speed" id="sp2" value="2"><label for="sp2">Fast</label>
+            <input type="radio" name="speed" id="sp3" value="3"><label for="sp3">Very fast</label>
+          </div>
+          <button class="btn" id="skip" type="button">Skip 5,000 days</button>
+          <button class="btn" id="restart" type="button">New world</button>
+        </div>
+        <div class="skip" id="skipbar" hidden><i id="skipfill"></i></div>
+        <div class="legend">
+          <div><span class="sw grass"></span><span><b>Grass.</b> Everyday sunshine energy. Brighter means more.</span></div>
+          <div><span class="sw dot"></span><span><b>Creatures.</b> Redder means hungrier. They start with random instincts.</span></div>
+          <div><span class="sw amber"></span><span><b>Small deposits.</b> Leftover energy that stays shut until a creature spends energy to open it.</span></div>
+          <div><span class="sw violet"></span><span><b>Big deposits.</b> Rich, but only several creatures working together can open them fully.</span></div>
+          <div><span class="sw ring"></span><span><b>Ring.</b> A creature is spending energy to open a deposit right now.</span></div>
+          <div><span class="sw glow"></span><span><b>Glow.</b> A faint scent of deposits that creatures can sense from afar.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card narr" aria-live="off">
+        <div class="day" id="day">Day 0</div>
+        <div class="headline" id="headline">Starting a new world.</div>
+        <p class="body" id="body"></p>
+        <ol class="events" id="events" aria-live="polite"></ol>
+      </div>
+
+      <div class="card bars">
+        <div>
+          <div class="bar-label"><span>Sunshine used or wasted</span><span id="usedTxt"></span></div>
+          <div class="bar" role="img" aria-label="Share of available energy that creatures used versus wasted"><i id="bUsed" style="background:var(--grass)"></i><i id="bWaste" style="background:#4b5878"></i></div>
+          <p class="small" style="margin-top:6px">Wasted means energy that grew or leaked away without anyone using it. Leftovers are the point of this world.</p>
+        </div>
+        <div>
+          <div class="bar-label"><span>Where creatures get their energy</span><span id="srcTxt"></span></div>
+          <div class="bar" role="img" aria-label="Share of creature energy from grass, small deposits and big deposits"><i id="sGrass" style="background:var(--grass)"></i><i id="sAmber" style="background:var(--amber)"></i><i id="sViolet" style="background:var(--violet)"></i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="charts">
+          <div class="chart"><h3>Creatures alive</h3><canvas id="chPop" aria-label="Chart of population over time"></canvas></div>
+          <div class="chart"><h3>Energy used, %</h3><canvas id="chUsed" aria-label="Chart of share of energy used over time"></canvas></div>
+          <div class="chart"><h3>From deposits, %</h3><canvas id="chDep" aria-label="Chart of share of energy from deposits over time"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Instincts, averaged over all living creatures</h3>
+        <p class="small" style="margin:4px 0 10px" id="instNote">At the start these hover around zero because every creature is random. Bars to the right mean creatures are drawn toward it.</p>
+        <div class="inst" id="inst"></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="try">
+    <h2 id="try" style="margin-bottom:12px">Try something</h2>
+    <div class="presets">
+      <button class="preset" type="button" data-preset="natural"><b>Natural selection</b><span>Creatures with spare energy have children. Nothing else is rewarded. Use Very fast and wait a few thousand days.</span></button>
+      <button class="preset" type="button" data-preset="drift"><b>No selection</b><span>Children are born at random, whoever the parent is. This is the comparison that tells you whether selection did anything.</span></button>
+      <button class="preset" type="button" data-preset="entropy"><b>Reward burning energy</b><span>Instead of survival, the creatures that burn the most energy reproduce. Does rewarding the thing we measure help?</span></button>
+      <button class="preset" type="button" data-preset="expert"><b>A hand-coded expert</b><span>A forager we programmed by hand. It shows what a successful world could look like, with nothing evolved.</span></button>
+      <button class="preset" type="button" data-preset="noheredity"><b>No inheritance</b><span>Children start with random instincts instead of their parents'. Can anything build up?</span></button>
+      <button class="preset" type="button" data-preset="plenty"><b>Plenty of food</b><span>Make grass abundant. When life is easy, is there any pressure to find the hard deposits?</span></button>
+    </div>
+  </section>
+
+  <section class="grid2" aria-labelledby="rules">
+    <div class="card">
+      <h2 id="rules" style="margin-bottom:6px">Rules of this world</h2>
+      <p class="small" style="margin-bottom:8px">Changing a rule starts a new world.</p>
+      <div class="rule"><input type="checkbox" id="r-scarcity" checked><label for="r-scarcity"><b>Food is scarce</b><span>Grass grows slowly, so creatures compete for it.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-heredity" checked><label for="r-heredity"><b>Children inherit instincts</b><span>A child copies its parent, with a few small random changes.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-mortality" checked><label for="r-mortality"><b>Running out of energy is fatal</b><span>Also adds a small daily chance of dying by accident.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-succession" checked><label for="r-succession"><b>Big deposits form where small ones run dry</b><span>Each leftover is only available once the earlier one is used up.</span></label></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:6px">Who has children?</h2>
+      <p class="small" style="margin-bottom:8px">This is the only pressure in the world.</p>
+      <div class="rule"><input type="radio" name="sel" id="s-persistence" value="persistence" checked><label for="s-persistence"><b>Creatures with spare energy</b><span>Survival and surplus. Nothing tells them what to do.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-entropy" value="entropy"><label for="s-entropy"><b>Creatures that burn the most energy</b><span>Energy use is rewarded directly.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-drift" value="drift"><label for="s-drift"><b>Random creatures</b><span>No selection at all. The control.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-expert" value="expert"><label for="s-expert"><b>Hand-coded forager</b><span>Fixed rules we wrote. Nothing evolves.</span></label></div>
+    </div>
+  </section>
+
+  <section class="explain" aria-labelledby="how">
+    <div><h3 id="how">What is going on</h3><p>Sunshine falls on the ground as grass. Whatever is not eaten leaks away. Creatures eat, spend energy to move, and die when they run out. A creature with spare energy has a child that copies its instincts with small random changes. Over many generations, instincts that help creatures survive become common.</p></div>
+    <div><h3>The leftovers</h3><p>Deposits hold energy that grass cannot provide. They need effort to open, and no creature is told to bother. The question is whether creatures that happen to bother end up with more children, and whether the habit spreads.</p></div>
+    <div><h3>Why it matters for AI</h3><p>Most AI systems are given a goal. Living things were not. The idea tested here is that agency may need the same starting conditions as life: scarcity, inheritance, real consequences for failing, and a ladder of harder energy sources to climb.</p></div>
+  </section>
+
+  <div class="notice"><b>What this is not.</b> It is a toy world, tuned until selection could act in it, and it does not show how life began or that AI will become agentic. The real experiments, with 30 random worlds per condition, preregistered hypotheses and every design change listed, are in the <a href="https://github.com/praveenchandrahas/agency-from-gradients" target="_blank" rel="noopener">project repository</a>. This page runs a JavaScript port of the same rules, so runs look like the Python ones but are not identical.</div>
+  <footer>Open source under Apache-2.0.</footer>
+</div>
+<script>/* agency-from-gradients: browser/Node port of the Python engine (src/agency_gradients/world.py).
+ * Same rules and default parameters; a different random-number generator, so runs are
+ * statistically comparable to the Python ones but not bit-identical.
+ * Only the "equivariant" (27-parameter) policy is ported. */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) module.exports = factory();
+  else root.AGSim = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  const DEFAULTS = {
+    size: 32, maxPop: 200, initPop: 60,
+    metabolism: 0.10, moveCost: 0.03, investCost: 0.15, initEnergy: 8.0,
+    reproThresh: 12.0, reproCost: 6.0, childShare: 0.8, eatRate: 0.5, hazard: 0.003,
+    commonsCap: 1.0, commonsRegrow: 0.008, commonsRegrowAbundant: 0.08,
+    patchiness: 1.0, nPatches: 18, patchSigma: 3.5,
+    nTier1: 12, stock1: 150, regrow1: 0.30, lock1: 3.0, decay1: 0.02, harvest1: 1.5,
+    nTier2: 4, stock2: 800, regrow2: 1.6, lock2: 25.0, decay2: 0.15, harvest2: 6.0,
+    scentSigma: 4.0, reservoirLeak: 0.002, depletedAt: 1.0,
+    mutSigma: 0.30, mutRate: 0.10,
+    selection: "persistence", // persistence | entropy | drift
+    driftRestore: 0.05, entropyReproSpent: 12.0, kappa: 3.0,
+    scarcity: true, heredity: true, mortality: true, succession: true,
+  };
+  const NCH = 7, NG = NCH * 3 + 6;
+  // N, E, S, W, stay, invest
+  const DX = [-1, 0, 1, 0, 0, 0], DY = [0, 1, 0, -1, 0, 0];
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  class World {
+    constructor(opts, seed) {
+      const c = this.cfg = Object.assign({}, DEFAULTS, opts || {});
+      this.seed = seed >>> 0;
+      this._r = mulberry32(this.seed);
+      const L = c.size, N = L * L;
+      this.L = L;
+      this.commons = new Float64Array(N).fill(c.commonsCap);
+      this.ttype = new Int8Array(N);
+      this.stock = new Float64Array(N);
+      this.progress = new Float64Array(N);
+      this.unlocked = new Uint8Array(N);
+      this.scent = [new Float64Array(N), new Float64Array(N)];
+      this.t2Budget = 0;
+      this.field = this._makeField();
+      this._placeSites();
+      this._updateScent();
+
+      const M = c.maxPop;
+      this.alive = new Uint8Array(M);
+      this.x = new Int16Array(M); this.y = new Int16Array(M);
+      this.energy = new Float64Array(M);
+      this.age = new Int32Array(M);
+      this.lineage = new Int32Array(M);
+      this.genome = new Float64Array(M * NG);
+      this.spentAcc = new Float64Array(M);
+      this.lastAct = new Int8Array(M);
+      this.t = 0;
+      this.policy = null; // optional hand-coded forager
+      this.stats = { gainC: 0, gain1: 0, gain2: 0, leak: 0, heat: 0, births: 0, deaths: 0 };
+      this.cum = { gainC: 0, gain1: 0, gain2: 0, leak: 0, heat: 0, births: 0, deaths: 0 };
+      this.firstUnlock = { 1: null, 2: null };
+      this.converted = 0;
+      this.cnt = new Float64Array(N);
+      for (let i = 0; i < c.initPop; i++) {
+        const s = i;
+        this.alive[s] = 1; this.x[s] = this.randInt(L); this.y[s] = this.randInt(L);
+        this.energy[s] = c.initEnergy; this.lineage[s] = i;
+        for (let k = 0; k < NG; k++) this.genome[s * NG + k] = this.randn();
+      }
+    }
+    rand() { return this._r(); }
+    randInt(n) { return Math.floor(this._r() * n); }
+    randn() {
+      let u = 0; while (u === 0) u = this._r();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * this._r());
+    }
+    gumbel() { let u = 0; while (u === 0) u = this._r(); return -Math.log(-Math.log(u)); }
+    poisson(l) { const e = Math.exp(-l); let k = 0, p = 1; do { k++; p *= this._r(); } while (p > e && k < 100); return k - 1; }
+
+    _dist(a, b) { const d = Math.abs(a - b); return Math.min(d, this.L - d); }
+    _makeField() {
+      const c = this.cfg, L = this.L, f = new Float64Array(L * L);
+      if (c.patchiness <= 0) return f.fill(1);
+      for (let p = 0; p < c.nPatches; p++) {
+        const px = this.randInt(L), py = this.randInt(L);
+        for (let i = 0; i < L; i++) for (let j = 0; j < L; j++) {
+          const dx = this._dist(i, px), dy = this._dist(j, py);
+          f[i * L + j] += Math.exp(-(dx * dx + dy * dy) / (2 * c.patchSigma * c.patchSigma));
+        }
+      }
+      const norm = (arr) => { let m = 0; for (const v of arr) m += v; m /= arr.length; for (let i = 0; i < arr.length; i++) arr[i] /= m; };
+      norm(f);
+      for (let i = 0; i < f.length; i++) f[i] = (1 - c.patchiness) + c.patchiness * f[i];
+      norm(f);
+      return f;
+    }
+    _placeSites() {
+      const c = this.cfg, L = this.L, N = L * L;
+      const cells = []; const used = new Set();
+      while (cells.length < c.nTier1 + c.nTier2) { const v = this.randInt(N); if (!used.has(v)) { used.add(v); cells.push(v); } }
+      for (let i = 0; i < c.nTier1; i++) { this.ttype[cells[i]] = 1; this.stock[cells[i]] = c.stock1; }
+      if (c.succession) this.t2Budget = c.nTier2;
+      else for (let i = c.nTier1; i < cells.length; i++) { this.ttype[cells[i]] = 2; this.stock[cells[i]] = c.stock2; }
+    }
+    _updateScent() {
+      const c = this.cfg, L = this.L;
+      for (let k = 0; k < 2; k++) {
+        const f = this.scent[k]; f.fill(0);
+        for (let s = 0; s < L * L; s++) {
+          if (this.ttype[s] !== k + 1) continue;
+          const sx = Math.floor(s / L), sy = s % L;
+          for (let i = 0; i < L; i++) for (let j = 0; j < L; j++) {
+            const dx = this._dist(i, sx), dy = this._dist(j, sy);
+            f[i * L + j] += Math.exp(-(dx * dx + dy * dy) / (2 * c.scentSigma * c.scentSigma));
+          }
+        }
+        for (let i = 0; i < f.length; i++) if (f[i] > 1) f[i] = 1;
+      }
+    }
+    openness(i) {
+      const tt = this.ttype[i]; if (!tt) return 0;
+      return Math.min(this.progress[i] / (tt === 1 ? this.cfg.lock1 : this.cfg.lock2), 1);
+    }
+    count() { let n = 0; for (let i = 0; i < this.alive.length; i++) n += this.alive[i]; return n; }
+
+    _envUpdate() {
+      const c = this.cfg, N = this.L * this.L;
+      let leak = 0;
+      const reg = c.scarcity ? c.commonsRegrow : c.commonsRegrowAbundant;
+      for (let i = 0; i < N; i++) {
+        let v = this.commons[i] + reg * this.field[i];
+        if (v > c.commonsCap) { leak += v - c.commonsCap; v = c.commonsCap; }
+        this.commons[i] = v;
+        const tt = this.ttype[i];
+        if (tt) {
+          let s = this.stock[i] + (tt === 1 ? c.regrow1 : c.regrow2);
+          const lk = s * c.reservoirLeak; s -= lk; leak += lk; this.stock[i] = s;
+          this.progress[i] *= 1 - (tt === 1 ? c.decay1 : c.decay2);
+          this.unlocked[i] = this.progress[i] >= (tt === 1 ? c.lock1 : c.lock2) ? 1 : 0;
+        }
+      }
+      if (c.succession && this.t2Budget > 0) {
+        let changed = false;
+        for (let i = 0; i < N && this.t2Budget > 0; i++) {
+          if (this.ttype[i] === 1 && this.stock[i] <= c.depletedAt) {
+            this.ttype[i] = 2; this.stock[i] = c.stock2; this.progress[i] = 0; this.unlocked[i] = 0;
+            this.t2Budget--; this.converted++; changed = true;
+          }
+        }
+        if (changed) this._updateScent();
+      }
+      return leak;
+    }
+
+    _chan(cell, ch) {
+      const c = this.cfg;
+      switch (ch) {
+        case 0: return this.commons[cell] / c.commonsCap;
+        case 5: return this.scent[0][cell];
+        case 6: return this.scent[1][cell];
+        default: {
+          const tt = this.ttype[cell];
+          if (!tt || this.stock[cell] <= c.depletedAt) return 0;
+          const fr = this.openness(cell);
+          if (ch === 1) return tt === 1 ? 1 - fr : 0;
+          if (ch === 2) return tt === 1 ? fr : 0;
+          if (ch === 3) return tt === 2 ? 1 - fr : 0;
+          return tt === 2 ? fr : 0;
+        }
+      }
+    }
+
+    _decide(a) {
+      const L = this.L, c = this.cfg;
+      const cells = [0, 0, 0, 0, 0];
+      for (let d = 0; d < 5; d++) cells[d] = ((this.x[a] + DX[d] + L) % L) * L + ((this.y[a] + DY[d] + L) % L);
+      if (this.policy) return this.policy(this, a, cells);
+      const g = this.genome, o = a * NG, E = this.energy[a] / c.reproThresh;
+      const lg = [0, 0, 0, 0, 0, 0];
+      let stay = g[o + 3 * NCH + 1] + g[o + 3 * NCH + 4] * E;
+      let inv = g[o + 3 * NCH + 2] + g[o + 3 * NCH + 5] * E;
+      const bm = g[o + 3 * NCH] + g[o + 3 * NCH + 3] * E;
+      for (let ch = 0; ch < NCH; ch++) {
+        const wn = g[o + ch], ws = g[o + NCH + ch], wi = g[o + 2 * NCH + ch];
+        for (let d = 0; d < 4; d++) lg[d] += wn * this._chan(cells[d], ch);
+        const here = this._chan(cells[4], ch);
+        stay += ws * here; inv += wi * here;
+      }
+      for (let d = 0; d < 4; d++) lg[d] += bm;
+      lg[4] = stay; lg[5] = inv;
+      let best = -1e9, act = 0;
+      for (let k = 0; k < 6; k++) { const v = lg[k] + this.gumbel(); if (v > best) { best = v; act = k; } }
+      return act;
+    }
+
+    step() {
+      const c = this.cfg, L = this.L, N = L * L, M = c.maxPop;
+      const leak = this._envUpdate();
+      const idx = []; for (let a = 0; a < M; a++) if (this.alive[a]) idx.push(a);
+      let gC = 0, g1 = 0, g2 = 0, heat = 0, births = 0, deaths = 0;
+      if (idx.length) {
+        const acts = new Int8Array(idx.length), cost = new Float64Array(idx.length);
+        for (let k = 0; k < idx.length; k++) { acts[k] = this._decide(idx[k]); this.lastAct[idx[k]] = acts[k]; }
+        this.cnt.fill(0);
+        for (let k = 0; k < idx.length; k++) {
+          const a = idx[k], act = acts[k];
+          cost[k] = c.metabolism + (act < 4 ? c.moveCost : 0) + (act === 5 ? c.investCost : 0);
+          this.x[a] = (this.x[a] + DX[act] + L) % L; this.y[a] = (this.y[a] + DY[act] + L) % L;
+          const cell = this.x[a] * L + this.y[a];
+          this.cnt[cell] += 1;
+          if (act === 5 && this.ttype[cell]) this.progress[cell] += 1;
+        }
+        // cap progress, detect rising edges
+        for (let i = 0; i < N; i++) {
+          const tt = this.ttype[i]; if (!tt) continue;
+          const lock = tt === 1 ? c.lock1 : c.lock2;
+          if (this.progress[i] > 2 * lock) this.progress[i] = 2 * lock;
+          const now = this.progress[i] >= lock ? 1 : 0;
+          if (now && !this.unlocked[i] && this.firstUnlock[tt] === null) this.firstUnlock[tt] = this.t;
+          this.unlocked[i] = now;
+        }
+        // shared eating
+        const takeC = new Float64Array(N), takeR = new Float64Array(N);
+        for (let i = 0; i < N; i++) {
+          if (!this.cnt[i]) continue;
+          takeC[i] = Math.min(c.eatRate * this.cnt[i], this.commons[i]); this.commons[i] -= takeC[i];
+          const tt = this.ttype[i];
+          if (tt) {
+            const hr = (tt === 1 ? c.harvest1 : c.harvest2) * this.openness(i);
+            takeR[i] = Math.min(hr * this.cnt[i], this.stock[i]); this.stock[i] -= takeR[i];
+          }
+        }
+        for (let k = 0; k < idx.length; k++) {
+          const a = idx[k], cell = this.x[a] * L + this.y[a], n = this.cnt[cell];
+          const gc = takeC[cell] / n, gr = takeR[cell] / n, tt = this.ttype[cell];
+          gC += gc; if (tt === 1) g1 += gr; else if (tt === 2) g2 += gr;
+          this.energy[a] += gc + gr - cost[k];
+          this.spentAcc[a] += cost[k]; this.age[a]++; heat += cost[k];
+          let dead = this.energy[a] <= 0;
+          if (c.mortality && !dead && this.rand() < c.hazard) dead = true;
+          if (dead) {
+            if (c.mortality) { this.alive[a] = 0; deaths++; } else this.energy[a] = 1.0;
+          }
+        }
+        births = this._reproduce();
+      }
+      this.t++;
+      const s = this.stats, cm = this.cum;
+      s.gainC = gC; s.gain1 = g1; s.gain2 = g2; s.leak = leak; s.heat = heat; s.births = births; s.deaths = deaths;
+      cm.gainC += gC; cm.gain1 += g1; cm.gain2 += g2; cm.leak += leak; cm.heat += heat; cm.births += births; cm.deaths += deaths;
+    }
+
+    _reproduce() {
+      const c = this.cfg, M = c.maxPop;
+      const a = []; for (let i = 0; i < M; i++) if (this.alive[i]) a.push(i);
+      if (!a.length) return 0;
+      let parents = [];
+      const viable = (i) => this.energy[i] >= c.reproCost + 1.0;
+      if (c.selection === "persistence") parents = a.filter((i) => this.energy[i] >= c.reproThresh);
+      else if (c.selection === "entropy") parents = a.filter((i) => this.spentAcc[i] >= c.entropyReproSpent && viable(i));
+      else if (c.selection === "drift") {
+        const lam = c.driftRestore * Math.max(c.initPop - a.length, 0);
+        let nb = Math.min(this.poisson(lam), a.length);
+        const pool = a.slice();
+        for (let i = pool.length - 1; i > 0; i--) { const j = this.randInt(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        parents = pool.slice(0, nb).filter(viable);
+      } else throw new Error("unknown selection " + c.selection);
+      if (!parents.length) return 0;
+      for (let i = parents.length - 1; i > 0; i--) { const j = this.randInt(i + 1); [parents[i], parents[j]] = [parents[j], parents[i]]; }
+      const free = []; for (let i = 0; i < M && free.length < parents.length; i++) if (!this.alive[i]) free.push(i);
+      const k = Math.min(parents.length, free.length);
+      for (let q = 0; q < k; q++) {
+        const p = parents[q], s = free[q];
+        for (let g = 0; g < NG; g++) {
+          if (c.heredity) this.genome[s * NG + g] = this.genome[p * NG + g] + (this.rand() < c.mutRate ? c.mutSigma * this.randn() : 0);
+          else this.genome[s * NG + g] = this.randn();
+        }
+        this.energy[p] -= c.reproCost; this.spentAcc[p] = 0;
+        this.alive[s] = 1; this.x[s] = this.x[p]; this.y[s] = this.y[p];
+        this.energy[s] = c.reproCost * c.childShare; this.age[s] = 0; this.spentAcc[s] = 0; this.lineage[s] = this.lineage[p];
+      }
+      return k;
+    }
+  }
+
+  /* Hand-coded forager (positive control): follows food and glow, invests at reservoirs. */
+  function oracle(world, a, cells) {
+    const ch = (cell, c) => world._chan(cell, c);
+    const score = cells.map((cell) => ch(cell, 0) + 2 * ch(cell, 5) + 2 * ch(cell, 6) + 4 * (ch(cell, 1) + ch(cell, 2) + ch(cell, 3) + ch(cell, 4)));
+    let best = 0, bv = -1e9;
+    for (let d = 0; d < 4; d++) { const v = score[d] + world.rand() * 0.05; if (v > bv) { bv = v; best = d; } }
+    const here = cells[4];
+    const stay = score[4] >= Math.max(score[0], score[1], score[2], score[3]) && ch(here, 0) > 0.3;
+    let act = stay ? 4 : best;
+    const onRes = ch(here, 1) + ch(here, 2) + ch(here, 3) + ch(here, 4) > 0;
+    const open = ch(here, 2) + ch(here, 4);
+    if (onRes && (open < 0.999 || world.rand() < 0.15)) act = 5;
+    if (world.rand() < 0.1) act = world.randInt(6);
+    return act;
+  }
+
+  /* Rolling summary comparable to Python's World.summary() (last quarter of a finished run). */
+  class Recorder {
+    constructor(world) { this.w = world; this.rows = []; }
+    tick() { const s = this.w.stats; this.rows.push([this.w.count(), s.gainC, s.gain1, s.gain2, s.leak, s.heat]); }
+    summary(kappa) {
+      const T = this.rows.length, from = Math.floor(T * 0.75);
+      let gain = 0, g1 = 0, g2 = 0, leak = 0, heat = 0, pop = 0, n = 0;
+      for (let i = from; i < T; i++) { const r = this.rows[i]; pop += r[0]; gain += r[1] + r[2] + r[3]; g1 += r[2]; g2 += r[3]; leak += r[4]; heat += r[5]; n++; }
+      return { pop: pop / n, captureFraction: gain / Math.max(gain + leak, 1e-12), entropyRate: (leak + kappa * heat) / n, share1: g1 / Math.max(gain, 1e-12), share2: g2 / Math.max(gain, 1e-12), t2Reached: this.w.firstUnlock[2] !== null ? 1 : 0 };
+    }
+  }
+
+  return { World, Recorder, oracle, DEFAULTS, NG, NCH };
+});
+</script>
+<script>(function () {
+  "use strict";
+  var S = AGSim;
+  function $(id) { return document.getElementById(id); }
+  var css = getComputedStyle(document.documentElement);
+  function tok(n) { return css.getPropertyValue(n).trim(); }
+  function rgb(hex) { var h = hex.replace("#", ""); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; }
+  var COL = { grass: rgb(tok("--grass")), amber: rgb(tok("--amber")), violet: rgb(tok("--violet")), hunger: rgb(tok("--hunger")), canvas: tok("--canvas"), fg: tok("--fg"), muted: tok("--muted"), line: tok("--line"), accent: tok("--accent") };
+  function rgba(c, a) { return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")"; }
+
+  var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var SPEEDS = [1, 4, 25, 150];
+  var SAMPLE = 40, KEEP = 500;
+
+  var state = { rules: { scarcity: true, heredity: true, mortality: true, succession: true }, selection: "persistence", playing: !reduced, speed: reduced ? 0 : 1, skipTarget: 0, skipStart: 0 };
+  var world, hist, ema, events, flags, lastNarr = 0, lastUi = 0, narrCache = "";
+
+  function newWorld() {
+    var expert = state.selection === "expert";
+    var seed = (Math.random() * 2147483647) | 0;
+    world = new S.World(Object.assign({}, state.rules, { selection: expert ? "persistence" : state.selection }), seed);
+    if (expert) world.policy = S.oracle;
+    hist = { pop: [], used: [], dep: [] };
+    ema = { c: 0, g1: 0, g2: 0, leak: 0, init: false };
+    events = []; flags = { t1: false, t2: false, conv: 0, famine: false, glow: false, invest: false };
+    state.skipTarget = 0; $("skipbar").hidden = true;
+    renderEvents(); updateUi(true); narrate(true);
+  }
+
+  function pushEvent(text) { events.unshift({ day: world.t, text: text }); if (events.length > 6) events.pop(); renderEvents(); }
+  function renderEvents() {
+    var ol = $("events"); ol.textContent = "";
+    events.forEach(function (e) {
+      var li = document.createElement("li"), t = document.createElement("time"), s = document.createElement("span");
+      t.textContent = "Day " + e.day.toLocaleString(); s.textContent = e.text; li.appendChild(t); li.appendChild(s); ol.appendChild(li);
+    });
+  }
+
+  function stepOnce() {
+    world.step();
+    var s = world.stats, a = 1 / 300;
+    if (!ema.init) { ema.c = s.gainC; ema.g1 = s.gain1; ema.g2 = s.gain2; ema.leak = s.leak; ema.init = true; }
+    else { ema.c += (s.gainC - ema.c) * a; ema.g1 += (s.gain1 - ema.g1) * a; ema.g2 += (s.gain2 - ema.g2) * a; ema.leak += (s.leak - ema.leak) * a; }
+    if (world.t % SAMPLE === 0) {
+      var m = metrics();
+      push(hist.pop, world.count()); push(hist.used, m.used * 100); push(hist.dep, m.dep * 100);
+    }
+    detect();
+  }
+  function push(arr, v) { arr.push(v); if (arr.length > KEEP) arr.shift(); }
+
+  function metrics() {
+    var gain = ema.c + ema.g1 + ema.g2, tot = gain + ema.leak;
+    return { used: tot > 0 ? gain / tot : 0, dep: gain > 0 ? (ema.g1 + ema.g2) / gain : 0, g1: gain > 0 ? ema.g1 / gain : 0, g2: gain > 0 ? ema.g2 / gain : 0, gc: gain > 0 ? ema.c / gain : 1 };
+  }
+
+  function instincts() {
+    var n = 0, acc = [0, 0, 0, 0, 0], g = world.genome, NG = S.NG, NCH = S.NCH;
+    for (var a = 0; a < world.alive.length; a++) {
+      if (!world.alive[a]) continue; n++;
+      var o = a * NG;
+      acc[0] += g[o + 0]; acc[1] += g[o + 5]; acc[2] += g[o + 6]; acc[3] += g[o + 2 * NCH + 1]; acc[4] += g[o + 2 * NCH + 3];
+    }
+    return n ? acc.map(function (v) { return v / n; }) : acc;
+  }
+
+  function detect() {
+    var fu = world.firstUnlock;
+    if (!flags.t1 && fu[1] !== null) { flags.t1 = true; pushEvent("A creature opened a small deposit for the first time."); }
+    if (!flags.t2 && fu[2] !== null) { flags.t2 = true; pushEvent("A big deposit opened fully. Several creatures were investing in it at once."); }
+    if (world.converted > flags.conv) { flags.conv = world.converted; if (flags.conv <= 4) pushEvent("A small deposit ran dry and a big one formed in its place."); }
+    var pop = world.count();
+    if (!flags.famine && world.t > 100 && pop < world.cfg.initPop * 0.55) { flags.famine = true; pushEvent("Famine. The population fell to " + pop + "."); }
+    if (flags.famine && pop > world.cfg.initPop * 0.85) flags.famine = false;
+    if (pop === 0 && !flags.dead) { flags.dead = true; pushEvent("Everyone died. This world could not support life under these rules."); state.playing = false; syncPlay(); }
+  }
+
+  function narrate(force) {
+    var now = performance.now();
+    if (!force && now - lastNarr < 600) return;
+    lastNarr = now;
+    var m = metrics(), pop = world.count(), pct = function (x) { return Math.round(x * 100) + "%"; };
+    var head, body = "";
+    var sel = state.selection;
+    if (pop === 0) { head = "Everyone died."; body = "With these rules the creatures could not find enough energy. Press New world to try again."; }
+    else if (sel === "expert") {
+      head = "These creatures follow rules we wrote by hand.";
+      body = "They walk toward food and glow and spend energy to open deposits. " + pct(m.dep) + " of their energy now comes from deposits. Nothing here evolves; this is what success could look like.";
+    } else if (world.t < 200) {
+      head = "The creatures wander at random.";
+      body = "Each one burns energy just to exist and eats whatever grass it bumps into. None of them knows about deposits.";
+    } else if (m.g2 > 0.12) {
+      head = "Big deposits now supply " + pct(m.g2) + " of all energy.";
+      body = "Creatures are working together to keep them open. Only about " + pct(m.used) + " of the available sunshine is used, so most of it is still leftover.";
+    } else if (m.g1 + m.g2 > 0.06) {
+      head = "Some creatures have learned to open deposits.";
+      body = pct(m.dep) + " of the energy now comes from deposits instead of grass. Watch the instinct bars: the habit is spreading through inheritance.";
+    } else if (flags.famine) {
+      head = "Hard times: the population has shrunk a lot.";
+      body = "Grass alone cannot feed everyone. Whoever finds extra energy gets to have children.";
+    } else if (sel === "drift") {
+      head = "No selection. Children are born at random.";
+      body = "Nothing rewards good behaviour, so instincts only drift. This is the baseline to compare against: if selection matters, the other worlds should beat this one over time.";
+    } else if (sel === "entropy") {
+      head = "Creatures that burn the most energy have children.";
+      body = "Using energy is rewarded directly. Check whether that produces better foraging, or only restless creatures.";
+    } else {
+      head = "The creatures are using " + pct(m.used) + " of the sunshine.";
+      body = "They eat grass and have children when they have spare energy. Instincts change slowly, so try Very fast and wait a few thousand days.";
+    }
+    var key = head + body;
+    if (key !== narrCache) { narrCache = key; $("headline").textContent = head; $("body").textContent = body; }
+  }
+
+  // ---- drawing -------------------------------------------------------------
+  var cv = $("world"), ctx = cv.getContext("2d");
+  function fitCanvas() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = Math.round(cv.clientWidth * dpr);
+    if (w > 0 && cv.width !== w) { cv.width = w; cv.height = w; }
+  }
+  function draw() {
+    fitCanvas();
+    var W = cv.width, L = world.L, cell = W / L, cfg = world.cfg, i, j, k;
+    ctx.fillStyle = COL.canvas; ctx.fillRect(0, 0, W, W);
+    for (i = 0; i < L; i++) for (j = 0; j < L; j++) {
+      var v = world.commons[i * L + j];
+      if (v > 0.02) { ctx.fillStyle = rgba(COL.grass, (0.08 + 0.72 * v).toFixed(3)); ctx.fillRect(j * cell, i * cell, cell + 0.6, cell + 0.6); }
+    }
+    var sites = [];
+    for (k = 0; k < L * L; k++) if (world.ttype[k]) sites.push(k);
+    sites.forEach(function (c) {
+      if (world.stock[c] <= cfg.depletedAt) return;
+      var tt = world.ttype[c], col = tt === 1 ? COL.amber : COL.violet, cx = ((c % L) + 0.5) * cell, cy = (Math.floor(c / L) + 0.5) * cell, r = cell * 5.2;
+      var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      g.addColorStop(0, rgba(col, 0.22)); g.addColorStop(1, rgba(col, 0));
+      ctx.fillStyle = g; ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+    });
+    sites.forEach(function (c) {
+      var tt = world.ttype[c], col = tt === 1 ? COL.amber : COL.violet, x = c % L, y = Math.floor(c / L), cx = (x + 0.5) * cell, cy = (y + 0.5) * cell;
+      var open = world.openness(c), full = Math.min(world.stock[c] / (tt === 1 ? cfg.stock1 : cfg.stock2), 1), dry = world.stock[c] <= cfg.depletedAt;
+      ctx.lineWidth = Math.max(1.5, cell * 0.09);
+      if (tt === 1) {
+        var s = cell * 0.84, x0 = cx - s / 2, y0 = cy - s / 2;
+        if (dry) { ctx.setLineDash([3, 3]); ctx.strokeStyle = rgba(COL.amber, 0.35); ctx.strokeRect(x0, y0, s, s); ctx.setLineDash([]); return; }
+        ctx.fillStyle = rgba(COL.amber, 0.12 + 0.7 * open * Math.max(full, 0.3)); ctx.fillRect(x0, y0 + s * (1 - open), s, s * open);
+        ctx.strokeStyle = rgba(COL.amber, 0.45 + 0.55 * full); ctx.strokeRect(x0, y0, s, s);
+      } else {
+        var d = cell * 1.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy - d); ctx.lineTo(cx + d, cy); ctx.lineTo(cx, cy + d); ctx.lineTo(cx - d, cy); ctx.closePath();
+        ctx.fillStyle = rgba(COL.violet, 0.10 + 0.6 * open * Math.max(full, 0.3)); ctx.fill();
+        if (open > 0.02) {
+          ctx.save(); ctx.clip(); ctx.fillStyle = rgba(COL.violet, 0.35 + 0.4 * open); ctx.fillRect(cx - d, cy + d - 2 * d * open, 2 * d, 2 * d * open); ctx.restore();
+        }
+        ctx.strokeStyle = rgba(COL.violet, dry ? 0.3 : 0.5 + 0.5 * full); ctx.stroke();
+      }
+    });
+    var E = cfg.reproThresh, hc = COL.hunger, fc = [244, 246, 255];
+    for (var a = 0; a < world.alive.length; a++) {
+      if (!world.alive[a]) continue;
+      var px = (world.y[a] + 0.5) * cell, py = (world.x[a] + 0.5) * cell, t = Math.max(0, Math.min(world.energy[a] / E, 1));
+      ctx.fillStyle = "rgb(" + Math.round(hc[0] + (fc[0] - hc[0]) * t) + "," + Math.round(hc[1] + (fc[1] - hc[1]) * t) + "," + Math.round(hc[2] + (fc[2] - hc[2]) * t) + ")";
+      ctx.beginPath(); ctx.arc(px, py, cell * 0.27, 0, 6.2832); ctx.fill();
+      ctx.lineWidth = 1; ctx.strokeStyle = "rgba(5,8,18,.7)"; ctx.stroke();
+      if (world.lastAct[a] === 5) {
+        var ct = world.ttype[world.x[a] * L + world.y[a]];
+        ctx.beginPath(); ctx.arc(px, py, cell * 0.5, 0, 6.2832);
+        ctx.strokeStyle = ct === 2 ? rgba(COL.violet, 0.95) : ct === 1 ? rgba(COL.amber, 0.95) : "rgba(233,237,248,.5)";
+        ctx.lineWidth = Math.max(1.5, cell * 0.08); ctx.stroke();
+      }
+    }
+  }
+
+  function chart(id, data, max, unit) {
+    var c = $(id), dpr = Math.min(window.devicePixelRatio || 1, 2), w = Math.round(c.clientWidth * dpr), h = Math.round(c.clientHeight * dpr);
+    if (!w || !h) return;
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+    var g = c.getContext("2d"); g.clearRect(0, 0, w, h);
+    var padL = 4 * dpr, padR = 30 * dpr, padT = 6 * dpr, padB = 6 * dpr, pw = w - padL - padR, ph = h - padT - padB;
+    g.font = (10 * dpr) + "px " + tok("--mono"); g.textBaseline = "middle"; g.fillStyle = COL.muted; g.strokeStyle = COL.line; g.lineWidth = 1;
+    [0, 0.5, 1].forEach(function (f) {
+      var y = padT + ph * (1 - f); g.beginPath(); g.moveTo(padL, y); g.lineTo(padL + pw, y); g.stroke();
+      g.fillText(String(Math.round(max * f)), padL + pw + 4 * dpr, y);
+    });
+    if (data.length < 2) return;
+    var n = data.length, pts = data.map(function (v, i) { return [padL + pw * (i / (KEEP - 1 > n - 1 ? Math.max(n - 1, 1) : KEEP - 1)), padT + ph * (1 - Math.min(v / max, 1))]; });
+    g.beginPath(); pts.forEach(function (p, i) { i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]); });
+    g.strokeStyle = COL.accent; g.lineWidth = 1.8 * dpr; g.stroke();
+    g.lineTo(pts[n - 1][0], padT + ph); g.lineTo(pts[0][0], padT + ph); g.closePath(); g.fillStyle = rgba(rgb(tok("--accent")), 0.14); g.fill();
+    g.beginPath(); g.arc(pts[n - 1][0], pts[n - 1][1], 3 * dpr, 0, 6.2832); g.fillStyle = COL.accent; g.fill();
+  }
+
+  var INST = [["Seeks grass", COL.grass], ["Follows the amber glow", COL.amber], ["Follows the violet glow", COL.violet], ["Opens small deposits", COL.amber], ["Opens big deposits", COL.violet]];
+  (function buildInst() {
+    var box = $("inst");
+    INST.forEach(function (it, i) {
+      var l = document.createElement("div"); l.textContent = it[0];
+      var tr = document.createElement("div"); tr.className = "track";
+      var f = document.createElement("div"); f.className = "fill"; f.id = "inst" + i; f.style.background = rgba(it[1], 0.9); tr.appendChild(f);
+      box.appendChild(l); box.appendChild(tr);
+    });
+  })();
+
+  function updateUi(force) {
+    var now = performance.now();
+    if (!force && now - lastUi < 150) return;
+    lastUi = now;
+    var m = metrics(), pop = world.count();
+    $("day").textContent = "Day " + world.t.toLocaleString() + "  ·  " + pop + " creatures";
+    var usedP = Math.round(m.used * 100);
+    $("bUsed").style.width = usedP + "%"; $("bWaste").style.width = (100 - usedP) + "%";
+    $("usedTxt").textContent = usedP + "% used, " + (100 - usedP) + "% wasted";
+    $("sGrass").style.width = Math.round(m.gc * 100) + "%"; $("sAmber").style.width = Math.round(m.g1 * 100) + "%"; $("sViolet").style.width = Math.round(m.g2 * 100) + "%";
+    $("srcTxt").textContent = "grass " + Math.round(m.gc * 100) + "% · small " + Math.round(m.g1 * 100) + "% · big " + Math.round(m.g2 * 100) + "%";
+    chart("chPop", hist.pop, world.cfg.maxPop); chart("chUsed", hist.used, 100); chart("chDep", hist.dep, 100);
+    var ex = state.selection === "expert", ins = instincts();
+    INST.forEach(function (it, i) {
+      var f = $("inst" + i), v = ex ? 0 : Math.max(-1.5, Math.min(1.5, ins[i])) / 1.5;
+      f.style.left = v >= 0 ? "50%" : (50 + v * 50) + "%"; f.style.width = Math.abs(v) * 50 + "%";
+    });
+    $("instNote").textContent = ex ? "The hand-coded forager has fixed rules, so there are no instincts to evolve." : "At the start these hover around zero because every creature is random. A bar to the right means creatures are drawn toward it, to the left means they avoid it.";
+    var sk = $("skipfill"); if (state.skipTarget) sk.style.width = Math.min(100, 100 * (world.t - state.skipStart) / (state.skipTarget - state.skipStart)) + "%";
+    narrate(false);
+  }
+
+  // ---- loop ----------------------------------------------------------------
+  function frame() {
+    if (state.playing) {
+      var skipping = state.skipTarget > 0, budget = skipping ? 28 : 11, want = skipping ? 1e9 : SPEEDS[state.speed], t0 = performance.now(), n = 0;
+      while (n < want) {
+        stepOnce(); n++;
+        if (skipping && world.t >= state.skipTarget) { state.skipTarget = 0; $("skipbar").hidden = true; break; }
+        if ((n & 7) === 0 && performance.now() - t0 > budget) break;
+        if (!state.playing) break;
+      }
+    }
+    draw(); updateUi(false);
+    requestAnimationFrame(frame);
+  }
+
+  // ---- controls ------------------------------------------------------------
+  function syncPlay() { var b = $("play"); b.textContent = state.playing ? "Pause" : "Play"; b.setAttribute("aria-pressed", String(state.playing)); }
+  $("play").addEventListener("click", function () { state.playing = !state.playing; syncPlay(); });
+  document.querySelectorAll('input[name="speed"]').forEach(function (r) { r.addEventListener("change", function () { state.speed = +r.value; }); });
+  $("skip").addEventListener("click", function () { state.skipStart = world.t; state.skipTarget = world.t + 5000; $("skipbar").hidden = false; $("skipfill").style.width = "0"; state.playing = true; syncPlay(); });
+  $("restart").addEventListener("click", function () { newWorld(); });
+  document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/BUTTON|INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { e.preventDefault(); $("play").click(); } });
+  function readRules() {
+    ["scarcity", "heredity", "mortality", "succession"].forEach(function (k) { state.rules[k] = $("r-" + k).checked; });
+    var r = document.querySelector('input[name="sel"]:checked'); state.selection = r ? r.value : "persistence";
+  }
+  function writeRules() {
+    ["scarcity", "heredity", "mortality", "succession"].forEach(function (k) { $("r-" + k).checked = state.rules[k]; });
+    $("s-" + state.selection).checked = true;
+  }
+  document.querySelectorAll('.rule input').forEach(function (el) { el.addEventListener("change", function () { readRules(); newWorld(); state.playing = true; syncPlay(); }); });
+  var PRESETS = {
+    natural: { rules: {}, sel: "persistence" }, drift: { rules: {}, sel: "drift" }, entropy: { rules: {}, sel: "entropy" }, expert: { rules: {}, sel: "expert" },
+    noheredity: { rules: { heredity: false }, sel: "persistence" }, plenty: { rules: { scarcity: false }, sel: "persistence" }
+  };
+  document.querySelectorAll(".preset").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var p = PRESETS[b.dataset.preset];
+      state.rules = Object.assign({ scarcity: true, heredity: true, mortality: true, succession: true }, p.rules); state.selection = p.sel;
+      writeRules(); newWorld(); state.playing = true; state.speed = 2; syncPlay();
+      document.getElementById("sp2").checked = true;
+      cv.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "nearest" });
+    });
+  });
+  cv.addEventListener("pointermove", function (e) {
+    var r = cv.getBoundingClientRect(), L = world.L, y = Math.floor((e.clientX - r.left) / r.width * L), x = Math.floor((e.clientY - r.top) / r.height * L);
+    if (x < 0 || y < 0 || x >= L || y >= L) return;
+    var c = x * L + y, parts = ["Grass " + Math.round(world.commons[c] * 100) + "%"], tt = world.ttype[c], n = 0, es = 0;
+    if (tt) parts.push((tt === 1 ? "Small" : "Big") + " deposit: " + (world.stock[c] <= world.cfg.depletedAt ? "used up" : Math.round(world.openness(c) * 100) + "% open, " + Math.round(world.stock[c]) + " energy left"));
+    for (var a = 0; a < world.alive.length; a++) if (world.alive[a] && world.x[a] === x && world.y[a] === y) { n++; es += world.energy[a]; }
+    if (n) parts.push(n + " creature" + (n > 1 ? "s" : "") + ", average energy " + (es / n).toFixed(1));
+    $("inspect").textContent = parts.join("  ·  ");
+  });
+  cv.addEventListener("pointerleave", function () { $("inspect").textContent = "Hover over the world to inspect a square."; });
+
+  // Open directly on a preset via #natural, #drift, ...  (plain hash names only)
+  syncPlay(); writeRules(); newWorld();
+  var h = (location.hash || "").slice(1);
+  if (PRESETS[h]) { var b = document.querySelector('.preset[data-preset="' + h + '"]'); if (b) b.click(); }
+  // Warm start: skip ahead a little so the first screen already shows structure.
+  window.__ag = { world: function () { return world; }, state: state };
+  requestAnimationFrame(frame);
+})();
+</script>

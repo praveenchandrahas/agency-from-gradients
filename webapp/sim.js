@@ -61,6 +61,7 @@
       this.lineage = new Int32Array(M);
       this.genome = new Float64Array(M * NG);
       this.spentAcc = new Float64Array(M);
+      this.lastAct = new Int8Array(M);
       this.t = 0;
       this.policy = null; // optional hand-coded forager
       this.stats = { gainC: 0, gain1: 0, gain2: 0, leak: 0, heat: 0, births: 0, deaths: 0 };
@@ -207,7 +208,7 @@
       let gC = 0, g1 = 0, g2 = 0, heat = 0, births = 0, deaths = 0;
       if (idx.length) {
         const acts = new Int8Array(idx.length), cost = new Float64Array(idx.length);
-        for (let k = 0; k < idx.length; k++) acts[k] = this._decide(idx[k]);
+        for (let k = 0; k < idx.length; k++) { acts[k] = this._decide(idx[k]); this.lastAct[idx[k]] = acts[k]; }
         this.cnt.fill(0);
         for (let k = 0; k < idx.length; k++) {
           const a = idx[k], act = acts[k];

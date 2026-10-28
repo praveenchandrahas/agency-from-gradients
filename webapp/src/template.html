@@ -1,0 +1,228 @@
+<title>Agency From Gradients</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout concept: one live world beside a plain-language narrator; rules and experiments underneath. */
+:root {
+  color-scheme: dark;
+  --bg: #0a0f1f;
+  --panel: #111a33;
+  --panel-2: #16213f;
+  --line: #26345c;
+  --fg: #e9edf8;
+  --muted: #9fabcb;
+  --canvas: #070b17;
+  --grass: #3ecf8e;
+  --amber: #f5a524;
+  --violet: #b690ff;
+  --hunger: #ff6b6b;
+  --accent: #8fb0ff;
+  --accent-ink: #0a1230;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); }
+body {
+  margin: 0; color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5;
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 4.6vw, 44px); line-height: 1.08; }
+h2 { font-size: 22px; }
+h3 { font-size: 16px; }
+p { margin: 0; }
+a { color: var(--accent); }
+.lede { color: var(--muted); font-size: 18px; max-width: 62ch; margin-top: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.stage { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; }
+.worldcard { padding: 12px; }
+#world { width: 100%; aspect-ratio: 1; display: block; background: var(--canvas); border-radius: 6px; touch-action: manipulation; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+button, select { font: inherit; color: var(--fg); }
+.btn { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; min-height: 40px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { padding: 8px 12px; cursor: pointer; background: var(--panel-2); font-size: 14px; min-height: 40px; display: flex; align-items: center; border-right: 1px solid var(--line); }
+.seg label:last-child { border-right: 0; }
+.seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.seg input:focus-visible + label { outline: 2px solid var(--fg); outline-offset: -3px; }
+.inspect { font-family: var(--mono); font-size: 12.5px; color: var(--muted); min-height: 1.5em; margin-top: 10px; }
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px 16px; margin-top: 12px; font-size: 14px; color: var(--muted); }
+.legend div { display: flex; gap: 10px; align-items: flex-start; }
+.legend b { color: var(--fg); font-weight: 600; }
+.sw { flex: none; width: 16px; height: 16px; margin-top: 3px; }
+.sw.grass { background: var(--grass); opacity: .7; border-radius: 2px; }
+.sw.amber { border: 2px solid var(--amber); border-radius: 2px; }
+.sw.violet { border: 2px solid var(--violet); transform: rotate(45deg) scale(.8); }
+.sw.dot { border-radius: 50%; background: linear-gradient(90deg, var(--hunger), #f4f6ff); }
+.sw.ring { border-radius: 50%; border: 2px solid var(--fg); }
+.sw.glow { border-radius: 50%; background: radial-gradient(circle, rgba(245,165,36,.7), rgba(182,144,255,.0) 70%); }
+.narr .headline { font-family: var(--display); font-size: 21px; line-height: 1.25; font-weight: 700; text-wrap: balance; }
+.narr .body { color: var(--muted); margin-top: 8px; }
+.narr .day { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+.bars { display: flex; flex-direction: column; gap: 14px; }
+.bar-label { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; margin-bottom: 4px; }
+.bar-label span:last-child { font-family: var(--mono); color: var(--muted); font-size: 12.5px; text-align: right; }
+.bar { display: flex; height: 16px; border-radius: 4px; overflow: hidden; background: var(--canvas); border: 1px solid var(--line); }
+.bar i { display: block; height: 100%; transition: width .25s linear; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 12px; }
+.chart h3 { font-size: 13px; font-family: var(--body); font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.chart canvas { width: 100%; height: 84px; display: block; }
+.inst { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 6px 12px; align-items: center; font-size: 14px; }
+.inst .track { position: relative; height: 12px; background: var(--canvas); border: 1px solid var(--line); border-radius: 3px; }
+.inst .track::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); opacity: .6; }
+.inst .fill { position: absolute; top: 0; bottom: 0; transition: all .25s linear; }
+.small { font-size: 13.5px; color: var(--muted); }
+.events { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.events li { display: flex; gap: 10px; }
+.events time { font-family: var(--mono); font-size: 12px; color: var(--muted); flex: none; padding-top: 2px; min-width: 64px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.rule { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.rule:last-child { border-bottom: 0; }
+.rule input { margin-top: 5px; width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.rule label { cursor: pointer; }
+.rule b { display: block; font-weight: 600; }
+.rule span { color: var(--muted); font-size: 14px; }
+.presets { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.preset { text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; }
+.preset:hover { border-color: var(--accent); }
+.preset b { font-family: var(--display); font-size: 16px; }
+.preset span { color: var(--muted); font-size: 14px; }
+.explain { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.explain p { color: var(--muted); }
+.explain h3 { margin-bottom: 6px; color: var(--fg); }
+.notice { border-left: 3px solid var(--amber); padding: 10px 14px; background: var(--panel); border-radius: 0 8px 8px 0; color: var(--muted); }
+.notice b { color: var(--fg); }
+.skip { height: 6px; background: var(--canvas); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+.skip i { display: block; height: 100%; width: 0; background: var(--accent); }
+footer { color: var(--muted); font-size: 14px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .bar i, .inst .fill { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">A small world, running live</div>
+    <h1>Agency from gradients</h1>
+    <p class="lede">Stars burn energy fast, yet most of it spills into empty space. This world asks what happens when creatures are never told what to want, only that those who run out of energy die and those with spare energy have children.</p>
+  </header>
+
+  <section class="stage" aria-label="Simulation">
+    <div class="col">
+      <div class="card worldcard">
+        <canvas id="world" width="640" height="640" role="img" aria-label="Live view of the simulated world: green grass, amber and violet energy deposits, and small creatures moving between them"></canvas>
+        <div class="inspect" id="inspect">Hover over the world to inspect a square.</div>
+        <div class="controls">
+          <button class="btn primary" id="play" type="button" aria-pressed="true">Pause</button>
+          <div class="seg" role="radiogroup" aria-label="Speed">
+            <input type="radio" name="speed" id="sp0" value="0"><label for="sp0">Slow</label>
+            <input type="radio" name="speed" id="sp1" value="1" checked><label for="sp1">Normal</label>
+            <input type="radio" name="speed" id="sp2" value="2"><label for="sp2">Fast</label>
+            <input type="radio" name="speed" id="sp3" value="3"><label for="sp3">Very fast</label>
+          </div>
+          <button class="btn" id="skip" type="button">Skip 5,000 days</button>
+          <button class="btn" id="restart" type="button">New world</button>
+        </div>
+        <div class="skip" id="skipbar" hidden><i id="skipfill"></i></div>
+        <div class="legend">
+          <div><span class="sw grass"></span><span><b>Grass.</b> Everyday sunshine energy. Brighter means more.</span></div>
+          <div><span class="sw dot"></span><span><b>Creatures.</b> Redder means hungrier. They start with random instincts.</span></div>
+          <div><span class="sw amber"></span><span><b>Small deposits.</b> Leftover energy that stays shut until a creature spends energy to open it.</span></div>
+          <div><span class="sw violet"></span><span><b>Big deposits.</b> Rich, but only several creatures working together can open them fully.</span></div>
+          <div><span class="sw ring"></span><span><b>Ring.</b> A creature is spending energy to open a deposit right now.</span></div>
+          <div><span class="sw glow"></span><span><b>Glow.</b> A faint scent of deposits that creatures can sense from afar.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card narr" aria-live="off">
+        <div class="day" id="day">Day 0</div>
+        <div class="headline" id="headline">Starting a new world.</div>
+        <p class="body" id="body"></p>
+        <ol class="events" id="events" aria-live="polite"></ol>
+      </div>
+
+      <div class="card bars">
+        <div>
+          <div class="bar-label"><span>Sunshine used or wasted</span><span id="usedTxt"></span></div>
+          <div class="bar" role="img" aria-label="Share of available energy that creatures used versus wasted"><i id="bUsed" style="background:var(--grass)"></i><i id="bWaste" style="background:#4b5878"></i></div>
+          <p class="small" style="margin-top:6px">Wasted means energy that grew or leaked away without anyone using it. Leftovers are the point of this world.</p>
+        </div>
+        <div>
+          <div class="bar-label"><span>Where creatures get their energy</span><span id="srcTxt"></span></div>
+          <div class="bar" role="img" aria-label="Share of creature energy from grass, small deposits and big deposits"><i id="sGrass" style="background:var(--grass)"></i><i id="sAmber" style="background:var(--amber)"></i><i id="sViolet" style="background:var(--violet)"></i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="charts">
+          <div class="chart"><h3>Creatures alive</h3><canvas id="chPop" aria-label="Chart of population over time"></canvas></div>
+          <div class="chart"><h3>Energy used, %</h3><canvas id="chUsed" aria-label="Chart of share of energy used over time"></canvas></div>
+          <div class="chart"><h3>From deposits, %</h3><canvas id="chDep" aria-label="Chart of share of energy from deposits over time"></canvas></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Instincts, averaged over all living creatures</h3>
+        <p class="small" style="margin:4px 0 10px" id="instNote">At the start these hover around zero because every creature is random. Bars to the right mean creatures are drawn toward it.</p>
+        <div class="inst" id="inst"></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="try">
+    <h2 id="try" style="margin-bottom:12px">Try something</h2>
+    <div class="presets">
+      <button class="preset" type="button" data-preset="natural"><b>Natural selection</b><span>Creatures with spare energy have children. Nothing else is rewarded. Use Very fast and wait a few thousand days.</span></button>
+      <button class="preset" type="button" data-preset="drift"><b>No selection</b><span>Children are born at random, whoever the parent is. This is the comparison that tells you whether selection did anything.</span></button>
+      <button class="preset" type="button" data-preset="entropy"><b>Reward burning energy</b><span>Instead of survival, the creatures that burn the most energy reproduce. Does rewarding the thing we measure help?</span></button>
+      <button class="preset" type="button" data-preset="expert"><b>A hand-coded expert</b><span>A forager we programmed by hand. It shows what a successful world could look like, with nothing evolved.</span></button>
+      <button class="preset" type="button" data-preset="noheredity"><b>No inheritance</b><span>Children start with random instincts instead of their parents'. Can anything build up?</span></button>
+      <button class="preset" type="button" data-preset="plenty"><b>Plenty of food</b><span>Make grass abundant. When life is easy, is there any pressure to find the hard deposits?</span></button>
+    </div>
+  </section>
+
+  <section class="grid2" aria-labelledby="rules">
+    <div class="card">
+      <h2 id="rules" style="margin-bottom:6px">Rules of this world</h2>
+      <p class="small" style="margin-bottom:8px">Changing a rule starts a new world.</p>
+      <div class="rule"><input type="checkbox" id="r-scarcity" checked><label for="r-scarcity"><b>Food is scarce</b><span>Grass grows slowly, so creatures compete for it.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-heredity" checked><label for="r-heredity"><b>Children inherit instincts</b><span>A child copies its parent, with a few small random changes.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-mortality" checked><label for="r-mortality"><b>Running out of energy is fatal</b><span>Also adds a small daily chance of dying by accident.</span></label></div>
+      <div class="rule"><input type="checkbox" id="r-succession" checked><label for="r-succession"><b>Big deposits form where small ones run dry</b><span>Each leftover is only available once the earlier one is used up.</span></label></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:6px">Who has children?</h2>
+      <p class="small" style="margin-bottom:8px">This is the only pressure in the world.</p>
+      <div class="rule"><input type="radio" name="sel" id="s-persistence" value="persistence" checked><label for="s-persistence"><b>Creatures with spare energy</b><span>Survival and surplus. Nothing tells them what to do.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-entropy" value="entropy"><label for="s-entropy"><b>Creatures that burn the most energy</b><span>Energy use is rewarded directly.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-drift" value="drift"><label for="s-drift"><b>Random creatures</b><span>No selection at all. The control.</span></label></div>
+      <div class="rule"><input type="radio" name="sel" id="s-expert" value="expert"><label for="s-expert"><b>Hand-coded forager</b><span>Fixed rules we wrote. Nothing evolves.</span></label></div>
+    </div>
+  </section>
+
+  <section class="explain" aria-labelledby="how">
+    <div><h3 id="how">What is going on</h3><p>Sunshine falls on the ground as grass. Whatever is not eaten leaks away. Creatures eat, spend energy to move, and die when they run out. A creature with spare energy has a child that copies its instincts with small random changes. Over many generations, instincts that help creatures survive become common.</p></div>
+    <div><h3>The leftovers</h3><p>Deposits hold energy that grass cannot provide. They need effort to open, and no creature is told to bother. The question is whether creatures that happen to bother end up with more children, and whether the habit spreads.</p></div>
+    <div><h3>Why it matters for AI</h3><p>Most AI systems are given a goal. Living things were not. The idea tested here is that agency may need the same starting conditions as life: scarcity, inheritance, real consequences for failing, and a ladder of harder energy sources to climb.</p></div>
+  </section>
+
+  <div class="notice"><b>What this is not.</b> It is a toy world, tuned until selection could act in it, and it does not show how life began or that AI will become agentic. The real experiments, with 30 random worlds per condition, preregistered hypotheses and every design change listed, are in the <a href="https://github.com/praveenchandrahas/agency-from-gradients" target="_blank" rel="noopener">project repository</a>. This page runs a JavaScript port of the same rules, so runs look like the Python ones but are not identical.</div>
+  <footer>Open source under Apache-2.0.</footer>
+</div>
+<script>{{SIM}}</script>
+<script>{{APP}}</script>
