@@ -126,3 +126,16 @@ def test_kappa_one_collapses_capture_ratio_towards_one():
     cfg = Config(steps=3000, kappa=1.0)
     s = World(cfg, 2).run().summary(passive_rate=_passive(cfg))
     assert 0.7 < s["capture_ratio"] < 1.15
+
+
+def test_contributor_sharing_closes_ledger_and_rewards_investors():
+    import numpy as np
+    from agency_gradients.config import Config
+    from agency_gradients.world import World
+
+    cfg = Config(steps=600, deposit_share="contributor")
+    w = World(cfg, seed=3)
+    for _ in range(600):
+        w.step()
+    assert abs(w.ledger_residual()) < 1e-6
+    assert np.all(w.contrib[~w.alive] >= 0)

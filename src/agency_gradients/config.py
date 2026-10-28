@@ -62,6 +62,10 @@ class Config:
     mut_sigma: float = 0.30
     mut_rate: float = 0.10         # fraction of genome entries perturbed per birth
     selection: str = "persistence"  # persistence | entropy | task | drift
+    # S6 (added after the confirmatory run; default reproduces S1-S5 exactly)
+    deposit_share: str = "equal"  # "equal": reservoir harvest split evenly on a cell; "contributor": split by recent investment
+    contrib_decay: float = 0.98    # per-step decay of an agent's investment trace
+    contrib_floor: float = 0.02    # weight of a non-investor relative to one unit of trace
     drift_restore: float = 0.05    # random-parents birth rate per missing individual
     entropy_repro_spent: float = 12.0  # entropy mode: energy burned per child
 

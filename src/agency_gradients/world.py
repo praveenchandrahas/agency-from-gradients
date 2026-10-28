@@ -107,6 +107,7 @@ class World:
         self.genome = np.zeros((m, n_params(cfg.policy)))
         self.spent_acc = np.zeros(m)
         self.commons_acc = np.zeros(m)
+        self.contrib = np.zeros(m)
 
         self.t = 0
         self.reproduce = True
@@ -190,6 +191,7 @@ class World:
         self.age[s] = 0
         self.spent_acc[s] = 0.0
         self.commons_acc[s] = 0.0
+        self.contrib[s] = 0.0
         self.lineage[s] = np.arange(k) if lineages is None else lineages[:k]
         return k
 
@@ -312,6 +314,9 @@ class World:
 
             # invest -> progress -> unlock
             m = (act == 5) & (self.ttype[x, y] > 0)
+            if cfg.deposit_share == "contributor":
+                self.contrib[idx] *= cfg.contrib_decay
+                self.contrib[idx[m]] += 1.0
             if m.any():
                 np.add.at(self.progress, (x[m], y[m]), 1.0)
                 lock = np.where(self.ttype == 1, cfg.lock1, cfg.lock2)
@@ -340,7 +345,12 @@ class World:
                   * self._openness()).ravel()
             tot_r = np.minimum(hr * cnt, self.stock.ravel())
             self.stock.ravel()[:] -= tot_r
-            g_r = tot_r[cell] / safe[cell]
+            if cfg.deposit_share == "contributor":
+                w = self.contrib[idx] + cfg.contrib_floor
+                W = np.bincount(cell, weights=w, minlength=L * L)
+                g_r = tot_r[cell] * w / W[cell]
+            else:
+                g_r = tot_r[cell] / safe[cell]
             t_at = self.ttype[x, y]
             g_1 = np.where(t_at == 1, g_r, 0.0)
             g_2 = np.where(t_at == 2, g_r, 0.0)
@@ -431,6 +441,7 @@ class World:
         self.age[s] = 0
         self.spent_acc[s] = 0.0
         self.commons_acc[s] = 0.0
+        self.contrib[s] = 0.0
         self.lineage[s] = self.lineage[parents]
         return k
 
