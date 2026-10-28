@@ -45,4 +45,4 @@ Falsified if `t2_reached(entropy) - t2_reached(persistence)` has a 95% CI above 
 
 ## Deviation log
 
-(none yet)
+- **Clarification (before results):** the `drift` control is called neutral in earlier text. It is not fully neutral: parents are random among the living, but starvation still removes genomes, so viability selection remains and only fecundity selection is removed. H1 is interpreted accordingly. No code or parameter changed. Comments in `src/` that say "neutral" will be corrected in a separate behaviour-neutral commit after the confirmatory run finishes.

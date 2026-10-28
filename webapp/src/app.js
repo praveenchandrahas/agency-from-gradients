@@ -89,6 +89,9 @@
     } else if (world.t < 200) {
       head = "The creatures wander at random.";
       body = "Each one burns energy just to exist and eats whatever grass it bumps into. None of them knows about deposits.";
+    } else if (world.t > 8000 && m.dep < 0.02 && (sel === "persistence" || sel === "entropy")) {
+      head = "Still ignoring the deposits after " + world.t.toLocaleString() + " days.";
+      body = "Survival alone has not led these creatures to open deposits in this world. In some worlds they find them and in others they do not. Check the instinct bars, then press New world to roll another.";
     } else if (m.g2 > 0.12) {
       head = "Big deposits now supply " + pct(m.g2) + " of all energy.";
       body = "Creatures are working together to keep them open. Only about " + pct(m.used) + " of the available sunshine is used, so most of it is still leftover.";
@@ -99,8 +102,8 @@
       head = "Hard times: the population has shrunk a lot.";
       body = "Grass alone cannot feed everyone. Whoever finds extra energy gets to have children.";
     } else if (sel === "drift") {
-      head = "No selection. Children are born at random.";
-      body = "Nothing rewards good behaviour, so instincts only drift. This is the baseline to compare against: if selection matters, the other worlds should beat this one over time.";
+      head = "Random parents. Having more energy gives no advantage.";
+      body = "Children are born at random among the creatures still alive. Starving still weeds out poor foragers, so some instincts improve, but nobody gets extra children for doing well. This is the baseline the other worlds are compared with.";
     } else if (sel === "entropy") {
       head = "Creatures that burn the most energy have children.";
       body = "Using energy is rewarded directly. Check whether that produces better foraging, or only restless creatures.";

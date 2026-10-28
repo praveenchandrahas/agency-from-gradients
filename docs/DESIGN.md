@@ -34,7 +34,7 @@ The gradient ladder (Tiers 1 and 2) is **not** a factor; see README limitation 5
 | `persistence` | agents whose energy reaches the reproduction threshold |
 | `entropy` | agents that have burned enough energy since their last birth (entropy used as a reward; the control the thesis argues against) |
 | `task` | agents that have eaten enough commons energy (a conventional task reward) |
-| `drift` | births restore the population toward its initial size; parents are chosen uniformly at random among the living |
+| `drift` | births restore the population toward its initial size; parents are chosen uniformly at random among the living. Not fully neutral: starvation still filters genomes, so only fecundity selection is removed |
 
 ## Metrics
 
@@ -72,7 +72,7 @@ All pilots used seeds >= 1000. None of these runs is confirmatory, but the chang
 3. Replaced the **latched unlock** with a maintained level. Under the latch, one lucky agent opened a site for everyone forever and unlock counts saturated whatever the policy.
 4. Added an **extrinsic death hazard** and **sparse mutation** to get more generations per run (about 35 generations in 30,000 steps was far too few).
 5. Made **openness graded**. A site that paid nothing until fully open was a needle in a haystack.
-6. Replaced the original **drift control**, which went extinct and so was not a usable null, with a population-restoring neutral model.
+6. Replaced the original **drift control**, which went extinct and so was not a usable null, with a population-restoring random-parents model (later found to retain viability selection, see Selection criteria).
 7. Made the commons **patchy**, so directed foraging pays immediately.
 8. Added a **hand-coded positive control** to measure headroom. Its first version went extinct because of two bugs in my code: it assumed the wrong observation order, and drained reservoirs looked "locked". Both fixed.
 9. Added the **equivariant policy** as the default after the MLP failed to evolve useful behaviour.

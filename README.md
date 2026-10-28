@@ -39,6 +39,32 @@ A torus with a population that lives, eats, invests, reproduces and dies, with n
 
 Full details, the metrics and the accounting caveats are in [`docs/DESIGN.md`](docs/DESIGN.md).
 
+## Try it live
+
+`webapp/index.html` is a single self-contained file. Open it in any browser, no install and no server. It runs the same world in JavaScript, in real time, and explains what you are seeing in plain language: a headline that narrates the current state, a "sunshine used or wasted" bar, where the creatures' energy comes from, and a panel of the creatures' average instincts. To host it, enable GitHub Pages on the `/webapp` folder.
+
+Four presets: **Survival only** (random creatures, selected by who survives and reproduces), **Hand-coded expert** (fixed rules we wrote, to show what success could look like), **Reward for burning energy**, and **Random parents** (a control).
+
+<p align="center"><img src="docs/screenshots/01-early-random-creatures.png" alt="Web app at day 60: creatures wander at random and get 98% of their energy from grass" width="100%"></p>
+
+**Day 60, survival-only world.** Every creature starts with random instincts. 98% of their energy is grass, and the instinct bars hover near zero. Large amounts of energy are still wasted.
+
+<p align="center"><img src="docs/screenshots/02-hand-coded-expert.png" alt="Web app with the hand-coded expert at day 2,500: 50% of energy from big deposits" width="100%"></p>
+
+**Hand-coded expert, day ~2,500.** Rules we wrote by hand walk toward food and glow and pay energy to open deposits. Here 50% of their energy comes from big deposits, and several creatures stand on each big deposit keeping it open. This is the positive control: it shows the world has headroom. Nothing evolves here.
+
+<p align="center"><img src="docs/screenshots/03-survival-only-evolved.png" alt="Web app after 30,000 days of survival-only evolution: some creatures have learned to open deposits" width="100%"></p>
+
+**Survival-only, day ~30,000.** In this run, inheritance has shifted the instincts: the "opens big deposits" bar moved right and 9% of energy now comes from big deposits. This is one stochastic example. In other runs, evolved creatures never use the deposits (we saw this in an earlier capture of the same preset), which is exactly why the confirmatory experiments use 30 seeds per condition rather than a picture.
+
+<p align="center"><img src="docs/screenshots/04-random-parents-control.png" alt="Web app, random-parents control at day 30,000: all energy from grass" width="100%"></p>
+
+**Random-parents control, day ~30,000.** Children are born to randomly chosen living creatures, so having more energy gives no advantage in having children. All energy is grass. Caveat: this is not a fully neutral control. Starving still removes some genomes, so viability selection remains and only fecundity selection is removed. See the note in the [pre-registration](PREREGISTRATION.md#deviation-log).
+
+<p align="center"><img src="docs/screenshots/05-phone.png" alt="Web app at phone width" width="320"></p>
+
+Reading the screenshots: they are single seeded runs chosen to illustrate the interface. They are not evidence for the thesis. The evidence, such as it is, is the preregistered experiments.
+
 ## Hypotheses and falsifiers
 
 Written down before any confirmatory run: [`PREREGISTRATION.md`](PREREGISTRATION.md).
@@ -70,7 +96,7 @@ Each experiment writes a CSV of every run and a Markdown report to `results/` (g
 
 ## What a pilot has and hasn't shown (seeds 1000-1003, not confirmatory)
 
-- The ledger closes and the world is not degenerate. A hand-coded forager reaches Tier 2 in every run and gets about 40% more entropy production than neutral drift (35.8 vs 25.3).
+- The ledger closes and the world is not degenerate. A hand-coded forager reaches Tier 2 in every run and gets about 40% more entropy production than the random-parents control (35.8 vs 25.3).
 - Evolved-from-random populations land in between (30.2), with Tier 2 reached in 2 of 4 runs. The confidence intervals overlap heavily at 4 seeds. This is a reason to run the real experiment, not a result.
 - Entropy-as-reward did **not** produce more entropy than persistence in the pilot (27.4 vs 30.2, overlapping CIs). I had expected it might breed "furnaces"; the pilot doesn't support that, and the preregistration doesn't claim it.
 - The world went through ten design changes because early pilots showed null results. They are listed in [`docs/DESIGN.md`](docs/DESIGN.md#design-history-forced-by-pilots). Readers should weigh that: a design tuned until selection beats drift tends to make selection beat drift.
@@ -82,7 +108,8 @@ Each experiment writes a CSV of every run and a Markdown report to `results/` (g
 3. **Capture Ratio is largely an accounting identity.** It depends on an assumed `kappa` (entropy per unit energy for agents vs passive leakage). S3 includes a `kappa = 1` row as a sanity check. The empirical quantities are the capture fraction and tier shares.
 4. **Viability restoration is not prediction.** And the raw evolved-vs-random gap is inflated by survivorship; only the full-vs-no-heredity contrast is interpretable (see the S4 docstring).
 5. **The gradient ladder is held fixed** in the factorial design, because removing it would make tier ascent false by construction. Its necessity is only probed by the S3 no-ladder control, which is not a test of agency.
-6. **The extrinsic death hazard** (needed for enough generations) is itself a built-in selection pressure.
+6. **The drift control is not fully neutral.** Parents are random among survivors, so starvation still filters genomes. Only fecundity selection is removed. H1 therefore measures the effect of fecundity selection on top of viability selection.
+7. **The extrinsic death hazard** (needed for enough generations) is itself a built-in selection pressure.
 
 ## Roadmap
 
@@ -102,8 +129,11 @@ src/agency_gradients/
   stats.py         bootstrap helpers (numpy only)
   runner.py        parallel job runner and CSV output
   experiments/     s0 ... s4, plus the positive control
+webapp/            browser version of the world (index.html is generated by build.py)
+analysis/          figure scripts
 tests/
 docs/DESIGN.md
+docs/screenshots/
 PREREGISTRATION.md
 ```
 
