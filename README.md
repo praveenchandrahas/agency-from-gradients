@@ -16,13 +16,14 @@ Selection is by persistence and reproduction only. Entropy production is measure
 
 | Piece | State |
 |---|---|
-| World engine (gradient ladder, asynchronous population, closed energy ledger) | Implemented, 29 tests |
+| World engine v1 (gradient ladder, asynchronous population, closed energy ledger) | Implemented, 46 tests |
 | S0: re-analysis of earlier Study 2 genome trajectories | Implemented against an **assumed** JSON schema; never run on the real files |
-| S1: selection criterion comparison | **Confirmatory run done** (30 seeds per cell) |
-| S2: 16-condition factorial ablation | **Confirmatory run done** (30 seeds per cell) |
-| S3: passive baseline, no-ladder control, accounting check | **Confirmatory run done** |
-| S4: agency probe (viability restoration) | **Confirmatory run done** |
-| Positive control (hand-coded forager) | **Confirmatory run done** |
+| S1-S4 and positive control | **Confirmatory run done** (30 seeds per cell). See results below |
+| S6: private benefit of opening deposits (free-rider test) | **Confirmatory run done**: not supported at this power |
+| World v2: ~2,070-gene recurrent policy, memory, heritable body traits, seasons, walls, danger zones, signalling | Implemented and tested (ledger closes, v1 unchanged bit for bit) |
+| S7: complex world over many generations | **Pilot only** (4 seeds, ~650 generations); a larger-world pilot is running; **not preregistered yet** |
+| S8: total entropy as an explicit objective | **Pilot only** (2 optimisation runs per kappa); preregistered, confirmatory run pending |
+| Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | Predictive-information probe | **Not implemented** |
 
@@ -81,6 +82,11 @@ python -m agency_gradients.experiments.s2_ablation
 python -m agency_gradients.experiments.s3_succession
 python -m agency_gradients.experiments.s4_agency
 
+# later experiments
+python -m agency_gradients.experiments.s6_private_benefit
+python -m agency_gradients.experiments.s7_complex_world --seeds 4 --seed0 1000      # pilot; 100,000 steps per run
+python -m agency_gradients.experiments.s8_entropy_objective --seeds 2 --seed0 1000  # pilot
+
 # S0 needs your saved files
 python -m agency_gradients.experiments.s0_reanalysis 'data/evo_*.json' --tier2-threshold 0.6
 ```
@@ -127,6 +133,49 @@ So the simple free-rider story is not confirmed. Something else makes inherited 
 <p align="center"><img src="figures/s3_accounting.png" alt="S3: accounting and ladder controls" width="100%"></p>
 <p align="center"><img src="figures/world_snapshots.png" alt="World snapshots" width="100%"></p>
 
+## World v2: a much bigger genome and many generations
+
+Prompted by the objection that agency will not evolve from a few dozen genes. `Config(world_v2=True)` (use `v2_config()`; the default world is unchanged) adds:
+
+- **A recurrent policy with memory** (`recurrent`, about 2,070 genes; `mlp2` feed-forward, about 1,400; `equivariant2`, the 29-gene control on the same world). Genomes include two heritable body traits: size (bigger bodies eat more and burn more) and reproduction threshold.
+- **Seasons** (commons regrowth rises and falls), **impassable walls**, **danger zones** with extra death risk, and a **pheromone channel**: a seventh action that leaves a decaying, diffusing signal other creatures can sense. Signalling costs energy.
+- **Two-scale random mutation**: frequent small point mutations plus rare large ones. `v2_config(scale=2)` quadruples the torus at constant density, so populations of about 200 give a 2,000-gene genome more mutational supply.
+- The energy ledger still closes (tested through every option). The pheromone is information, not energy.
+
+The hand-coded forager still runs in v2 (the first 37 observation channels are identical).
+
+### S7 pilot: has not shown anything yet
+
+4 seeds, 100,000 steps (about 650 generations on average), 5 variants (`docs/results/pilot/s7_*`):
+
+- The 2,070-gene recurrent policy did **not** find big deposits (tier-2 energy share about 0.1%), beat random parents on entropy rate (+4.9) but random parents went extinct in 1 of 4 runs, so that gap is confounded, and did *worse* than the 29-gene chemotaxis policy on the same world (-4.0).
+- Its learning curve was flat after about 40% of the run. This is a pilot with 4 seeds and is not evidence about the thesis. A larger-world pilot (about 200 agents, 200,000 steps) is running on GitHub Actions; S7 will be preregistered after it, and before any confirmatory run.
+
+## S8: what if entropy IS the objective? ([`PREREGISTRATION_S8.md`](PREREGISTRATION_S8.md))
+
+The reverse of everything above, on purpose. A single shared controller is optimised directly for the world's total entropy production with evolution strategies. Life forms eat and scavenge leftover energy exactly as before, but nothing rewards survival or reproduction. We then ask what behaviour the objective produces.
+
+Pilot (2 optimisation runs per kappa, seeds 1000-1001; **not confirmatory**, `docs/results/pilot/s8_*`):
+
+| kappa = 3 | entropy rate | capture fraction | big-deposit share | actions spent investing |
+|---|---|---|---|---|
+| optimised for entropy | 40.0 | 0.92 | 0.41 | 0.71 |
+| hand-coded forager | 29.0 | 0.49 | 0.63 | 0.27 |
+| random controller | 19.0 | 0.42 | 0.06 | 0.13 |
+| always move | 20.3 | 0.55 | 0.00 | 0.00 |
+| no life forms | 11.8 | 0.00 | 0.00 | 0.00 |
+
+- With entropy as the objective, the controller captures nearly everything (92%) and parks at the big deposits, spending 71% of its actions on investing. Investing is the costliest action, so it is also the most entropy-producing: this looks like a **furnace**, not a forager. It beats our best hand-written forager on the objective itself, which is exactly what an objective-maximiser should do.
+- At kappa = 1 the controller gained little (14.4 vs 11.0 for random, 15.3 for the forager) and the two runs disagreed (11.8 and 16.2). At kappa = 1 entropy is almost fixed by the energy inflow, so there is little to optimise.
+
+**Two cautions that apply to every S8 result.** (1) The objective counts agent dissipation as kappa times passive leakage, so "capture energy and burn it" scores higher by construction: S8 shows *which behaviour* maximises an assumed quantity, not that the assumption is right. (2) One shared controller removes the free-rider problem that blocked individual selection in S2 and S6. Cooperation is trivial when all agents run the same rule, so S8 cannot be read as "objective-driven evolution solves cooperation".
+
+The objective can be gamed, which is the point of testing it: an explicit entropy goal selects for burning energy, not for anything we would call agency.
+
+## Reproducing on GitHub Actions (no tokens, no local compute)
+
+All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S1-S4 and the control), `complex-world-runs` (S6 and the five S7 variants), `s7-custom` (free-form S7 pilots, scaled worlds), `s8-entropy-objective` (S8), and `pages` (publishes the explainer and the grid view). Each uploads its results as artifacts and also commits them to a `ci-results` branch, so they can be read without downloading artifacts.
+
 ## Notes from the pilot (seeds 1000-1003, not confirmatory)
 
 - The world went through ten design changes because early pilots showed null results. They are listed in [`docs/DESIGN.md`](docs/DESIGN.md#design-history-forced-by-pilots). A design tuned until selection beats random parents tends to make selection beat random parents, so weigh H1 with that in mind. H2 failing despite this tuning is some evidence the tuning did not simply guarantee the thesis.
@@ -140,11 +189,16 @@ So the simple free-rider story is not confirmed. Something else makes inherited 
 4. **Viability restoration is not prediction.** And the raw evolved-vs-random gap is inflated by survivorship; only the full-vs-no-heredity contrast is interpretable (see the S4 docstring).
 5. **The gradient ladder is held fixed** in the factorial design, because removing it would make tier ascent false by construction. Its necessity is only probed by the S3 no-ladder control, which is not a test of agency.
 6. **The drift control is not fully neutral.** Parents are random among survivors, so starvation still filters genomes. Only fecundity selection is removed. H1 therefore measures the effect of fecundity selection on top of viability selection.
-7. **The extrinsic death hazard** (needed for enough generations) is itself a built-in selection pressure.
+7. **S8's objective is an assumption wearing a measurement's clothes.** Entropy counts agent dissipation at kappa times passive leakage, so energy capture is rewarded by construction, and a shared controller sidesteps cooperation problems that individual selection faces.
+8. **World v2 is untested at scale.** The large-genome pilot has not shown the behaviour the thesis predicts, and we do not yet know whether that is the world, the mutation model, population size, or the number of generations.
+9. **The extrinsic death hazard** (needed for enough generations) is itself a built-in selection pressure.
 
 ## Roadmap
 
-- Test the free-rider explanation for H2 directly (for example, make deposit benefits private or kin-shared, and see whether big-deposit access recovers under heredity and mortality).
+- S7: finish the larger-world pilot, then preregister and run the confirmatory comparison of the recurrent policy against random parents and the small policy.
+- S8: confirmatory run (5 optimisation runs per kappa), then a behaviour analysis of what the optimised controllers actually do.
+- If big deposits are still not found under individual selection: kin sharing (benefits shared among relatives), larger populations, and sexual recombination.
+- Bring the v2 world into the explainer's pond.
 - S5: add an efficiency pathway and deplete gradients, to see whether populations go thermodynamically quiet (Barrow's miniaturisation counter-argument).
 - Predictive-information probe, which needs the MLP policy to evolve (or a memory-bearing equivariant variant).
 - Run S0 on the real Study 2 trajectories.
@@ -156,17 +210,21 @@ src/agency_gradients/
   config.py        every knob; a run is fully described by (Config, seed)
   world.py         the engine and its energy ledger
   controls.py      hand-coded positive control
+  world_v2.py      the richer world (recurrent policy, signalling, seasons, walls, danger)
+  policies_v2.py   v2 policies and heritable traits
   probes.py        viability-restoration probe
   stats.py         bootstrap helpers (numpy only)
   runner.py        parallel job runner and CSV output
-  experiments/     s0 ... s4, plus the positive control
+  experiments/     s0 ... s4, s6, s7, s8, plus the positive control
 webapp/            browser version of the world, technical grid view (index.html is generated by build.py)
 explainer/         plain-language scroll page with a live pond (index.html is generated by build.py)
 analysis/          figure scripts
 tests/
 docs/DESIGN.md
+docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
-PREREGISTRATION.md
+PREREGISTRATION.md   H1-H5
+PREREGISTRATION_S6.md, PREREGISTRATION_S8.md   (S7 will follow its larger-world pilot)
 ```
 
 ## License

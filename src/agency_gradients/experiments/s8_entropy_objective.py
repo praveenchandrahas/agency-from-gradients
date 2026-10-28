@@ -169,6 +169,29 @@ def main(argv=None):
             v = [r[m] for r in rs]
             cells.append("{} [{}, {}]".format(*[fmt(x) for x in bootstrap_mean_ci(v)]) if len(v) > 2 else fmt(np.mean(v)))
         L.append(f"| {c} | " + " | ".join(cells) + " |")
+    # pre-registered contrasts (PREREGISTRATION_S8.md): bootstrap over ES runs
+    L += ["", "## Pre-registered contrasts (mean over ES runs, 95% bootstrap CI)", ""]
+
+    def opt(k):
+        return [r for r in rows if r["condition"] == f"optimised, kappa={k:g}"]
+
+    def base(name, k):
+        return [r for r in rows if r["condition"] == f"{name}, kappa={k:g}"][0]
+
+    def line(label, vals):
+        m, lo, hi = bootstrap_mean_ci(vals)
+        L.append(f"- {label}: {fmt(m)} [{fmt(lo)}, {fmt(hi)}]")
+
+    if 3.0 in kappas:
+        line("H8a  optimised - hand-coded forager (kappa=3), entropy rate", [r["fitness"] - base("hand-coded forager", 3)["fitness"] for r in opt(3)])
+        line("H8b  optimised - hand-coded forager (kappa=3), share of actions spent investing", [r["act_invest"] - base("hand-coded forager", 3)["act_invest"] for r in opt(3)])
+    if 3.0 in kappas and 1.0 in kappas:
+        g3 = [r["fitness"] - base("random controller", 3)["fitness"] for r in opt(3)]
+        g1 = [r["fitness"] - base("random controller", 1)["fitness"] for r in opt(1)]
+        rng = np.random.default_rng(0)
+        diffs = [np.mean(rng.choice(g3, len(g3))) - np.mean(rng.choice(g1, len(g1))) for _ in range(4000)]
+        L.append(f"- H8c  gain over random controller, kappa=3 minus kappa=1: {fmt(np.mean(g3) - np.mean(g1))} "
+                 f"[{fmt(np.percentile(diffs, 2.5))}, {fmt(np.percentile(diffs, 97.5))}]")
     emit(L, f"{args.out}/s8_report.md")
 
 

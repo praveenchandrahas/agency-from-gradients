@@ -77,3 +77,32 @@ All pilots used seeds >= 1000. None of these runs is confirmatory, but the chang
 8. Added a **hand-coded positive control** to measure headroom. Its first version went extinct because of two bugs in my code: it assumed the wrong observation order, and drained reservoirs looked "locked". Both fixed.
 9. Added the **equivariant policy** as the default after the MLP failed to evolve useful behaviour.
 10. Corrected the **S4 null**. A smoke run showed `delta_recovered > 0` even with no heredity, from survivorship bias; the interpretable quantity is the full-vs-no-heredity contrast.
+
+11. **S6 sharing rule** (`deposit_share="contributor"`): reservoir harvest on a cell split by each agent's decaying investment trace (decay 0.98, floor 0.02) instead of evenly. Default `"equal"` reproduces S1-S5 bit for bit (checked on seed 0 against the confirmatory CSV). Parameters fixed before the S6 run.
+12. **World v2** (`world_v2=True`, `world_v2.py`, `policies_v2.py`). Added after the main run showed that evolved populations did not use big deposits and the objection that a few dozen genes is too few.
+
+## World v2
+
+| Addition | Detail |
+|---|---|
+| Observation (54) | The 37 v1 inputs unchanged (so the v1 forager works), then wall, danger and signal channels over the five visible cells, and season sin/cos |
+| Actions (7) | v1 actions plus **signal** (costs `signal_cost` energy, dissipated as heat) |
+| Policies | `recurrent` (hidden 24, tanh, ~2,070 genes), `mlp2` (~1,400), `equivariant2` (29, the small prior-laden policy on the same world) |
+| Heritable traits | Two genes after the policy weights: body size in [0.5, 1.5] (scales metabolism, eating share and bite) and reproduction-threshold multiplier in [0.5, 1.5] |
+| Seasons | Commons regrowth multiplied by `1 + season_amp sin(2 pi t / season_period)`; injection counted from the same field, so the ledger closes |
+| Terrain | `n_walls` line segments of `wall_len` cells, never on reservoir sites; a move into a wall is blocked (cost still paid); gaps leave the torus connected |
+| Danger | `n_danger` discs; extra death probability `danger_hazard` per step (only with mortality on) |
+| Pheromone | Field decays (`signal_decay`) and diffuses (`signal_diffuse`); information only, not in the ledger |
+| Mutation | Per-gene small mutation (`mut_rate`, `mut_sigma`) plus rare large mutation (`mut_big_p`, `mut_big_sigma`). `v2_config()` uses 0.02 / 0.10 / 0.0005 / 1.0 |
+| Scale | `v2_config(scale=k)` multiplies the torus side by k and every count by k squared, keeping densities |
+| Metrics added | `signal_rate`, `size_mean`, `repro_mult_mean`, `gen_mean` (mean generations of descent), `n_genes`, early-vs-late entropy rate and tier-2 share |
+
+Tests: the ledger closes for all three v2 policies with mortality on/off, contributor sharing and no succession; walls block; the default v1 summary is unchanged by the v2 code; a v2 run exceeds 2,000 genes and more than 10 generations.
+
+## S8: entropy as an explicit objective
+
+A shared controller (all life forms run the same genome) is optimised by evolution strategies (antithetic sampling, centred-rank fitness, common random numbers within a generation). Fitness is the mean of `leak + kappa x heat` over an episode after a burn-in. No births, no extrinsic hazard; starvation is the only death. Behaviour is characterised by action shares (move, stay, invest), capture fraction, leak share, tier shares and population. Baselines: random controller, hand-coded forager, always-invest, always-move, no life forms. See `PREREGISTRATION_S8.md`. The kappa = 1 arm is the control for the accounting assumption.
+
+## Plain-language explainer
+
+`explainer/` builds a single page with the same JavaScript engine as the grid view (`webapp/sim.js`), drawn as swimming creatures, grass motes, wells and embers. Creature colours are founding families. It is not a different model, only a different rendering. The what-if explorer replays the S2 per-condition table; nothing in it is simulated live.
