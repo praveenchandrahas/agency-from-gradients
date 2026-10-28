@@ -1,0 +1,182 @@
+<title>Leftover Energy</title>
+<meta name="description" content="Why life exists, and what happens when you give a simulated creature the same starting conditions. A plain-language explainer with live simulations.">
+<style>
+:root{
+  --bg:#06141c; --bg2:#0a1f2b; --ink:#e8f3f1; --ink2:#a9c3c4; --mute:#6f8d93; --line:#16323d;
+  --moss:#7bd88f; --amber:#f2b45a; --violet:#a98bff; --ember:#ff8a5c; --warm:#ffd9a8;
+  --card:#0b2230; --focus:#9fe3ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{font-family:ui-serif,Georgia,"Iowan Old Style","Palatino Linotype",serif;font-weight:600;line-height:1.15;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(2.3rem,6vw,4.1rem);margin:0 0 .4em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);margin:0 0 .5em}
+h3{font-size:1.15rem;margin:0 0 .3em}
+p{margin:.6em 0;max-width:66ch;color:var(--ink2);text-wrap:pretty}
+p strong,li strong{color:var(--ink);font-weight:600}
+a{color:var(--focus)}
+section{padding-block:clamp(40px,8vw,88px)}
+.eyebrow{font:600 .74rem/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--moss);margin-bottom:14px}
+.hero{padding-top:clamp(36px,7vw,80px)}
+.lede{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--ink2);max-width:58ch}
+.card{background:linear-gradient(180deg,var(--card),#081b26);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,2.4vw,22px)}
+.stage{position:relative;border-radius:14px;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#0f3140 0%,#071a24 55%,#04101a 100%);border:1px solid var(--line)}
+canvas{display:block;width:100%;height:auto;touch-action:manipulation}
+.pond-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:820px){.pond-grid{grid-template-columns:minmax(0,1fr)}}
+.say{min-height:5.6em}
+.say b{display:block;font:600 1.3rem/1.25 ui-serif,Georgia,serif;color:var(--ink);margin-bottom:.2em}
+.say span{color:var(--ink2);font-size:.98rem}
+.day{font:500 .8rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute);letter-spacing:.04em}
+.meter{margin:16px 0}
+.meter .lab{display:flex;justify-content:space-between;gap:10px;font-size:.92rem;color:var(--ink)}
+.meter .lab em{font-style:normal;color:var(--mute);font-variant-numeric:tabular-nums}
+.bar{display:flex;height:12px;border-radius:7px;overflow:hidden;background:#12303c;margin-top:6px;gap:2px}
+.bar i{display:block;height:100%;transition:width .4s}
+.note{font-size:.86rem;color:var(--mute);margin:.35em 0 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+button,select{font:inherit;font-size:.92rem;color:var(--ink);background:#0f2b39;border:1px solid #1d4252;border-radius:10px;padding:9px 14px;cursor:pointer;min-height:42px}
+button:hover,select:hover{background:#143648}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button.on{background:#1d5b73;border-color:#3a8aa6}
+.seg{display:inline-flex;border:1px solid #1d4252;border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;border-right:1px solid #1d4252}.seg button:last-child{border-right:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:.84rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.ring{width:13px;height:13px;border-radius:50%;border:2px solid;display:inline-block}
+.slider{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+input[type=range]{flex:1;min-width:180px;accent-color:#7bd88f;height:28px}
+.big{font:600 clamp(1.8rem,4vw,2.6rem)/1 ui-serif,Georgia,serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.finding{margin-top:26px;border-left:3px solid var(--moss);padding:4px 0 4px 18px}
+.finding.bad{border-color:var(--ember)}
+.finding.mid{border-color:var(--amber)}
+.finding h3{margin-bottom:.2em}
+.toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+@media(max-width:560px){.toggles{grid-template-columns:1fr}}
+.tg{display:flex;gap:10px;align-items:flex-start;background:#0d2735;border:1px solid #1b3f4e;border-radius:12px;padding:12px;cursor:pointer;min-height:64px}
+.tg input{margin-top:5px;accent-color:#7bd88f;width:18px;height:18px;flex:none}
+.tg b{display:block;font-weight:600;color:var(--ink);font-size:.95rem}
+.tg span{font-size:.82rem;color:var(--mute);line-height:1.35}
+.dots{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:6px;max-width:520px;margin:12px 0 6px}
+.dots i{aspect-ratio:1;border-radius:50%;background:#143040;display:block;transition:background .25s,transform .25s}
+.dots i.hit{background:var(--amber);box-shadow:0 0 10px rgba(242,180,90,.5)}
+.limits li{margin:.5em 0;color:var(--ink2)}
+.limits{max-width:70ch;padding-left:1.1em}
+footer{padding-block:40px 70px;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
+.sr{position:absolute;left:-9999px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">An explainer, with live simulations</div>
+    <h1>Where does the leftover energy go?</h1>
+    <p class="lede">Stars burn fast and waste most of what they make. Life is what grew to catch the scraps. This page asks a simple question: if we want an artificial mind, should we copy the <em>conditions</em> that produced life, instead of handing it a goal?</p>
+    <p class="note">One honest note first: these are small toy worlds. They test an idea. They do not prove anything about Earth.</p>
+  </header>
+
+  <section id="waste">
+    <div class="eyebrow">1 · The idea</div>
+    <h2>Energy always spills.</h2>
+    <p>Think of water falling down a staircase of pools. Each pool catches some and lets the rest spill over. What spills past the last pool is gone into the dark. Move the slider to add more mills that catch the spill.</p>
+    <div class="card">
+      <div class="stage"><canvas id="fall" width="960" height="420" aria-label="Animation: droplets of energy falling through three pools, some caught by mills and some spilling into the dark"></canvas></div>
+      <div class="slider"><label for="catch" style="color:var(--ink)">Life forms catching the spill</label><input id="catch" type="range" min="0" max="95" value="0"><div class="big" id="usedbig" aria-live="polite">0%</div></div>
+      <p class="note">Illustration, not a simulation: it shows only the idea of capture. Each pool catches the same share of what reaches it.</p>
+    </div>
+  </section>
+
+  <section id="pondsec">
+    <div class="eyebrow">2 · The live pond</div>
+    <h2>Now give creatures the same conditions.</h2>
+    <p>This pond runs the real model from our research code. Creatures eat the glowing grass. They also find <strong style="color:var(--amber)">small wells</strong> and <strong style="color:var(--violet)">big wells</strong>, which stay shut unless creatures spend energy to hold them open. Wasted energy rises away as embers. Nobody is told what to want: creatures that gather enough energy have children, those that starve disappear, and children inherit their parent's instincts with small random changes. Press <strong>Very fast</strong> and watch.</p>
+    <div class="card">
+      <div class="pond-grid">
+        <div>
+          <div class="stage"><canvas id="pond" width="900" height="900" aria-label="Live simulation of creatures swimming and eating energy in a pond"></canvas></div>
+          <div class="controls">
+            <button id="play" class="on">Pause</button>
+            <div class="seg" role="group" aria-label="Speed"><button data-sp="0">Slow</button><button data-sp="1" class="on">Normal</button><button data-sp="2">Fast</button><button data-sp="3">Very fast</button></div>
+            <select id="preset" aria-label="Which kind of creatures"><option value="natural">Creatures start random and evolve</option><option value="expert">Hand-coded expert (what success looks like)</option><option value="drift">Random parents (comparison)</option></select>
+            <button id="again">New pond</button>
+          </div>
+          <div class="legend" aria-label="Legend">
+            <span><i class="dot" style="background:#9be58a"></i>Grass energy</span>
+            <span><i class="ring" style="border-color:var(--amber)"></i>Small well</span>
+            <span><i class="ring" style="border-color:var(--violet)"></i>Big well</span>
+            <span><i class="dot" style="background:#ffa37a"></i>Creature (colour = family)</span>
+            <span><i class="dot" style="background:var(--ember)"></i>Wasted energy</span>
+          </div>
+        </div>
+        <div>
+          <div class="day" id="day">Day 0</div>
+          <div class="say" aria-live="polite"><b id="head">Creatures wander at random.</b><span id="sub"></span></div>
+          <div class="meter"><div class="lab"><span>Energy used or wasted</span><em id="usedtxt"></em></div>
+            <div class="bar"><i id="b-used" style="background:var(--moss);width:0"></i><i id="b-waste" style="background:#6a3d34;flex:1"></i></div>
+            <p class="note">Wasted means it grew or leaked away without anyone using it.</p></div>
+          <div class="meter"><div class="lab"><span>Where creatures get their energy</span><em id="srctxt"></em></div>
+            <div class="bar"><i id="b-grass" style="background:var(--moss);width:100%"></i><i id="b-small" style="background:var(--amber);width:0"></i><i id="b-big" style="background:var(--violet);width:0"></i></div></div>
+          <div class="meter"><div class="lab"><span>Creatures alive</span><em id="poptxt"></em></div>
+            <div class="bar"><i id="b-pop" style="background:#5fb4d6;width:0"></i></div>
+            <p class="note" id="fam"></p></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Each run is one random example. Another pond can go very differently, which is why the next section uses 30 ponds per setting rather than a picture.</p>
+  </section>
+
+  <section id="results">
+    <div class="eyebrow">3 · What we found</div>
+    <h2>Mostly not what we predicted.</h2>
+    <p>We wrote down our predictions before running anything, then ran 30 ponds for each setting. Here is the plain-language version. Full numbers and caveats are in the repository.</p>
+
+    <div class="finding mid"><h3>Survival alone helped a little, not a lot.</h3>
+      <p>Creatures selected only by surviving and having children scored about <strong>9% higher</strong> on our energy-use measure than creatures whose parents were chosen at random. A real but small effect.</p></div>
+    <div class="finding"><h3>The world has room to do much better.</h3>
+      <p>A forager we programmed by hand gets about half its energy from the big wells, and it finds them in <strong>every one</strong> of 30 ponds. Evolved creatures got about 2% of their energy there. So most of the available leftover energy went unused.</p></div>
+    <div class="finding bad"><h3>Our main prediction failed.</h3>
+      <p>We predicted that scarce food, inheritance, and the real cost of dying would each be <em>needed</em> to reach the big wells. The opposite happened. Removing any of them made it <em>easier</em> to find them. Try it below.</p></div>
+
+    <div class="card" style="margin-top:20px">
+      <h3>Switch conditions on and off</h3>
+      <p class="note" style="margin-top:0">Each dot is one of 30 ponds. A lit dot means a creature opened a big well at least once. Real results, not a simulation.</p>
+      <div class="toggles">
+        <label class="tg"><input type="checkbox" id="t-scar" checked><div><b>Food is scarce</b><span>Off: grass is plentiful</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-her" checked><div><b>Children inherit instincts</b><span>Off: every child gets random instincts</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-mor" checked><div><b>Starvation is fatal</b><span>Off: creatures are rescued when they run out</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-suc" checked><div><b>Big wells form where small ones run dry</b><span>Off: big wells exist from day one</span></div></label>
+      </div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <div class="big" id="dotsbig" aria-live="polite"></div>
+      <p class="note" id="dotsnote"></p>
+      <p class="note">Caution: "opened at least once" is a generous test. It does not mean the creatures kept using the big wells. With everything switched on, they get only a few percent of their energy from them.</p>
+    </div>
+
+    <div class="finding mid"><h3>One idea we tested and could not confirm.</h3>
+      <p>We guessed that opening a well is a favour to everyone nearby, so selection punishes the creature that pays for it. We tested that by letting the opener keep most of the reward. It moved in the predicted direction, but not by enough to be sure it was real at 30 ponds.</p></div>
+  </section>
+
+  <section id="limits">
+    <div class="eyebrow">4 · What this does not show</div>
+    <h2>Read this part.</h2>
+    <ul class="limits">
+      <li><strong>It is a toy.</strong> Whether these ingredients are what mattered on Earth is an assumption.</li>
+      <li><strong>The creatures' brains are tiny and shaped to follow gradients.</strong> A generic network did not learn useful behaviour in our budget, so "evolved" here means a small, well-shaped controller got tuned.</li>
+      <li><strong>The energy accounting involves an assumption.</strong> We count a creature burning energy as producing more entropy than the same energy leaking away. That choice makes "capture it" look good by definition.</li>
+      <li><strong>The design was adjusted after early failures.</strong> A world tuned until selection beats chance tends to show selection beating chance.</li>
+      <li><strong>We are not claiming novelty.</strong> This is a test of an old idea, not a discovery of it.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Code, data, and the full pre-registered analysis: <a href="https://github.com/praveenchandrahas/agency-from-gradients">github.com/praveenchandrahas/agency-from-gradients</a>. The technical grid view of the same model is the <a href="lab/">lab</a>.</p>
+  </footer>
+</div>
+<script>{{SIM}}</script>
+<script>{{APP}}</script>

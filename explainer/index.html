@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Leftover Energy</title><meta name="description" content="Why life exists, and what happens when you give a simulated creature the same starting conditions. A plain-language explainer with live simulations."></head><body>
+
+<style>
+:root{
+  --bg:#06141c; --bg2:#0a1f2b; --ink:#e8f3f1; --ink2:#a9c3c4; --mute:#6f8d93; --line:#16323d;
+  --moss:#7bd88f; --amber:#f2b45a; --violet:#a98bff; --ember:#ff8a5c; --warm:#ffd9a8;
+  --card:#0b2230; --focus:#9fe3ff; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto}
+h1,h2,h3{font-family:ui-serif,Georgia,"Iowan Old Style","Palatino Linotype",serif;font-weight:600;line-height:1.15;letter-spacing:-.01em;text-wrap:balance}
+h1{font-size:clamp(2.3rem,6vw,4.1rem);margin:0 0 .4em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);margin:0 0 .5em}
+h3{font-size:1.15rem;margin:0 0 .3em}
+p{margin:.6em 0;max-width:66ch;color:var(--ink2);text-wrap:pretty}
+p strong,li strong{color:var(--ink);font-weight:600}
+a{color:var(--focus)}
+section{padding-block:clamp(40px,8vw,88px)}
+.eyebrow{font:600 .74rem/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--moss);margin-bottom:14px}
+.hero{padding-top:clamp(36px,7vw,80px)}
+.lede{font-size:clamp(1.05rem,2vw,1.3rem);color:var(--ink2);max-width:58ch}
+.card{background:linear-gradient(180deg,var(--card),#081b26);border:1px solid var(--line);border-radius:18px;padding:clamp(14px,2.4vw,22px)}
+.stage{position:relative;border-radius:14px;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#0f3140 0%,#071a24 55%,#04101a 100%);border:1px solid var(--line)}
+canvas{display:block;width:100%;height:auto;touch-action:manipulation}
+.pond-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:820px){.pond-grid{grid-template-columns:minmax(0,1fr)}}
+.say{min-height:5.6em}
+.say b{display:block;font:600 1.3rem/1.25 ui-serif,Georgia,serif;color:var(--ink);margin-bottom:.2em}
+.say span{color:var(--ink2);font-size:.98rem}
+.day{font:500 .8rem ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute);letter-spacing:.04em}
+.meter{margin:16px 0}
+.meter .lab{display:flex;justify-content:space-between;gap:10px;font-size:.92rem;color:var(--ink)}
+.meter .lab em{font-style:normal;color:var(--mute);font-variant-numeric:tabular-nums}
+.bar{display:flex;height:12px;border-radius:7px;overflow:hidden;background:#12303c;margin-top:6px;gap:2px}
+.bar i{display:block;height:100%;transition:width .4s}
+.note{font-size:.86rem;color:var(--mute);margin:.35em 0 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+button,select{font:inherit;font-size:.92rem;color:var(--ink);background:#0f2b39;border:1px solid #1d4252;border-radius:10px;padding:9px 14px;cursor:pointer;min-height:42px}
+button:hover,select:hover{background:#143648}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button.on{background:#1d5b73;border-color:#3a8aa6}
+.seg{display:inline-flex;border:1px solid #1d4252;border-radius:10px;overflow:hidden}
+.seg button{border:0;border-radius:0;border-right:1px solid #1d4252}.seg button:last-child{border-right:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:.84rem;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.ring{width:13px;height:13px;border-radius:50%;border:2px solid;display:inline-block}
+.slider{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap}
+input[type=range]{flex:1;min-width:180px;accent-color:#7bd88f;height:28px}
+.big{font:600 clamp(1.8rem,4vw,2.6rem)/1 ui-serif,Georgia,serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.finding{margin-top:26px;border-left:3px solid var(--moss);padding:4px 0 4px 18px}
+.finding.bad{border-color:var(--ember)}
+.finding.mid{border-color:var(--amber)}
+.finding h3{margin-bottom:.2em}
+.toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+@media(max-width:560px){.toggles{grid-template-columns:1fr}}
+.tg{display:flex;gap:10px;align-items:flex-start;background:#0d2735;border:1px solid #1b3f4e;border-radius:12px;padding:12px;cursor:pointer;min-height:64px}
+.tg input{margin-top:5px;accent-color:#7bd88f;width:18px;height:18px;flex:none}
+.tg b{display:block;font-weight:600;color:var(--ink);font-size:.95rem}
+.tg span{font-size:.82rem;color:var(--mute);line-height:1.35}
+.dots{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:6px;max-width:520px;margin:12px 0 6px}
+.dots i{aspect-ratio:1;border-radius:50%;background:#143040;display:block;transition:background .25s,transform .25s}
+.dots i.hit{background:var(--amber);box-shadow:0 0 10px rgba(242,180,90,.5)}
+.limits li{margin:.5em 0;color:var(--ink2)}
+.limits{max-width:70ch;padding-left:1.1em}
+footer{padding-block:40px 70px;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
+.sr{position:absolute;left:-9999px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">An explainer, with live simulations</div>
+    <h1>Where does the leftover energy go?</h1>
+    <p class="lede">Stars burn fast and waste most of what they make. Life is what grew to catch the scraps. This page asks a simple question: if we want an artificial mind, should we copy the <em>conditions</em> that produced life, instead of handing it a goal?</p>
+    <p class="note">One honest note first: these are small toy worlds. They test an idea. They do not prove anything about Earth.</p>
+  </header>
+
+  <section id="waste">
+    <div class="eyebrow">1 · The idea</div>
+    <h2>Energy always spills.</h2>
+    <p>Think of water falling down a staircase of pools. Each pool catches some and lets the rest spill over. What spills past the last pool is gone into the dark. Move the slider to add more mills that catch the spill.</p>
+    <div class="card">
+      <div class="stage"><canvas id="fall" width="960" height="420" aria-label="Animation: droplets of energy falling through three pools, some caught by mills and some spilling into the dark"></canvas></div>
+      <div class="slider"><label for="catch" style="color:var(--ink)">Life forms catching the spill</label><input id="catch" type="range" min="0" max="95" value="0"><div class="big" id="usedbig" aria-live="polite">0%</div></div>
+      <p class="note">Illustration, not a simulation: it shows only the idea of capture. Each pool catches the same share of what reaches it.</p>
+    </div>
+  </section>
+
+  <section id="pondsec">
+    <div class="eyebrow">2 · The live pond</div>
+    <h2>Now give creatures the same conditions.</h2>
+    <p>This pond runs the real model from our research code. Creatures eat the glowing grass. They also find <strong style="color:var(--amber)">small wells</strong> and <strong style="color:var(--violet)">big wells</strong>, which stay shut unless creatures spend energy to hold them open. Wasted energy rises away as embers. Nobody is told what to want: creatures that gather enough energy have children, those that starve disappear, and children inherit their parent's instincts with small random changes. Press <strong>Very fast</strong> and watch.</p>
+    <div class="card">
+      <div class="pond-grid">
+        <div>
+          <div class="stage"><canvas id="pond" width="900" height="900" aria-label="Live simulation of creatures swimming and eating energy in a pond"></canvas></div>
+          <div class="controls">
+            <button id="play" class="on">Pause</button>
+            <div class="seg" role="group" aria-label="Speed"><button data-sp="0">Slow</button><button data-sp="1" class="on">Normal</button><button data-sp="2">Fast</button><button data-sp="3">Very fast</button></div>
+            <select id="preset" aria-label="Which kind of creatures"><option value="natural">Creatures start random and evolve</option><option value="expert">Hand-coded expert (what success looks like)</option><option value="drift">Random parents (comparison)</option></select>
+            <button id="again">New pond</button>
+          </div>
+          <div class="legend" aria-label="Legend">
+            <span><i class="dot" style="background:#9be58a"></i>Grass energy</span>
+            <span><i class="ring" style="border-color:var(--amber)"></i>Small well</span>
+            <span><i class="ring" style="border-color:var(--violet)"></i>Big well</span>
+            <span><i class="dot" style="background:#ffa37a"></i>Creature (colour = family)</span>
+            <span><i class="dot" style="background:var(--ember)"></i>Wasted energy</span>
+          </div>
+        </div>
+        <div>
+          <div class="day" id="day">Day 0</div>
+          <div class="say" aria-live="polite"><b id="head">Creatures wander at random.</b><span id="sub"></span></div>
+          <div class="meter"><div class="lab"><span>Energy used or wasted</span><em id="usedtxt"></em></div>
+            <div class="bar"><i id="b-used" style="background:var(--moss);width:0"></i><i id="b-waste" style="background:#6a3d34;flex:1"></i></div>
+            <p class="note">Wasted means it grew or leaked away without anyone using it.</p></div>
+          <div class="meter"><div class="lab"><span>Where creatures get their energy</span><em id="srctxt"></em></div>
+            <div class="bar"><i id="b-grass" style="background:var(--moss);width:100%"></i><i id="b-small" style="background:var(--amber);width:0"></i><i id="b-big" style="background:var(--violet);width:0"></i></div></div>
+          <div class="meter"><div class="lab"><span>Creatures alive</span><em id="poptxt"></em></div>
+            <div class="bar"><i id="b-pop" style="background:#5fb4d6;width:0"></i></div>
+            <p class="note" id="fam"></p></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Each run is one random example. Another pond can go very differently, which is why the next section uses 30 ponds per setting rather than a picture.</p>
+  </section>
+
+  <section id="results">
+    <div class="eyebrow">3 · What we found</div>
+    <h2>Mostly not what we predicted.</h2>
+    <p>We wrote down our predictions before running anything, then ran 30 ponds for each setting. Here is the plain-language version. Full numbers and caveats are in the repository.</p>
+
+    <div class="finding mid"><h3>Survival alone helped a little, not a lot.</h3>
+      <p>Creatures selected only by surviving and having children scored about <strong>9% higher</strong> on our energy-use measure than creatures whose parents were chosen at random. A real but small effect.</p></div>
+    <div class="finding"><h3>The world has room to do much better.</h3>
+      <p>A forager we programmed by hand gets about half its energy from the big wells, and it finds them in <strong>every one</strong> of 30 ponds. Evolved creatures got about 2% of their energy there. So most of the available leftover energy went unused.</p></div>
+    <div class="finding bad"><h3>Our main prediction failed.</h3>
+      <p>We predicted that scarce food, inheritance, and the real cost of dying would each be <em>needed</em> to reach the big wells. The opposite happened. Removing any of them made it <em>easier</em> to find them. Try it below.</p></div>
+
+    <div class="card" style="margin-top:20px">
+      <h3>Switch conditions on and off</h3>
+      <p class="note" style="margin-top:0">Each dot is one of 30 ponds. A lit dot means a creature opened a big well at least once. Real results, not a simulation.</p>
+      <div class="toggles">
+        <label class="tg"><input type="checkbox" id="t-scar" checked><div><b>Food is scarce</b><span>Off: grass is plentiful</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-her" checked><div><b>Children inherit instincts</b><span>Off: every child gets random instincts</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-mor" checked><div><b>Starvation is fatal</b><span>Off: creatures are rescued when they run out</span></div></label>
+        <label class="tg"><input type="checkbox" id="t-suc" checked><div><b>Big wells form where small ones run dry</b><span>Off: big wells exist from day one</span></div></label>
+      </div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+      <div class="big" id="dotsbig" aria-live="polite"></div>
+      <p class="note" id="dotsnote"></p>
+      <p class="note">Caution: "opened at least once" is a generous test. It does not mean the creatures kept using the big wells. With everything switched on, they get only a few percent of their energy from them.</p>
+    </div>
+
+    <div class="finding mid"><h3>One idea we tested and could not confirm.</h3>
+      <p>We guessed that opening a well is a favour to everyone nearby, so selection punishes the creature that pays for it. We tested that by letting the opener keep most of the reward. It moved in the predicted direction, but not by enough to be sure it was real at 30 ponds.</p></div>
+  </section>
+
+  <section id="limits">
+    <div class="eyebrow">4 · What this does not show</div>
+    <h2>Read this part.</h2>
+    <ul class="limits">
+      <li><strong>It is a toy.</strong> Whether these ingredients are what mattered on Earth is an assumption.</li>
+      <li><strong>The creatures' brains are tiny and shaped to follow gradients.</strong> A generic network did not learn useful behaviour in our budget, so "evolved" here means a small, well-shaped controller got tuned.</li>
+      <li><strong>The energy accounting involves an assumption.</strong> We count a creature burning energy as producing more entropy than the same energy leaking away. That choice makes "capture it" look good by definition.</li>
+      <li><strong>The design was adjusted after early failures.</strong> A world tuned until selection beats chance tends to show selection beating chance.</li>
+      <li><strong>We are not claiming novelty.</strong> This is a test of an old idea, not a discovery of it.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Code, data, and the full pre-registered analysis: <a href="https://github.com/praveenchandrahas/agency-from-gradients">github.com/praveenchandrahas/agency-from-gradients</a>. The technical grid view of the same model is the <a href="lab/">lab</a>.</p>
+  </footer>
+</div>
+<script>/* agency-from-gradients: browser/Node port of the Python engine (src/agency_gradients/world.py).
+ * Same rules and default parameters; a different random-number generator, so runs are
+ * statistically comparable to the Python ones but not bit-identical.
+ * Only the "equivariant" (27-parameter) policy is ported. */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) module.exports = factory();
+  else root.AGSim = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  const DEFAULTS = {
+    size: 32, maxPop: 200, initPop: 60,
+    metabolism: 0.10, moveCost: 0.03, investCost: 0.15, initEnergy: 8.0,
+    reproThresh: 12.0, reproCost: 6.0, childShare: 0.8, eatRate: 0.5, hazard: 0.003,
+    commonsCap: 1.0, commonsRegrow: 0.008, commonsRegrowAbundant: 0.08,
+    patchiness: 1.0, nPatches: 18, patchSigma: 3.5,
+    nTier1: 12, stock1: 150, regrow1: 0.30, lock1: 3.0, decay1: 0.02, harvest1: 1.5,
+    nTier2: 4, stock2: 800, regrow2: 1.6, lock2: 25.0, decay2: 0.15, harvest2: 6.0,
+    scentSigma: 4.0, reservoirLeak: 0.002, depletedAt: 1.0,
+    mutSigma: 0.30, mutRate: 0.10,
+    selection: "persistence", // persistence | entropy | drift
+    driftRestore: 0.05, entropyReproSpent: 12.0, kappa: 3.0,
+    scarcity: true, heredity: true, mortality: true, succession: true,
+  };
+  const NCH = 7, NG = NCH * 3 + 6;
+  // N, E, S, W, stay, invest
+  const DX = [-1, 0, 1, 0, 0, 0], DY = [0, 1, 0, -1, 0, 0];
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  class World {
+    constructor(opts, seed) {
+      const c = this.cfg = Object.assign({}, DEFAULTS, opts || {});
+      this.seed = seed >>> 0;
+      this._r = mulberry32(this.seed);
+      const L = c.size, N = L * L;
+      this.L = L;
+      this.commons = new Float64Array(N).fill(c.commonsCap);
+      this.ttype = new Int8Array(N);
+      this.stock = new Float64Array(N);
+      this.progress = new Float64Array(N);
+      this.unlocked = new Uint8Array(N);
+      this.scent = [new Float64Array(N), new Float64Array(N)];
+      this.t2Budget = 0;
+      this.field = this._makeField();
+      this._placeSites();
+      this._updateScent();
+
+      const M = c.maxPop;
+      this.alive = new Uint8Array(M);
+      this.x = new Int16Array(M); this.y = new Int16Array(M);
+      this.energy = new Float64Array(M);
+      this.age = new Int32Array(M);
+      this.lineage = new Int32Array(M);
+      this.genome = new Float64Array(M * NG);
+      this.spentAcc = new Float64Array(M);
+      this.lastAct = new Int8Array(M);
+      this.t = 0;
+      this.policy = null; // optional hand-coded forager
+      this.stats = { gainC: 0, gain1: 0, gain2: 0, leak: 0, heat: 0, births: 0, deaths: 0 };
+      this.cum = { gainC: 0, gain1: 0, gain2: 0, leak: 0, heat: 0, births: 0, deaths: 0 };
+      this.firstUnlock = { 1: null, 2: null };
+      this.converted = 0;
+      this.cnt = new Float64Array(N);
+      for (let i = 0; i < c.initPop; i++) {
+        const s = i;
+        this.alive[s] = 1; this.x[s] = this.randInt(L); this.y[s] = this.randInt(L);
+        this.energy[s] = c.initEnergy; this.lineage[s] = i;
+        for (let k = 0; k < NG; k++) this.genome[s * NG + k] = this.randn();
+      }
+    }
+    rand() { return this._r(); }
+    randInt(n) { return Math.floor(this._r() * n); }
+    randn() {
+      let u = 0; while (u === 0) u = this._r();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * this._r());
+    }
+    gumbel() { let u = 0; while (u === 0) u = this._r(); return -Math.log(-Math.log(u)); }
+    poisson(l) { const e = Math.exp(-l); let k = 0, p = 1; do { k++; p *= this._r(); } while (p > e && k < 100); return k - 1; }
+
+    _dist(a, b) { const d = Math.abs(a - b); return Math.min(d, this.L - d); }
+    _makeField() {
+      const c = this.cfg, L = this.L, f = new Float64Array(L * L);
+      if (c.patchiness <= 0) return f.fill(1);
+      for (let p = 0; p < c.nPatches; p++) {
+        const px = this.randInt(L), py = this.randInt(L);
+        for (let i = 0; i < L; i++) for (let j = 0; j < L; j++) {
+          const dx = this._dist(i, px), dy = this._dist(j, py);
+          f[i * L + j] += Math.exp(-(dx * dx + dy * dy) / (2 * c.patchSigma * c.patchSigma));
+        }
+      }
+      const norm = (arr) => { let m = 0; for (const v of arr) m += v; m /= arr.length; for (let i = 0; i < arr.length; i++) arr[i] /= m; };
+      norm(f);
+      for (let i = 0; i < f.length; i++) f[i] = (1 - c.patchiness) + c.patchiness * f[i];
+      norm(f);
+      return f;
+    }
+    _placeSites() {
+      const c = this.cfg, L = this.L, N = L * L;
+      const cells = []; const used = new Set();
+      while (cells.length < c.nTier1 + c.nTier2) { const v = this.randInt(N); if (!used.has(v)) { used.add(v); cells.push(v); } }
+      for (let i = 0; i < c.nTier1; i++) { this.ttype[cells[i]] = 1; this.stock[cells[i]] = c.stock1; }
+      if (c.succession) this.t2Budget = c.nTier2;
+      else for (let i = c.nTier1; i < cells.length; i++) { this.ttype[cells[i]] = 2; this.stock[cells[i]] = c.stock2; }
+    }
+    _updateScent() {
+      const c = this.cfg, L = this.L;
+      for (let k = 0; k < 2; k++) {
+        const f = this.scent[k]; f.fill(0);
+        for (let s = 0; s < L * L; s++) {
+          if (this.ttype[s] !== k + 1) continue;
+          const sx = Math.floor(s / L), sy = s % L;
+          for (let i = 0; i < L; i++) for (let j = 0; j < L; j++) {
+            const dx = this._dist(i, sx), dy = this._dist(j, sy);
+            f[i * L + j] += Math.exp(-(dx * dx + dy * dy) / (2 * c.scentSigma * c.scentSigma));
+          }
+        }
+        for (let i = 0; i < f.length; i++) if (f[i] > 1) f[i] = 1;
+      }
+    }
+    openness(i) {
+      const tt = this.ttype[i]; if (!tt) return 0;
+      return Math.min(this.progress[i] / (tt === 1 ? this.cfg.lock1 : this.cfg.lock2), 1);
+    }
+    count() { let n = 0; for (let i = 0; i < this.alive.length; i++) n += this.alive[i]; return n; }
+
+    _envUpdate() {
+      const c = this.cfg, N = this.L * this.L;
+      let leak = 0;
+      const reg = c.scarcity ? c.commonsRegrow : c.commonsRegrowAbundant;
+      for (let i = 0; i < N; i++) {
+        let v = this.commons[i] + reg * this.field[i];
+        if (v > c.commonsCap) { leak += v - c.commonsCap; v = c.commonsCap; }
+        this.commons[i] = v;
+        const tt = this.ttype[i];
+        if (tt) {
+          let s = this.stock[i] + (tt === 1 ? c.regrow1 : c.regrow2);
+          const lk = s * c.reservoirLeak; s -= lk; leak += lk; this.stock[i] = s;
+          this.progress[i] *= 1 - (tt === 1 ? c.decay1 : c.decay2);
+          this.unlocked[i] = this.progress[i] >= (tt === 1 ? c.lock1 : c.lock2) ? 1 : 0;
+        }
+      }
+      if (c.succession && this.t2Budget > 0) {
+        let changed = false;
+        for (let i = 0; i < N && this.t2Budget > 0; i++) {
+          if (this.ttype[i] === 1 && this.stock[i] <= c.depletedAt) {
+            this.ttype[i] = 2; this.stock[i] = c.stock2; this.progress[i] = 0; this.unlocked[i] = 0;
+            this.t2Budget--; this.converted++; changed = true;
+          }
+        }
+        if (changed) this._updateScent();
+      }
+      return leak;
+    }
+
+    _chan(cell, ch) {
+      const c = this.cfg;
+      switch (ch) {
+        case 0: return this.commons[cell] / c.commonsCap;
+        case 5: return this.scent[0][cell];
+        case 6: return this.scent[1][cell];
+        default: {
+          const tt = this.ttype[cell];
+          if (!tt || this.stock[cell] <= c.depletedAt) return 0;
+          const fr = this.openness(cell);
+          if (ch === 1) return tt === 1 ? 1 - fr : 0;
+          if (ch === 2) return tt === 1 ? fr : 0;
+          if (ch === 3) return tt === 2 ? 1 - fr : 0;
+          return tt === 2 ? fr : 0;
+        }
+      }
+    }
+
+    _decide(a) {
+      const L = this.L, c = this.cfg;
+      const cells = [0, 0, 0, 0, 0];
+      for (let d = 0; d < 5; d++) cells[d] = ((this.x[a] + DX[d] + L) % L) * L + ((this.y[a] + DY[d] + L) % L);
+      if (this.policy) return this.policy(this, a, cells);
+      const g = this.genome, o = a * NG, E = this.energy[a] / c.reproThresh;
+      const lg = [0, 0, 0, 0, 0, 0];
+      let stay = g[o + 3 * NCH + 1] + g[o + 3 * NCH + 4] * E;
+      let inv = g[o + 3 * NCH + 2] + g[o + 3 * NCH + 5] * E;
+      const bm = g[o + 3 * NCH] + g[o + 3 * NCH + 3] * E;
+      for (let ch = 0; ch < NCH; ch++) {
+        const wn = g[o + ch], ws = g[o + NCH + ch], wi = g[o + 2 * NCH + ch];
+        for (let d = 0; d < 4; d++) lg[d] += wn * this._chan(cells[d], ch);
+        const here = this._chan(cells[4], ch);
+        stay += ws * here; inv += wi * here;
+      }
+      for (let d = 0; d < 4; d++) lg[d] += bm;
+      lg[4] = stay; lg[5] = inv;
+      let best = -1e9, act = 0;
+      for (let k = 0; k < 6; k++) { const v = lg[k] + this.gumbel(); if (v > best) { best = v; act = k; } }
+      return act;
+    }
+
+    step() {
+      const c = this.cfg, L = this.L, N = L * L, M = c.maxPop;
+      const leak = this._envUpdate();
+      const idx = []; for (let a = 0; a < M; a++) if (this.alive[a]) idx.push(a);
+      let gC = 0, g1 = 0, g2 = 0, heat = 0, births = 0, deaths = 0;
+      if (idx.length) {
+        const acts = new Int8Array(idx.length), cost = new Float64Array(idx.length);
+        for (let k = 0; k < idx.length; k++) { acts[k] = this._decide(idx[k]); this.lastAct[idx[k]] = acts[k]; }
+        this.cnt.fill(0);
+        for (let k = 0; k < idx.length; k++) {
+          const a = idx[k], act = acts[k];
+          cost[k] = c.metabolism + (act < 4 ? c.moveCost : 0) + (act === 5 ? c.investCost : 0);
+          this.x[a] = (this.x[a] + DX[act] + L) % L; this.y[a] = (this.y[a] + DY[act] + L) % L;
+          const cell = this.x[a] * L + this.y[a];
+          this.cnt[cell] += 1;
+          if (act === 5 && this.ttype[cell]) this.progress[cell] += 1;
+        }
+        // cap progress, detect rising edges
+        for (let i = 0; i < N; i++) {
+          const tt = this.ttype[i]; if (!tt) continue;
+          const lock = tt === 1 ? c.lock1 : c.lock2;
+          if (this.progress[i] > 2 * lock) this.progress[i] = 2 * lock;
+          const now = this.progress[i] >= lock ? 1 : 0;
+          if (now && !this.unlocked[i] && this.firstUnlock[tt] === null) this.firstUnlock[tt] = this.t;
+          this.unlocked[i] = now;
+        }
+        // shared eating
+        const takeC = new Float64Array(N), takeR = new Float64Array(N);
+        for (let i = 0; i < N; i++) {
+          if (!this.cnt[i]) continue;
+          takeC[i] = Math.min(c.eatRate * this.cnt[i], this.commons[i]); this.commons[i] -= takeC[i];
+          const tt = this.ttype[i];
+          if (tt) {
+            const hr = (tt === 1 ? c.harvest1 : c.harvest2) * this.openness(i);
+            takeR[i] = Math.min(hr * this.cnt[i], this.stock[i]); this.stock[i] -= takeR[i];
+          }
+        }
+        for (let k = 0; k < idx.length; k++) {
+          const a = idx[k], cell = this.x[a] * L + this.y[a], n = this.cnt[cell];
+          const gc = takeC[cell] / n, gr = takeR[cell] / n, tt = this.ttype[cell];
+          gC += gc; if (tt === 1) g1 += gr; else if (tt === 2) g2 += gr;
+          this.energy[a] += gc + gr - cost[k];
+          this.spentAcc[a] += cost[k]; this.age[a]++; heat += cost[k];
+          let dead = this.energy[a] <= 0;
+          if (c.mortality && !dead && this.rand() < c.hazard) dead = true;
+          if (dead) {
+            if (c.mortality) { this.alive[a] = 0; deaths++; } else this.energy[a] = 1.0;
+          }
+        }
+        births = this._reproduce();
+      }
+      this.t++;
+      const s = this.stats, cm = this.cum;
+      s.gainC = gC; s.gain1 = g1; s.gain2 = g2; s.leak = leak; s.heat = heat; s.births = births; s.deaths = deaths;
+      cm.gainC += gC; cm.gain1 += g1; cm.gain2 += g2; cm.leak += leak; cm.heat += heat; cm.births += births; cm.deaths += deaths;
+    }
+
+    _reproduce() {
+      const c = this.cfg, M = c.maxPop;
+      const a = []; for (let i = 0; i < M; i++) if (this.alive[i]) a.push(i);
+      if (!a.length) return 0;
+      let parents = [];
+      const viable = (i) => this.energy[i] >= c.reproCost + 1.0;
+      if (c.selection === "persistence") parents = a.filter((i) => this.energy[i] >= c.reproThresh);
+      else if (c.selection === "entropy") parents = a.filter((i) => this.spentAcc[i] >= c.entropyReproSpent && viable(i));
+      else if (c.selection === "drift") {
+        const lam = c.driftRestore * Math.max(c.initPop - a.length, 0);
+        let nb = Math.min(this.poisson(lam), a.length);
+        const pool = a.slice();
+        for (let i = pool.length - 1; i > 0; i--) { const j = this.randInt(i + 1); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+        parents = pool.slice(0, nb).filter(viable);
+      } else throw new Error("unknown selection " + c.selection);
+      if (!parents.length) return 0;
+      for (let i = parents.length - 1; i > 0; i--) { const j = this.randInt(i + 1); [parents[i], parents[j]] = [parents[j], parents[i]]; }
+      const free = []; for (let i = 0; i < M && free.length < parents.length; i++) if (!this.alive[i]) free.push(i);
+      const k = Math.min(parents.length, free.length);
+      for (let q = 0; q < k; q++) {
+        const p = parents[q], s = free[q];
+        for (let g = 0; g < NG; g++) {
+          if (c.heredity) this.genome[s * NG + g] = this.genome[p * NG + g] + (this.rand() < c.mutRate ? c.mutSigma * this.randn() : 0);
+          else this.genome[s * NG + g] = this.randn();
+        }
+        this.energy[p] -= c.reproCost; this.spentAcc[p] = 0;
+        this.alive[s] = 1; this.x[s] = this.x[p]; this.y[s] = this.y[p];
+        this.energy[s] = c.reproCost * c.childShare; this.age[s] = 0; this.spentAcc[s] = 0; this.lineage[s] = this.lineage[p];
+      }
+      return k;
+    }
+  }
+
+  /* Hand-coded forager (positive control): follows food and glow, invests at reservoirs. */
+  function oracle(world, a, cells) {
+    const ch = (cell, c) => world._chan(cell, c);
+    const score = cells.map((cell) => ch(cell, 0) + 2 * ch(cell, 5) + 2 * ch(cell, 6) + 4 * (ch(cell, 1) + ch(cell, 2) + ch(cell, 3) + ch(cell, 4)));
+    let best = 0, bv = -1e9;
+    for (let d = 0; d < 4; d++) { const v = score[d] + world.rand() * 0.05; if (v > bv) { bv = v; best = d; } }
+    const here = cells[4];
+    const stay = score[4] >= Math.max(score[0], score[1], score[2], score[3]) && ch(here, 0) > 0.3;
+    let act = stay ? 4 : best;
+    const onRes = ch(here, 1) + ch(here, 2) + ch(here, 3) + ch(here, 4) > 0;
+    const open = ch(here, 2) + ch(here, 4);
+    if (onRes && (open < 0.999 || world.rand() < 0.15)) act = 5;
+    if (world.rand() < 0.1) act = world.randInt(6);
+    return act;
+  }
+
+  /* Rolling summary comparable to Python's World.summary() (last quarter of a finished run). */
+  class Recorder {
+    constructor(world) { this.w = world; this.rows = []; }
+    tick() { const s = this.w.stats; this.rows.push([this.w.count(), s.gainC, s.gain1, s.gain2, s.leak, s.heat]); }
+    summary(kappa) {
+      const T = this.rows.length, from = Math.floor(T * 0.75);
+      let gain = 0, g1 = 0, g2 = 0, leak = 0, heat = 0, pop = 0, n = 0;
+      for (let i = from; i < T; i++) { const r = this.rows[i]; pop += r[0]; gain += r[1] + r[2] + r[3]; g1 += r[2]; g2 += r[3]; leak += r[4]; heat += r[5]; n++; }
+      return { pop: pop / n, captureFraction: gain / Math.max(gain + leak, 1e-12), entropyRate: (leak + kappa * heat) / n, share1: g1 / Math.max(gain, 1e-12), share2: g2 / Math.max(gain, 1e-12), t2Reached: this.w.firstUnlock[2] !== null ? 1 : 0 };
+    }
+  }
+
+  return { World, Recorder, oracle, DEFAULTS, NG, NCH };
+});
+</script>
+<script>(function () {
+  "use strict";
+  var S = AGSim;
+  function $(id) { return document.getElementById(id); }
+  var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  /* ------------------------------------------------------------------ waterfall (illustration) */
+  (function () {
+    var cv = $("fall"), ctx = cv.getContext("2d"), W = cv.width, H = cv.height;
+    var slider = $("catch"), big = $("usedbig");
+    var drops = [], used = 0, wasted = 0, last = 0, acc = 0;
+    var pools = [{ x: 150, y: 150, w: 170, label: "Grass: everyday energy" }, { x: 430, y: 255, w: 170, label: "Small wells" }, { x: 710, y: 340, w: 170, label: "Big wells" }];
+    function p() { return slider.value / 100; }
+    function spawn() { drops.push({ x: pools[0].x + (Math.random() - .5) * 120, y: -10, vy: 1.2 + Math.random() * .6, stage: 0, state: "fall", life: 1, tx: 0 }); }
+    function frame(t) {
+      var dt = Math.min((t - last) / 16.7, 3); last = t;
+      acc += dt * (reduced ? 0 : 0.28); while (acc >= 1) { spawn(); acc -= 1; }
+      ctx.clearRect(0, 0, W, H);
+      var g = ctx.createRadialGradient(150, -40, 10, 150, -40, 360); g.addColorStop(0, "rgba(255,217,168,.55)"); g.addColorStop(1, "rgba(255,217,168,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#ffd9a8"; ctx.beginPath(); ctx.arc(150, -4, 26, 0, 7); ctx.fill();
+      ctx.font = "600 15px ui-sans-serif,system-ui,sans-serif"; ctx.textAlign = "center";
+      pools.forEach(function (pl, i) {
+        ctx.fillStyle = "#12384a"; ctx.strokeStyle = "#2c6479"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect(pl.x - pl.w / 2, pl.y, pl.w, 46, 10); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#a9c3c4"; ctx.fillText(pl.label, pl.x, pl.y + 72);
+        var mills = Math.round(p() * 4); // little mills along the rim
+        for (var m = 0; m < mills; m++) {
+          var mx = pl.x - pl.w / 2 + 22 + m * ((pl.w - 44) / 3);
+          ctx.strokeStyle = "#7bd88f"; ctx.lineWidth = 2.5; var a = t / 400 + m;
+          ctx.beginPath(); ctx.arc(mx, pl.y + 8, 11, 0, 7); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(mx - 11 * Math.cos(a), pl.y + 8 - 11 * Math.sin(a)); ctx.lineTo(mx + 11 * Math.cos(a), pl.y + 8 + 11 * Math.sin(a)); ctx.stroke();
+        }
+      });
+      ctx.fillStyle = "#04101a"; ctx.fillRect(0, H - 34, W, 34); ctx.fillStyle = "#6f8d93"; ctx.fillText("Lost into empty space", W / 2, H - 12);
+      for (var i = drops.length - 1; i >= 0; i--) {
+        var d = drops[i];
+        if (d.state === "fall") {
+          d.y += d.vy * dt * 2.4;
+          var pl = pools[d.stage];
+          if (d.y >= pl.y && d.stage < 3) {
+            if (Math.random() < p()) { d.state = "used"; d.life = 1; used++; }
+            else if (d.stage === 2) { d.state = "gone"; wasted++; }
+            else { d.stage++; d.x = pools[d.stage].x + (Math.random() - .5) * 120; d.y = pools[d.stage].y - 90; d.vy = 1.4; }
+          }
+          ctx.fillStyle = "rgba(255,217,168,.95)"; ctx.beginPath(); ctx.arc(d.x, d.y, 3.2, 0, 7); ctx.fill();
+        } else if (d.state === "used") {
+          d.life -= 0.02 * dt; var pl2 = pools[d.stage];
+          ctx.fillStyle = "rgba(123,216,143," + Math.max(d.life, 0) + ")"; ctx.beginPath(); ctx.arc(d.x, pl2.y + 4 - (1 - d.life) * 26, 3.6, 0, 7); ctx.fill();
+          if (d.life <= 0) drops.splice(i, 1);
+        } else {
+          d.y += 3 * dt; d.x += 1.2 * dt;
+          ctx.fillStyle = "rgba(255,138,92,.8)"; ctx.beginPath(); ctx.arc(d.x, d.y, 2.6, 0, 7); ctx.fill();
+          if (d.y > H) drops.splice(i, 1);
+        }
+      }
+      var tot = used + wasted; big.textContent = tot > 20 ? Math.round(100 * used / tot) + "% used" : "…";
+      if (tot > 400) { used *= 0.5; wasted *= 0.5; }
+      requestAnimationFrame(frame);
+    }
+    slider.addEventListener("input", function () { used = wasted = 0; });
+    if (reduced) { for (var k = 0; k < 40; k++) spawn(); }
+    requestAnimationFrame(frame);
+  })();
+
+  /* ------------------------------------------------------------------ the pond */
+  var cv = $("pond"), ctx = cv.getContext("2d");
+  var L = 32, state = { playing: !reduced, speed: 1, preset: "natural" };
+  var SPEEDS = [3, 9, 40, 220];
+  var world, prev, cur, born, ghosts, embers, rings, acc = 0, stepAge = 0, animT = 0;
+  var ema, hist, flags;
+
+  function px(cells) { return cells * (cv.width / L); }
+
+  function newPond() {
+    var seed = (Math.random() * 2147483647) | 0, ps = state.preset;
+    world = new S.World({ selection: ps === "drift" ? "drift" : "persistence" }, seed);
+    if (ps === "expert") world.policy = S.oracle;
+    var M = world.alive.length;
+    prev = { x: new Float32Array(M), y: new Float32Array(M) };
+    cur = { x: new Float32Array(M), y: new Float32Array(M) };
+    born = new Float32Array(M); ghosts = []; embers = []; rings = [];
+    for (var a = 0; a < M; a++) { cur.x[a] = prev.x[a] = world.x[a]; cur.y[a] = prev.y[a] = world.y[a]; }
+    ema = { c: 0, g1: 0, g2: 0, leak: 0, init: false }; flags = { t1: false, t2: false };
+    acc = 0; stepAge = 0;
+    render(0); ui(true);
+  }
+
+  function snapshot(aliveBefore) {
+    var M = world.alive.length;
+    for (var a = 0; a < M; a++) {
+      var was = aliveBefore[a], is = world.alive[a];
+      if (is && !was) { prev.x[a] = cur.x[a] = world.x[a]; prev.y[a] = cur.y[a] = world.y[a]; born[a] = 1; rings.push({ x: world.x[a], y: world.y[a], t: 0 }); }
+      else if (!is && was) ghosts.push({ x: cur.x[a], y: cur.y[a], h: hue(a), t: 0 });
+      else if (is) { prev.x[a] = cur.x[a]; prev.y[a] = cur.y[a]; cur.x[a] = world.x[a]; cur.y[a] = world.y[a]; }
+    }
+  }
+  var HUES = [8, 330, 200, 28, 285, 350, 215, 48];
+  function hue(a) { return HUES[world.lineage[a] % HUES.length]; }
+
+  function stepOnce(tween) {
+    var before = tween ? world.alive.slice() : null;
+    world.step();
+    var s = world.stats, al = 1 / 300;
+    if (!ema.init) { ema.c = s.gainC; ema.g1 = s.gain1; ema.g2 = s.gain2; ema.leak = s.leak; ema.init = true; }
+    else { ema.c += (s.gainC - ema.c) * al; ema.g1 += (s.gain1 - ema.g1) * al; ema.g2 += (s.gain2 - ema.g2) * al; ema.leak += (s.leak - ema.leak) * al; }
+    if (tween) {
+      snapshot(before);
+      var n = Math.min(6, Math.round(s.leak * 0.35));
+      for (var k = 0; k < n && embers.length < 260; k++) embers.push({ x: Math.random() * L, y: Math.random() * L, t: 0, v: .4 + Math.random() * .8 });
+    } else {
+      var M = world.alive.length;
+      for (var a = 0; a < M; a++) { cur.x[a] = prev.x[a] = world.x[a]; cur.y[a] = prev.y[a] = world.y[a]; }
+    }
+  }
+
+  function hash(i, k) { var h = Math.imul(i * 7919 + k * 104729 + 13, 2654435761); h ^= h >>> 15; return ((h >>> 0) % 10000) / 10000; }
+
+  function render(dt) {
+    var W = cv.width, cs = W / L; animT += dt;
+    ctx.clearRect(0, 0, W, W);
+    // soft water
+    var g = ctx.createRadialGradient(W * .5, W * .1, W * .05, W * .5, W * .5, W * .85);
+    g.addColorStop(0, "#10394a"); g.addColorStop(.6, "#08202c"); g.addColorStop(1, "#04111a");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, W);
+    // grass motes
+    var com = world.commons, tt = animT;
+    for (var i = 0; i < L * L; i++) {
+      var c = com[i]; if (c < 0.05) continue;
+      var n = Math.min(5, Math.ceil(c * 5)), cx = Math.floor(i / L), cy = i % L;
+      for (var k = 0; k < n; k++) {
+        var ox = hash(i, k * 2), oy = hash(i, k * 2 + 1), ph = hash(i, k + 99) * 6.28;
+        var x = (cy + ox + Math.sin(tt * .7 + ph) * .12) * cs, y = (cx + oy + Math.cos(tt * .6 + ph) * .12) * cs;
+        var tw = .55 + .45 * Math.sin(tt * 1.6 + ph);
+        ctx.fillStyle = "rgba(155,229,138," + (0.28 + 0.5 * c * tw) + ")";
+        ctx.beginPath(); ctx.arc(x, y, cs * (.045 + .03 * c), 0, 6.3); ctx.fill();
+      }
+    }
+    // wells
+    for (var j = 0; j < L * L; j++) {
+      var ty = world.ttype[j]; if (!ty) continue;
+      var live = world.stock[j] > world.cfg.depletedAt; if (!live) continue;
+      var op = world.openness(j), wx = (j % L + .5) * cs, wy = (Math.floor(j / L) + .5) * cs;
+      var col = ty === 1 ? [242, 180, 90] : [169, 139, 255], r = cs * (ty === 1 ? .62 : 1.05);
+      var glow = ctx.createRadialGradient(wx, wy, r * .2, wx, wy, r * (1.9 + op));
+      glow.addColorStop(0, "rgba(" + col + "," + (.12 + .45 * op) + ")"); glow.addColorStop(1, "rgba(" + col + ",0)");
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(wx, wy, r * (1.9 + op), 0, 6.3); ctx.fill();
+      ctx.strokeStyle = "rgba(" + col + "," + (.6 + .4 * op) + ")"; ctx.lineWidth = Math.max(1.5, cs * .08);
+      ctx.setLineDash(op < .98 ? [cs * .22, cs * .18] : []); ctx.lineDashOffset = -tt * 6;
+      ctx.beginPath(); ctx.arc(wx, wy, r, 0, 6.3); ctx.stroke(); ctx.setLineDash([]);
+      if (op > .3) { // rising bubbles when open
+        for (var b = 0; b < 3; b++) { var bp = (tt * .5 + b / 3 + hash(j, b)) % 1; ctx.fillStyle = "rgba(" + col + "," + (1 - bp) * .7 + ")"; ctx.beginPath(); ctx.arc(wx + (hash(j, b + 5) - .5) * r, wy - bp * r * 1.4, cs * .05, 0, 6.3); ctx.fill(); }
+      }
+    }
+    // embers (wasted energy)
+    for (var e = embers.length - 1; e >= 0; e--) {
+      var em = embers[e]; em.t += dt * .5; if (em.t > 1) { embers.splice(e, 1); continue; }
+      ctx.fillStyle = "rgba(255,138,92," + (.6 * (1 - em.t)) + ")";
+      ctx.beginPath(); ctx.arc(em.x * cs + Math.sin(em.t * 5 + em.v) * cs * .2, (em.y - em.t * em.v * 5) * cs, cs * .05, 0, 6.3); ctx.fill();
+    }
+    // creatures
+    var M = world.alive.length, f = state.speed >= 2 ? 1 : Math.min(stepAge, 1);
+    for (var a = 0; a < M; a++) {
+      if (!world.alive[a]) continue;
+      var dx = cur.x[a] - prev.x[a], dy = cur.y[a] - prev.y[a];
+      if (dx > L / 2) dx -= L; else if (dx < -L / 2) dx += L; if (dy > L / 2) dy -= L; else if (dy < -L / 2) dy += L;
+      var X = ((prev.y[a] + dy * f) % L + L) % L, Y = ((prev.x[a] + dx * f) % L + L) % L;
+      var en = Math.max(0, Math.min(world.energy[a] / world.cfg.reproThresh, 1.3)), rad = cs * (.2 + .2 * en);
+      var h = hue(a), sx = (X + .5) * cs, sy = (Y + .5) * cs;
+      var gl = ctx.createRadialGradient(sx, sy, 0, sx, sy, rad * 3);
+      gl.addColorStop(0, "hsla(" + h + ",85%,68%," + (.25 + .35 * Math.min(en, 1)) + ")"); gl.addColorStop(1, "hsla(" + h + ",85%,68%,0)");
+      ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(sx, sy, rad * 3, 0, 6.3); ctx.fill();
+      ctx.fillStyle = "hsl(" + h + ",80%," + (45 + 25 * Math.min(en, 1)) + "%)"; ctx.beginPath(); ctx.arc(sx, sy, rad, 0, 6.3); ctx.fill();
+      if (world.lastAct && world.lastAct[a] === 5) { ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(sx, sy, rad * 1.7, 0, 6.3); ctx.stroke(); }
+    }
+    // births and deaths
+    for (var r2 = rings.length - 1; r2 >= 0; r2--) { var rg = rings[r2]; rg.t += dt * 1.6; if (rg.t > 1) { rings.splice(r2, 1); continue; } ctx.strokeStyle = "rgba(255,255,255," + (.7 * (1 - rg.t)) + ")"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc((rg.y + .5) * cs, (rg.x + .5) * cs, cs * (.3 + rg.t * .8), 0, 6.3); ctx.stroke(); }
+    for (var q = ghosts.length - 1; q >= 0; q--) { var gh = ghosts[q]; gh.t += dt * 1.2; if (gh.t > 1) { ghosts.splice(q, 1); continue; } ctx.fillStyle = "hsla(" + gh.h + ",20%,60%," + (.4 * (1 - gh.t)) + ")"; ctx.beginPath(); ctx.arc((gh.y + .5) * cs, (gh.x + .5) * cs, cs * .2 * (1 + gh.t), 0, 6.3); ctx.fill(); }
+  }
+
+  /* panel */
+  function metrics() {
+    var gain = ema.c + ema.g1 + ema.g2, tot = gain + ema.leak;
+    return { used: tot > 0 ? gain / tot : 0, g1: gain > 0 ? ema.g1 / gain : 0, g2: gain > 0 ? ema.g2 / gain : 0 };
+  }
+  var lastUi = 0, headCache = "";
+  function ui(force) {
+    var now = performance.now(); if (!force && now - lastUi < 250) return; lastUi = now;
+    var m = metrics(), pop = world.count(), fams = {};
+    for (var a = 0; a < world.alive.length; a++) if (world.alive[a]) fams[world.lineage[a]] = 1;
+    var nf = Object.keys(fams).length, t = world.t, dep = m.g1 + m.g2;
+    $("day").textContent = "Day " + t.toLocaleString();
+    $("usedtxt").textContent = Math.round(m.used * 100) + "% used · " + Math.round((1 - m.used) * 100) + "% wasted";
+    $("b-used").style.width = (m.used * 100) + "%";
+    $("srctxt").textContent = "grass " + Math.round((1 - dep) * 100) + "% · small " + Math.round(m.g1 * 100) + "% · big " + Math.round(m.g2 * 100) + "%";
+    $("b-grass").style.width = ((1 - dep) * 100) + "%"; $("b-small").style.width = (m.g1 * 100) + "%"; $("b-big").style.width = (m.g2 * 100) + "%";
+    $("poptxt").textContent = pop + " of 200"; $("b-pop").style.width = (pop / 2) + "%";
+    $("fam").textContent = state.preset === "expert" ? "Everyone follows the same hand-written rules." : (nf + (nf === 1 ? " family" : " families") + " still alive. Colours are founding families.");
+    var h, s;
+    if (pop === 0) { h = "Everyone died."; s = "This pond could not support life."; }
+    else if (state.preset === "expert") { h = "These creatures follow rules we wrote by hand."; s = "They head for food and wells and pay energy to open them. Nothing here evolves: it shows what success could look like. " + Math.round(dep * 100) + "% of their energy comes from wells."; }
+    else if (state.preset === "drift") { h = "Parents are chosen at random."; s = "Having more energy gives no advantage in having children, so this is the comparison pond. Starvation still removes some creatures."; }
+    else if (t < 200) { h = "Creatures wander at random."; s = "Each burns energy just to exist and eats grass it bumps into. Press Very fast and give them time."; }
+    else if (dep < 0.02 && t > 4000) { h = "They graze, but ignore the wells."; s = "Families with better grazing instincts won out. After " + t.toLocaleString() + " days, almost none of their energy comes from the wells."; }
+    else if (dep >= 0.08) { h = "Some families learned to open wells."; s = Math.round(dep * 100) + "% of the energy now comes from wells instead of grass. The habit spreads through inheritance."; }
+    else { h = "Slowly, they are getting better at finding food."; s = "Parents with spare energy have children, who inherit their instincts with small random changes."; }
+    if (h !== headCache) { $("head").textContent = h; headCache = h; } $("sub").textContent = s;
+  }
+
+  /* loop */
+  var lastT = 0;
+  function loop(t) {
+    var dt = Math.min((t - lastT) / 1000, .1); lastT = t;
+    if (state.playing && world) {
+      var sps = SPEEDS[state.speed]; acc += dt * sps; var n = 0;
+      while (acc >= 1 && n < 260) { stepOnce(state.speed < 2); acc -= 1; n++; stepAge = 0; }
+      if (n >= 260) acc = 0; stepAge = acc;
+      if (state.speed >= 2) { stepAge = 1; }
+      render(dt); ui(false);
+    } else if (world) { render(0); }
+    requestAnimationFrame(loop);
+  }
+
+  function size() { var w = cv.clientWidth || 600; cv.width = Math.round(w * DPR); cv.height = Math.round(w * DPR); if (world) render(0); }
+  window.addEventListener("resize", size);
+  $("play").addEventListener("click", function () { state.playing = !state.playing; this.textContent = state.playing ? "Pause" : "Play"; this.classList.toggle("on", state.playing); });
+  document.querySelectorAll(".seg button").forEach(function (b) { b.addEventListener("click", function () { state.speed = +b.dataset.sp; document.querySelectorAll(".seg button").forEach(function (x) { x.classList.toggle("on", x === b); }); }); });
+  $("preset").addEventListener("change", function () { state.preset = this.value; newPond(); });
+  $("again").addEventListener("click", newPond);
+  if (reduced) { $("play").textContent = "Play"; $("play").classList.remove("on"); }
+  size(); newPond(); requestAnimationFrame(loop);
+  window.__pond = { world: function () { return world; }, state: state, newPond: newPond, step: function (n) { for (var i = 0; i < n; i++) stepOnce(false); render(0); ui(true); } };
+
+  /* ------------------------------------------------------------------ what-if explorer (real S2 results) */
+  // t2_reached out of 30 seeds, keyed scarcity,heredity,mortality,succession (1 = condition ON). docs/results/s2_report.md
+  var T2 = { "0000": .933, "0001": .900, "0010": .900, "0011": .867, "0100": .867, "0101": .867, "0110": .433, "0111": .533,
+             "1000": .733, "1001": .867, "1010": 1.0, "1011": 1.0, "1100": .633, "1101": .800, "1110": .367, "1111": .267 };
+  var dots = $("dots"); for (var d = 0; d < 30; d++) dots.appendChild(document.createElement("i"));
+  function explorer() {
+    var key = ["t-scar", "t-her", "t-mor", "t-suc"].map(function (id) { return $(id).checked ? "1" : "0"; }).join("");
+    var k = Math.round(T2[key] * 30);
+    Array.prototype.forEach.call(dots.children, function (el, i) { el.classList.toggle("hit", i < k); });
+    $("dotsbig").textContent = k + " of 30 ponds";
+    var all = key === "1111";
+    $("dotsnote").textContent = all ? "With everything switched on, as in the original thesis: the lowest score on the board." : (k > 8 ? "Switching things off made the big wells easier to find, not harder." : "");
+  }
+  ["t-scar", "t-her", "t-mor", "t-suc"].forEach(function (id) { $(id).addEventListener("change", explorer); });
+  explorer();
+})();
+</script>
+</body></html>
