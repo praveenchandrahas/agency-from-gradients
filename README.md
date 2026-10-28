@@ -28,7 +28,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 
 ## Try it live
 
-`webapp/index.html` is a single self-contained file. Open it in any browser, no install and no server. It runs the same world in JavaScript, in real time, and explains what you are seeing in plain language: a headline that narrates the current state, a "sunshine used or wasted" bar, where the creatures' energy comes from, and a panel of the creatures' average instincts. To host it, enable GitHub Pages on the `/webapp` folder.
+`webapp/index.html` is a single self-contained file. Open it in any browser, no install and no server. It runs the same world in JavaScript, in real time, and explains what you are seeing in plain language: a headline that narrates the current state, a "sunshine used or wasted" bar, where the creatures' energy comes from, and a panel of the creatures' average instincts. It is published to GitHub Pages by `.github/workflows/pages.yml` (one-time setup: Settings, Pages, Source = GitHub Actions). Pages cannot serve an arbitrary folder like `/webapp` directly, which is why a workflow is used.
 
 Four presets: **Natural selection** (random creatures; those with spare energy have children), **Random parents** (a control), **Reward burning energy** (entropy used as the reward), and **A hand-coded expert** (fixed rules we wrote, to show what success could look like).
 
