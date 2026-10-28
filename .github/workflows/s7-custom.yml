@@ -1,0 +1,25 @@
+name: s7-custom
+# Free-form S7 run (pilots, scaled worlds). Trigger: Actions tab -> s7-custom -> Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      seeds: { description: "number of seeds", default: "2" }
+      seed0: { description: "first seed (pilots: >=1000)", default: "1100" }
+      scale: { description: "torus scale (area x scale^2)", default: "2" }
+      steps: { description: "steps per run", default: "200000" }
+      only: { description: "comma-separated variant substrings (empty = all)", default: "recurrent (~2,000 genes),small chemotaxis" }
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run S7
+        run: |
+          ARGS="--seeds ${{ inputs.seeds }} --seed0 ${{ inputs.seed0 }} --scale ${{ inputs.scale }} --long-steps ${{ inputs.steps }} --workers 4 --out out"
+          if [ -n "${{ inputs.only }}" ]; then python -m agency_gradients.experiments.s7_complex_world $ARGS --only "${{ inputs.only }}"; else python -m agency_gradients.experiments.s7_complex_world $ARGS; fi
+      - uses: actions/upload-artifact@v4
+        with: { name: results-s7-custom, path: out/ }
