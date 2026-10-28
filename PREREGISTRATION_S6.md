@@ -31,3 +31,7 @@ Any claim about kin sharing, other decay rates, other trace forms, entropy rate,
 ## Deviation log
 
 (none yet)
+
+## Outcome
+
+H6a not supported (CI includes 0); H6b not supported (heredity still lowers `t2_reached`; `share_tier2` CI includes 0). No deviations. Reports in `docs/results/s6_*`.

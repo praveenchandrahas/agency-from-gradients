@@ -1,0 +1,38 @@
+name: complex-world-runs
+# S6 (private benefit) and S7 (complex world, ~2,000-gene recurrent policies, 100,000 steps).
+# S7 is split into one job per variant so each fits the runner time limit.
+# Trigger manually: Actions tab -> complex-world-runs -> Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      seeds:
+        description: "number of seeds (preregistered: 30)"
+        default: "30"
+jobs:
+  s6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - run: python -m agency_gradients.experiments.s6_private_benefit --seeds ${{ inputs.seeds }} --seed0 0 --workers 4 --out out
+      - uses: actions/upload-artifact@v4
+        with: { name: results-s6, path: out/ }
+  s7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        only: ["recurrent (~2,000 genes)", "random parents", "feed-forward", "small chemotaxis", "hand-coded"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run S7 variant
+        run: python -m agency_gradients.experiments.s7_complex_world --seeds ${{ inputs.seeds }} --seed0 0 --workers 4 --only "${{ matrix.only }}" --out out
+      - uses: actions/upload-artifact@v4
+        with: { name: "results-s7-${{ strategy.job-index }}", path: out/ }

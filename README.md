@@ -105,6 +105,15 @@ Raw per-run CSVs and the generated reports are in [`docs/results/`](docs/results
 - **Succession did not help.** The ladder without succession had a higher entropy rate (33.0) than the full ladder (27.3) and a nominally higher big-deposit rate (0.37 vs 0.27), though the preregistered succession effect on `t2_reached` is not shown (CI includes zero).
 - **Not tested:** whether any of this transfers to Earth, whether a less-biased policy class would behave differently (the generic MLP did not evolve), Barrow's miniaturisation counter-argument (S5), or prediction.
 
+### S6: testing the free-rider explanation (preregistered in [`PREREGISTRATION_S6.md`](PREREGISTRATION_S6.md))
+
+If opening a deposit were a public good that selection punishes, making the benefit private should help. In the `contributor` rule the harvest on a deposit is split by each agent's recent investment. Result (30 seeds): **not supported at this power**.
+
+- H6a, contributor minus equal sharing (heredity on): tier-2 energy share +0.024 [-0.023, 0.075]; reached big deposits +0.13 [-0.10, 0.37]. The direction is as predicted, the interval includes zero.
+- H6b, heredity minus no heredity (contributor): tier-2 share -0.017 [-0.059, 0.032]; reached big deposits -0.60 [-0.77, -0.43]. Heredity still does not help, and random fresh genomes still reach big deposits in 100% of runs.
+
+So the simple free-rider story is not confirmed. Something else makes inherited policies avoid, or fail to sustain, the big deposits. Candidates (untested): the policy class is too constrained to learn a conditional, cooperative "invest only when others are nearby" rule; the cost and the payoff arrive too far apart for 27 genes to link; or the extrinsic hazard dominates. This is why the next step is a richer world and genome (below).
+
 <p align="center"><img src="figures/s1_selection.png" alt="S1: four selection rules compared" width="100%"></p>
 <p align="center"><img src="figures/trajectories.png" alt="Entropy production and big-deposit share over time" width="100%"></p>
 <p align="center"><img src="figures/s2_heatmap.png" alt="All 16 combinations of the four conditions" width="100%"></p>
