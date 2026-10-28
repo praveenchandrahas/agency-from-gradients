@@ -139,3 +139,55 @@ def test_contributor_sharing_closes_ledger_and_rewards_investors():
         w.step()
     assert abs(w.ledger_residual()) < 1e-6
     assert np.all(w.contrib[~w.alive] >= 0)
+
+
+V2 = dict(world_v2=True, steps=500)
+
+
+def test_v1_default_unchanged_by_v2_code():
+    # pinned from the confirmatory run (seed 0, 20000 steps would be slow; short run pinned here)
+    a = World(Config(steps=300), 0).run().summary()
+    b = World(Config(steps=300, world_v2=False), 0).run().summary()
+    assert a == b
+
+
+import pytest
+
+
+@pytest.mark.parametrize("policy", ["recurrent", "mlp2", "equivariant2"])
+@pytest.mark.parametrize("kw", [{}, dict(mortality=False), dict(deposit_share="contributor"), dict(succession=False)])
+def test_v2_ledger_closes(policy, kw):
+    from agency_gradients.world import make_world
+    w = make_world(Config(policy=policy, **V2, **kw), 3)
+    for _ in range(500):
+        w.step()
+        assert abs(w.ledger_residual()) < 1e-6
+
+
+def test_v2_walls_block_and_params_large():
+    import numpy as np
+    from agency_gradients.world import make_world, n_params
+    w = make_world(Config(policy="recurrent", **V2), 1)
+    assert n_params("recurrent") > 1500
+    w.run(300)
+    assert not w.wall[w.pos[w.alive, 0], w.pos[w.alive, 1]].any()
+
+
+def test_v2_oracle_runs_and_deterministic():
+    from agency_gradients.controls import oracle_policy
+    from agency_gradients.world import make_world
+    def go():
+        w = make_world(Config(policy="equivariant2", **V2), 5)
+        w.policy = oracle_policy
+        return w.run().summary()
+    assert go() == go()
+
+
+def test_v2_config_many_genes_and_generations():
+    from agency_gradients.config import v2_config
+    from agency_gradients.world import make_world
+    w = make_world(v2_config(steps=3000), 2).run()
+    s = w.summary()
+    assert s["n_genes"] > 2000
+    assert s["gen_mean"] > 10          # many generations of descent
+    assert abs(w.ledger_residual()) < 1e-6

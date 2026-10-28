@@ -31,7 +31,13 @@ P_MLP = N_OBS * HID + HID + HID * N_ACT + N_ACT
 P_EQ = N_CH * 3 + 6
 
 
+V2_POLICIES = ("recurrent", "mlp2", "equivariant2")
+
+
 def n_params(policy: str) -> int:
+    if policy in V2_POLICIES:
+        from .policies_v2 import n_params_v2
+        return n_params_v2(policy)
     if policy == "equivariant":
         return P_EQ
     if policy == "mlp":
@@ -44,6 +50,9 @@ LOOK = DIRS[:5]
 
 
 def random_genomes(rng: np.random.Generator, n: int, policy: str = "equivariant") -> np.ndarray:
+    if policy in V2_POLICIES:
+        from .policies_v2 import random_genomes_v2
+        return random_genomes_v2(rng, n, policy)
     if policy == "equivariant":
         return rng.normal(0.0, 1.0, (n, P_EQ))
     g = np.empty((n, P_MLP))
@@ -495,10 +504,18 @@ class World:
         return out
 
 
+def make_world(cfg: Config, seed: int, n_agents: int | None = None) -> "World":
+    """World factory: v1 unless cfg.world_v2."""
+    if cfg.world_v2:
+        from .world_v2 import WorldV2
+        return WorldV2(cfg, seed, n_agents)
+    return World(cfg, seed, n_agents)
+
+
 def passive_entropy_rate(cfg: Config, seed: int = 0, steps: int = 400) -> float:
     """Entropy rate of the same environment with no agents (the denominator of
     the Capture Ratio)."""
-    w = World(cfg, seed, n_agents=0)
+    w = make_world(cfg, seed, n_agents=0)
     w.run(steps)
     lg = np.asarray(w.log["leak"])
     return float(lg[steps // 2:].mean())

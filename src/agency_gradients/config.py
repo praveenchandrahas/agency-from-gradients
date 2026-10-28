@@ -66,6 +66,20 @@ class Config:
     deposit_share: str = "equal"  # "equal": reservoir harvest split evenly on a cell; "contributor": split by recent investment
     contrib_decay: float = 0.98    # per-step decay of an agent's investment trace
     contrib_floor: float = 0.02    # weight of a non-investor relative to one unit of trace
+    # --- WORLD v2 (opt-in; world_v2=False reproduces S1-S6 exactly) -----------------
+    world_v2: bool = False
+    season_amp: float = 0.5        # commons regrowth multiplier = 1 + amp * sin(2 pi t / period)
+    season_period: int = 2000
+    n_walls: int = 8               # impassable line segments (gaps remain, so the torus stays connected)
+    wall_len: int = 8
+    n_danger: int = 3              # danger zones: extra death hazard (only if mortality is on)
+    danger_radius: float = 3.0
+    danger_hazard: float = 0.03
+    signal_decay: float = 0.05     # pheromone field: fraction lost per step
+    signal_diffuse: float = 0.20   # fraction spread to the four neighbours per step
+    signal_cost: float = 0.02      # energy cost of emitting a signal (heat)
+    mut_big_p: float = 0.0         # v2: per-gene chance of a rare large-effect mutation per birth
+    mut_big_sigma: float = 1.0
     drift_restore: float = 0.05    # random-parents birth rate per missing individual
     entropy_repro_spent: float = 12.0  # entropy mode: energy burned per child
 
@@ -90,3 +104,13 @@ class Config:
 
 FACTORS = ("scarcity", "heredity", "mortality", "succession")
 SELECTIONS = ("persistence", "entropy", "task", "drift")
+
+
+def v2_config(**kw) -> Config:
+    """World v2 with a ~2,000-gene recurrent policy, many generations and a
+    two-scale mutation model (frequent small point mutations, rare large ones).
+    Mutation settings are fixed before any v2 confirmatory run."""
+    base = dict(world_v2=True, policy="recurrent", steps=100_000,
+                mut_rate=0.02, mut_sigma=0.10, mut_big_p=0.0005, mut_big_sigma=1.0)
+    base.update(kw)
+    return Config(**base)

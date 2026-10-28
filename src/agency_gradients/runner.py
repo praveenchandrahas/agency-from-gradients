@@ -8,7 +8,7 @@ from functools import lru_cache
 
 from .config import Config
 from .probes import viability_probe
-from .world import World, passive_entropy_rate
+from .world import make_world, passive_entropy_rate
 
 
 @lru_cache(maxsize=None)
@@ -19,7 +19,7 @@ def _passive(cfg: Config) -> float:
 def run_one(job: dict) -> dict:
     cfg: Config = job["cfg"]
     seed: int = job["seed"]
-    w = World(cfg, seed).run()
+    w = make_world(cfg, seed).run()
     row = dict(job["labels"])
     row["seed"] = seed
     row.update(w.summary(passive_rate=_passive(cfg)))
