@@ -8,6 +8,8 @@ on:
       scale: { description: "torus scale (area x scale^2)", default: "2" }
       steps: { description: "steps per run", default: "200000" }
       only: { description: "comma-separated variant substrings (empty = all)", default: "recurrent (~2,000 genes),small chemotaxis" }
+permissions:
+  contents: write
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -23,3 +25,17 @@ jobs:
           if [ -n "${{ inputs.only }}" ]; then python -m agency_gradients.experiments.s7_complex_world $ARGS --only "${{ inputs.only }}"; else python -m agency_gradients.experiments.s7_complex_world $ARGS; fi
       - uses: actions/upload-artifact@v4
         with: { name: results-s7-custom, path: out/ }
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="runs/${GITHUB_RUN_ID}-s7-custom"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/ || true
+          git config user.name "github-actions"; git config user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
