@@ -21,8 +21,8 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S1-S4 and positive control | **Confirmatory run done** (30 seeds per cell). See results below |
 | S6: private benefit of opening deposits (free-rider test) | **Confirmatory run done**: not supported at this power |
 | World v2: ~2,070-gene recurrent policy, memory, heritable body traits, seasons, walls, danger zones, signalling | Implemented and tested (ledger closes, v1 unchanged bit for bit) |
-| S7: complex world over many generations | **Pilot only** (4 seeds, ~650 generations); a larger-world pilot is running; **not preregistered yet** |
-| S8: total entropy as an explicit objective | **Pilot only** (2 optimisation runs per kappa); preregistered, confirmatory run pending |
+| S7: complex world over many generations | **Pilots only** (4 seeds, ~650 generations; 2 seeds, ~1,780 generations on a 4x world). Recurrent policy did not beat the small policy. **Not preregistered yet** |
+| S8: total entropy as an explicit objective | **Confirmatory run done** (5 optimisation runs per kappa): H8a and H8c supported, H8b not |
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | Predictive-information probe | **Not implemented** |
@@ -144,37 +144,44 @@ Prompted by the objection that agency will not evolve from a few dozen genes. `C
 
 The hand-coded forager still runs in v2 (the first 37 observation channels are identical).
 
-### S7 pilot: has not shown anything yet
+### S7 pilots: no sign yet that more genes and more generations help
 
-4 seeds, 100,000 steps (about 650 generations on average), 5 variants (`docs/results/pilot/s7_*`):
+- **4 seeds, 100,000 steps** (about 650 generations, population about 55): the 2,070-gene recurrent policy did not find big deposits (tier-2 energy share about 0.1%) and did worse than the 29-gene chemotaxis policy on the same world (entropy rate -4.0). Random parents went extinct in 1 of 4 runs, so the recurrent-vs-random gap is confounded.
+- **2 seeds, 200,000 steps, 4x area** (about 1,780 generations, population about 290; `docs/results/pilot/s7_large/`): both policies reached big deposits in both runs, but the recurrent policy again scored below the small one: tier-2 share 1.6% vs 6.3% (difference -4.7 points, CI [-8.5, -0.9]) and entropy rate 100 vs 120 (difference -19.9, CI [-24.4, -15.4]). Its tier-2 share did not rise from the first window to the last (-1.6 points, CI [-3.6, 0.4]).
 
-- The 2,070-gene recurrent policy did **not** find big deposits (tier-2 energy share about 0.1%), beat random parents on entropy rate (+4.9) but random parents went extinct in 1 of 4 runs, so that gap is confounded, and did *worse* than the 29-gene chemotaxis policy on the same world (-4.0).
-- Its learning curve was flat after about 40% of the run. This is a pilot with 4 seeds and is not evidence about the thesis. A larger-world pilot (about 200 agents, 200,000 steps) is running on GitHub Actions; S7 will be preregistered after it, and before any confirmatory run.
+These are pilots (2-4 seeds, mutation rates not tuned) and say nothing yet about the thesis. They do say that, in this world, a 2,000-gene prior-free policy with about 1,800 generations is not enough to beat a 29-gene policy with a chemotaxis-shaped prior. Candidate reasons, all untested: the mutation model (about 40 point mutations per child, mostly harmful in a large recurrent net), no recombination, selection pressure on any single gene being very weak, or a world where the payoff for investing is not learnable by gradual mutation. S7 will be preregistered before any confirmatory run.
 
 ## S8: what if entropy IS the objective? ([`PREREGISTRATION_S8.md`](PREREGISTRATION_S8.md))
 
 The reverse of everything above, on purpose. A single shared controller is optimised directly for the world's total entropy production with evolution strategies. Life forms eat and scavenge leftover energy exactly as before, but nothing rewards survival or reproduction. We then ask what behaviour the objective produces.
 
-Pilot (2 optimisation runs per kappa, seeds 1000-1001; **not confirmatory**, `docs/results/pilot/s8_*`):
+**Confirmatory result** (5 optimisation runs per kappa, seeds 0-4; reports in `docs/results/s8/`; 8 held-out worlds each):
 
 | kappa = 3 | entropy rate | capture fraction | big-deposit share | actions spent investing |
 |---|---|---|---|---|
-| optimised for entropy | 40.0 | 0.92 | 0.41 | 0.71 |
+| optimised for entropy (mean of 5 runs) | 35.8 [29.5, 40.1] | 0.88 | 0.33 | 0.54 |
 | hand-coded forager | 29.0 | 0.49 | 0.63 | 0.27 |
 | random controller | 19.0 | 0.42 | 0.06 | 0.13 |
 | always move | 20.3 | 0.55 | 0.00 | 0.00 |
 | no life forms | 11.8 | 0.00 | 0.00 | 0.00 |
 
-- With entropy as the objective, the controller captures nearly everything (92%) and parks at the big deposits, spending 71% of its actions on investing. Investing is the costliest action, so it is also the most entropy-producing: this looks like a **furnace**, not a forager. It beats our best hand-written forager on the objective itself, which is exactly what an objective-maximiser should do.
-- At kappa = 1 the controller gained little (14.4 vs 11.0 for random, 15.3 for the forager) and the two runs disagreed (11.8 and 16.2). At kappa = 1 entropy is almost fixed by the energy inflow, so there is little to optimise.
+| Hypothesis | Result | Verdict |
+|---|---|---|
+| **H8a** optimised beats the hand-coded forager on entropy rate | +6.85 [0.58, 11.11] | **Supported** |
+| **H8b** optimised spends more of its actions investing ("furnace") | +0.27 [-0.01, 0.44] | **Not supported** at this power (the interval just reaches zero) |
+| **H8c** the gain is larger at kappa = 3 than at kappa = 1 | +12.96 [6.58, 17.54] | **Supported** |
 
-**Two cautions that apply to every S8 result.** (1) The objective counts agent dissipation as kappa times passive leakage, so "capture energy and burn it" scores higher by construction: S8 shows *which behaviour* maximises an assumed quantity, not that the assumption is right. (2) One shared controller removes the free-rider problem that blocked individual selection in S2 and S6. Cooperation is trivial when all agents run the same rule, so S8 cannot be read as "objective-driven evolution solves cooperation".
+What the optimisation did:
+
+- **Four of five runs found the same solution; one did not.** In those four the controller captured about 90% of the energy, held the big deposits open (`t2` reached in 3 of 4 fully, 0.5 in the fourth) and spent 59-73% of its actions investing. Fitness 36-41. The fifth run never found the deposits (fitness 23.6, no investing). With 5 runs, the spread matters more than the mean.
+- **It beats our best hand-written forager on the objective itself**, with higher capture (0.88 vs 0.49) and a larger surviving population (57 vs 42), though a smaller share from big deposits (0.33 vs 0.63). Because the objective rewards burning energy, much of its edge is the heat from constant investing, so it is closer to a furnace than a forager. H8b's near-miss reflects that one run did not find the solution.
+- **At kappa = 1 there is little to optimise**, as predicted: the gain over random is about 3.9 (0.8 to 5.6), and two of five runs ended with the population nearly gone. H8c is the preregistered way of saying this: **the objective's power comes from the kappa assumption**, so S8 reveals which behaviour maximises an assumed quantity, not that the assumption holds.
 
 The objective can be gamed, which is the point of testing it: an explicit entropy goal selects for burning energy, not for anything we would call agency.
 
 ## Reproducing on GitHub Actions (no tokens, no local compute)
 
-All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S1-S4 and the control), `complex-world-runs` (S6 and the five S7 variants), `s7-custom` (free-form S7 pilots, scaled worlds), `s8-entropy-objective` (S8), and `pages` (publishes the explainer and the grid view). Each uploads its results as artifacts and also commits them to a `ci-results` branch, so they can be read without downloading artifacts.
+All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S1-S4 and the control), `complex-world-runs` (S6 and the five S7 variants), `s7-custom` (free-form S7 pilots, scaled worlds), `s8-entropy-objective` (S8), `ci-publish-test` (a tiny check of the results-publishing step), and `pages` (publishes the explainer and the grid view). Each uploads its results as artifacts and also commits them to a `ci-results` branch, so they can be read without downloading artifacts.
 
 ## Notes from the pilot (seeds 1000-1003, not confirmatory)
 
@@ -195,8 +202,8 @@ All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S
 
 ## Roadmap
 
-- S7: finish the larger-world pilot, then preregister and run the confirmatory comparison of the recurrent policy against random parents and the small policy.
-- S8: confirmatory run (5 optimisation runs per kappa), then a behaviour analysis of what the optimised controllers actually do.
+- S7: decide with the pilots in hand whether to add recombination, a lower mutation rate, or a larger population before preregistering the confirmatory comparison.
+- S8: a deeper behaviour analysis of what the optimised controllers do (where they sit, how they coordinate), and why one of five runs failed.
 - If big deposits are still not found under individual selection: kin sharing (benefits shared among relatives), larger populations, and sexual recombination.
 - Bring the v2 world into the explainer's pond.
 - S5: add an efficiency pathway and deplete gradients, to see whether populations go thermodynamically quiet (Barrow's miniaturisation counter-argument).

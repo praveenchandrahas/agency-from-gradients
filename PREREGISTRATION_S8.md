@@ -28,3 +28,7 @@ Supported if `gain(kappa=3) - gain(kappa=1)` has a 95% CI above 0.
 ## Deviation log
 
 (none yet)
+
+## Outcome (confirmatory run, ES seeds 0-4, `docs/results/s8/`)
+
+H8a supported (+6.85 [0.58, 11.11]). H8b not supported (+0.27 [-0.01, 0.44]); one of the five kappa = 3 runs never found the deposits (fitness 23.6, no investing), which is what pulls the interval to zero. H8c supported (+12.96 [6.58, 17.54]; computed by `docs/results/s8/h8c.md` from the two kappa jobs). No deviations.
