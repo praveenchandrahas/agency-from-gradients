@@ -1,0 +1,35 @@
+name: confirmatory-runs
+# Runs the preregistered experiments (seeds 0-29, default Config) on GitHub's runners.
+# Trigger manually: Actions tab -> confirmatory-runs -> Run workflow.
+# Each experiment is its own parallel job; results are uploaded as artifacts.
+on:
+  workflow_dispatch:
+    inputs:
+      seeds:
+        description: "number of seeds (preregistered: 30)"
+        default: "30"
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        experiment: [s1_selection, s2_ablation, s3_succession, s4_agency, s_control]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Record provenance
+        run: |
+          mkdir -p out
+          { echo "commit: $GITHUB_SHA"; echo "experiment: ${{ matrix.experiment }}";
+            python --version; python -c 'import numpy; print("numpy", numpy.__version__)'; } > out/RUN_INFO.txt
+      - name: Run ${{ matrix.experiment }}
+        run: python -m agency_gradients.experiments.${{ matrix.experiment }} --seeds ${{ inputs.seeds }} --seed0 0 --workers 4 --out out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.experiment }}
+          path: out/
