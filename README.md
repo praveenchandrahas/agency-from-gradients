@@ -23,6 +23,8 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | World v2: ~2,070-gene recurrent policy, memory, heritable body traits, seasons, walls, danger zones, signalling | Implemented and tested (ledger closes, v1 unchanged bit for bit) |
 | S7: complex world over many generations | **Pilots only** (4 seeds, ~650 generations; 2 seeds, ~1,780 generations on a 4x world). Recurrent policy did not beat the small policy. |
 | S7-v3: combined package (recombination, low mutation, 3x arena, ~5,300 genes, richer world), preregistered | **H7a, H7b, H7c not supported** (20 seeds/arm). 90% of big-genome runs went extinct. See below |
+| S9: private reward learned in a lifetime (energy vs heat) | **H9a-d not supported** (20 seeds/arm). See below |
+| S10: England-style dissipative adaptation, no selection | **H10a-c supported (by construction), H10d-e not** (20 seeds/arm). See below |
 | S8: total entropy as an explicit objective | **Confirmatory run done** (5 optimisation runs per kappa): H8a and H8c supported, H8b not |
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
@@ -180,6 +182,39 @@ What the optimisation did:
 
 The objective can be gamed, which is the point of testing it: an explicit entropy goal selects for burning energy, not for anything we would call agency.
 
+### S9: a learned private reward did not produce agency by our criteria (negative)
+
+Preregistered in `PREREGISTRATION_S9.md`; plain world v2, 100k steps, 20 seeds per arm, no extinctions (`docs/results/s9/`).
+
+| arm | entropy rate | tier-2 share | predictive probe (trained - random) | viability recovery (trained - random) | evolved recovery | random recovery |
+|---|---|---|---|---|---|---|
+| no learning | 100.8 | 0.026 | 0.024 | 0.134 | 0.480 | 0.346 |
+| learn from energy change | 115.5 | 0.117 | 0.027 | 0.058 | 0.457 | 0.399 |
+| learn from heat (private entropy reward) | 109.6 | 0.053 | 0.027 | 0.238 | 0.458 | 0.220 |
+
+- H9a, H9b (learning raises the predictive probe): not supported (+0.003 [-0.025, 0.032]; +0.002 [-0.022, 0.029]). The probe is near zero in every arm. It has no positive control, so this does not separate "no predictive information" from "probe too weak".
+- H9c (energy learning raises recovery): not supported, and the sign is reversed (-0.077 [-0.144, -0.012]).
+- H9d (heat worse than energy for recovery): not supported, and the sign is reversed (+0.180 [0.114, 0.245]).
+- **The reversed signs are a probe confound, not better agents.** Evolved agents recover equally in all arms (0.46-0.48). What moves is the random baseline: learning from energy helps naive random agents (0.35 to 0.40), and learning from heat hurts them (0.35 to 0.22). The "delta" therefore measures how much the learning rule helps or hurts a random agent, not how agent-like the evolved population is. I should have seen this before preregistering; the preregistered contrast is reported as registered.
+- Secondary: both learning arms raised the entropy rate (+14.7 [9.3, 19.8] for energy, +8.8 [3.4, 13.9] for heat). Energy learning raised the tier-2 share (+0.091 [0.031, 0.149]); heat learning did not (+0.027 [-0.025, 0.078]). The heat arm did not produce more entropy than the energy arm (-5.9 [-11.2, -0.7]); the explicit entropy reward was no better at producing entropy than the life-like signal.
+
+### S10: England-style dissipative adaptation with no selection
+
+Preregistered in `PREREGISTRATION_S10.md`; no births, no deaths, 60 agents, 100k steps, 20 seeds per arm (`docs/results/s10/`).
+
+| arm | intake per agent-step (late) | tier-2 share of intake |
+|---|---|---|
+| bias toward absorbed work | 0.200 | 0.476 |
+| bias toward dissipated work (capped by intake) | 0.205 | 0.497 |
+| neutral (random keep/revert) | 0.163 | 0.510 |
+| opposite bias | 0.110 | 0.618 |
+| hand-coded forager | 0.033 | 0.701 |
+
+- H10a-c (manipulation checks): supported. Absorbed - neutral +0.036 [0.023, 0.049]; dissipated - neutral +0.041 [0.031, 0.051]; absorbed - opposite +0.089 [0.074, 0.104]. A dose-response is what a rule that hill-climbs on intake gives, so it is expected by construction and is not evidence about physics.
+- H10d (the biased rule climbs the ladder): not supported (-0.033 [-0.070, 0.004]). H10e (dissipation-capped version): not supported (-0.013 [-0.050, 0.023]). The hypothesis H10e was preregistered but I did not code it into the analysis script; the number above comes from the descriptive line and I am recording the omission here.
+- The opposite bias had the highest tier-2 share of the arms with a rearrangement rule (0.62). The intake measure favours commons grazing, and the hand-coded forager scores worst on it (0.033) while scoring best on tier-2 share. So per-agent intake rewards the wrong behaviour for this world, and a rule that maximises it drifts away from the ladder.
+- Bottom line: with the bias imposed, the system absorbs more energy than under drift, but it does not climb the ladder, and nothing agent-like follows from that alone.
+
 ## Reproducing on GitHub Actions (no tokens, no local compute)
 
 All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S1-S4 and the control), `complex-world-runs` (S6 and the five S7 variants), `s7-custom` (free-form S7 pilots, scaled worlds), `s8-entropy-objective` (S8), `ci-publish-test` (a tiny check of the results-publishing step), and `pages` (publishes the explainer and the grid view). Each uploads its results as artifacts and also commits them to a `ci-results` branch, so they can be read without downloading artifacts.
@@ -232,7 +267,7 @@ docs/DESIGN.md
 docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
 PREREGISTRATION.md   H1-H5
-PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md
+PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md
 ```
 
 ## License

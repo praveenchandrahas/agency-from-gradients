@@ -35,5 +35,8 @@ Intake: absorbed 0.209, dissipated 0.203, neutral 0.177, anti 0.125, forager 0.0
 - Entropy rate is reported but not used for inference: with mortality off, bailout energy inflates it.
 - Anti having the highest tier-2 share in the pilot would be reported as found; it is not explained away.
 
+## Outcome (Actions run 40838878816, seeds 0-19)
+H10a-c supported (expected by construction). H10d not supported (-0.033 [-0.070, 0.004]); H10e not supported (-0.013 [-0.050, 0.023]). Report: `docs/results/s10/`.
+
 ## Deviation log
-(empty at registration)
+H10e was preregistered but not coded into the analysis script; it was computed from the descriptive line of the same script output. No other deviation.

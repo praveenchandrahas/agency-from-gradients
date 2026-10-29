@@ -31,5 +31,8 @@ Supported means the stated CI bound excludes zero in the stated direction. Secon
 - The heat arm rewards spending; if it produces more entropy but not more recovery or prediction, that repeats the S8 lesson at the individual level.
 - Learning is within a lifetime and not inherited, so this does not test a Baldwin effect.
 
+## Outcome (Actions run 40838928605, seeds 0-19)
+H9a, H9b, H9c, H9d: all NOT supported. H9c and H9d have the reversed sign, but the viability delta is confounded: evolved recovery is the same in all arms (0.46-0.48) and the delta moves only because learning helps (energy) or hurts (heat) the random baseline. Predictive probe near zero everywhere, with no positive control. Report: `docs/results/s9/`.
+
 ## Deviation log
-(empty at registration)
+None.
