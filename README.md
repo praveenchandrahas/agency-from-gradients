@@ -21,7 +21,8 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S1-S4 and positive control | **Confirmatory run done** (30 seeds per cell). See results below |
 | S6: private benefit of opening deposits (free-rider test) | **Confirmatory run done**: not supported at this power |
 | World v2: ~2,070-gene recurrent policy, memory, heritable body traits, seasons, walls, danger zones, signalling | Implemented and tested (ledger closes, v1 unchanged bit for bit) |
-| S7: complex world over many generations | **Pilots only** (4 seeds, ~650 generations; 2 seeds, ~1,780 generations on a 4x world). Recurrent policy did not beat the small policy. **Not preregistered yet** |
+| S7: complex world over many generations | **Pilots only** (4 seeds, ~650 generations; 2 seeds, ~1,780 generations on a 4x world). Recurrent policy did not beat the small policy. |
+| S7-v3: combined package (recombination, low mutation, 3x arena, ~5,300 genes, richer world), preregistered | **H7a, H7b, H7c not supported** (20 seeds/arm). 90% of big-genome runs went extinct. See below |
 | S8: total entropy as an explicit objective | **Confirmatory run done** (5 optimisation runs per kappa): H8a and H8c supported, H8b not |
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
@@ -202,7 +203,7 @@ All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S
 
 ## Roadmap
 
-- S7: decide with the pilots in hand whether to add recombination, a lower mutation rate, or a larger population before preregistering the confirmatory comparison.
+- S7 follow-up: the v3 package failed (mostly extinction). Next candidate: make the world survivable for prior-free genomes (viable seeding or a gentler start) and preregister that as a new test.
 - S8: a deeper behaviour analysis of what the optimised controllers do (where they sit, how they coordinate), and why one of five runs failed.
 - If big deposits are still not found under individual selection: kin sharing (benefits shared among relatives), larger populations, and sexual recombination.
 - Bring the v2 world into the explainer's pond.
@@ -231,9 +232,26 @@ docs/DESIGN.md
 docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
 PREREGISTRATION.md   H1-H5
-PREREGISTRATION_S6.md, PREREGISTRATION_S8.md   (S7 will follow its larger-world pilot)
+PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md
 ```
 
 ## License
 
 Apache-2.0. See [`LICENSE`](LICENSE).
+
+### S7-v3 confirmatory: the combined package did not work (negative result)
+
+Preregistered in `PREREGISTRATION_S7.md` before the run; 20 seeds per arm, 200k steps, world v3 at scale 3 (full table: `docs/results/s7_v3/`).
+
+| arm | tier-2 share | entropy rate | generations | extinct before 200k steps |
+|---|---|---|---|---|
+| A: recurrent, ~5,300 genes, persistence selection | 0.000 | 112 | ~1,500 | 90% |
+| B: same genome, random parents | 0.000 | 117 | ~1,600 | 70% |
+| C: 29-gene policy | 0.037 [0.001, 0.090] | 198 | ~1,800 | 20% |
+| D: hand-coded forager (headroom) | 0.399 [0.295, 0.501] | 201 | ~3,000 | 20% |
+
+- H7a (A - B > 0): not supported (difference -0.000 [-0.001, -0.000]). H7b (A - C > 0): not supported, and the sign is reversed (-0.037 [-0.092, -0.001]). H7c (A improves over its own run): not supported (-0.020 [-0.033, -0.008]).
+- Persistence selection did not help the large genome. A and B are indistinguishable on entropy rate, generations and extinction (the extinction difference, 90% vs 70%, has overlapping intervals).
+- Big caveat: most A and B populations died out, so their metrics come from truncated runs. v3 is harsh for prior-free genomes, and even the hand-coded forager (D) lost 20% of its runs. The test therefore shows that this package fails at this budget; it does not show whether a big genome could evolve ladder use in a gentler world.
+- The package was bundled, so the result cannot be attributed to any one component.
+- Not tried: seeding with a viable population, an easier world, a longer survival grace period, or a curriculum from v1 to v3. Any of these would be a new preregistered test.

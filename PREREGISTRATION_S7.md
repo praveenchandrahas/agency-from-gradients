@@ -30,5 +30,8 @@ Secondary, descriptive only: entropy_rate, generations (gen_mean), signal_rate, 
 - Entropy is measured, never rewarded; selection is by persistence only (as in earlier experiments).
 - Plumbing smoke tests only on seeds >= 1000.
 
+## Outcome (recorded after the run, Actions run 40738250309, seeds 0-19)
+H7a, H7b, H7c: all NOT supported. A - B share_tier2 -0.000 [-0.001, -0.000]; A - C -0.037 [-0.092, -0.001]; A last - first window -0.020 [-0.033, -0.008]. Extinction before 200k steps: A 90%, B 70%, C 20%, D 20%, so A/B metrics come from truncated runs. Report: `docs/results/s7_v3/`.
+
 ## Deviation log
-(empty at registration)
+None. (Extinction handling was not specified in advance; extinct runs are included as they ended, which is a gap in this preregistration.)
