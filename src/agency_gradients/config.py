@@ -93,6 +93,19 @@ class Config:
     drift_restore: float = 0.05    # random-parents birth rate per missing individual
     entropy_repro_spent: float = 12.0  # entropy mode: energy burned per child
 
+    # --- S9 / S10 additions (opt-in; defaults reproduce everything before) --------------
+    plastic: str = "off"           # S9: "off" | "energy" | "heat" - within-lifetime learning (recurrent policy only).
+                                   # The learning signal is the agent's own energy change, or the heat it dissipates.
+                                   # Selection stays what cfg.selection says (persistence); learning is not inherited.
+    plastic_lr: float = 0.05
+    plastic_trace: float = 0.95    # eligibility trace decay
+    england: str = "off"           # S10: "off" | "absorbed" | "dissipated" | "neutral" | "anti". No births, no deaths:
+                                   # an agent's policy is re-drawn only by a dissipation-biased rearrangement rule.
+    eng_window: int = 100          # steps per evaluation window
+    eng_beta: float = 10.0         # bias of acceptance by relative change in the score
+    eng_sigma: float = 0.3         # size of a proposed rearrangement (per changed gene)
+    eng_frac: float = 0.3          # fraction of policy genes changed per proposal
+
     # --- accounting assumption (see docs/DESIGN.md) ------------------------------
     kappa: float = 3.0             # entropy per unit energy dissipated by an agent;
                                    # passive leakage counts 1.0

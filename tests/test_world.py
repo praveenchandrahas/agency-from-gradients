@@ -223,3 +223,51 @@ def test_v3_flags_off_leave_v2_unchanged():
     a = make_world(Config(world_v2=True, policy="recurrent", steps=400), 1).run().summary()
     b = make_world(Config(world_v2=True, policy="recurrent", steps=400, recomb=False, day_night=False), 1).run().summary()
     assert a == b
+
+
+def test_plastic_and_england_ledgers_close_and_defaults_unchanged():
+    from agency_gradients.config import v2_config, Config
+    from agency_gradients.world import make_world
+    for kw in (dict(plastic="energy"), dict(plastic="heat"),
+               dict(england="absorbed", policy="equivariant2", mortality=False),
+               dict(england="dissipated", policy="equivariant2", mortality=False),
+               dict(england="anti", policy="equivariant2", mortality=False)):
+        w = make_world(v2_config(scale=1, steps=700, **kw), 3)
+        for _ in range(700):
+            w.step()
+            assert abs(w.ledger_residual()) < 1e-6
+    a = make_world(Config(world_v2=True, policy="recurrent", steps=300), 1).run().summary()
+    b = make_world(Config(world_v2=True, policy="recurrent", steps=300, plastic="off", england="off"), 1).run().summary()
+    assert a == b
+
+
+def test_england_world_has_no_births_or_deaths_and_changes_genomes():
+    import numpy as np
+    from agency_gradients.config import v2_config
+    from agency_gradients.world import make_world
+    w = make_world(v2_config(scale=1, steps=800, england="absorbed", policy="equivariant2", mortality=False), 5)
+    g0 = w.genome.copy()
+    w.run()
+    assert int(w.alive.sum()) == w.cfg.init_pop and sum(w.log["births"]) == 0
+    assert not np.allclose(w.genome, g0)
+
+
+def test_plastic_learning_is_not_inherited_and_changes_weights():
+    import numpy as np
+    from agency_gradients.config import v2_config
+    from agency_gradients.world import make_world
+    w = make_world(v2_config(scale=1, steps=600, plastic="energy"), 2)
+    w.run()
+    assert np.abs(w.dW[w.alive]).sum() > 0
+    young = np.flatnonzero(w.alive & (w.age == 0))
+    assert np.abs(w.dW[young]).sum() == 0
+
+
+def test_predictive_probe_runs():
+    import numpy as np
+    from agency_gradients.config import v2_config
+    from agency_gradients.world import make_world
+    from agency_gradients.probes import predictive_probe
+    w = make_world(v2_config(scale=1, steps=500), 4).run()
+    r = predictive_probe(w, steps=120, horizon=10)
+    assert set(r) == {"pred_dr2_evolved", "pred_dr2_random", "pred_delta"}

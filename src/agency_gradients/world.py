@@ -507,6 +507,12 @@ class World:
 def make_world(cfg: Config, seed: int, n_agents: int | None = None) -> "World":
     """World factory: v1 unless cfg.world_v2."""
     if cfg.world_v2:
+        if cfg.england != "off":
+            from .world_learn import EnglandWorld
+            return EnglandWorld(cfg, seed, n_agents)
+        if cfg.plastic != "off":
+            from .world_learn import PlasticWorld
+            return PlasticWorld(cfg, seed, n_agents)
         from .world_v2 import WorldV2
         return WorldV2(cfg, seed, n_agents)
     return World(cfg, seed, n_agents)

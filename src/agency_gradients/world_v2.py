@@ -80,7 +80,14 @@ class WorldV2(World):
         k = super().spawn(genomes, positions, energies, lineages)
         if k and hasattr(self, "h"):
             self.h[free[:k]] = 0.0
+            self._on_birth(free[:k])
         return k
+
+    def _on_birth(self, slots: np.ndarray) -> None:
+        """Hook: per-agent state of subclasses (learned weights, trial genomes) is reset here."""
+
+    def _post_step(self, idx: np.ndarray, gain: np.ndarray, cost: np.ndarray) -> None:
+        """Hook: called after energy has been updated, before deaths. gain/cost are per agent."""
 
     # ------------------------------------------------------------ perception
     def _observe(self, idx: np.ndarray) -> np.ndarray:
@@ -197,6 +204,7 @@ class WorldV2(World):
             g_2 = np.where(t_at == 2, g_r, 0.0)
 
             self.energy[idx] += g_c + g_1 + g_2 - cost
+            self._post_step(idx, g_c + g_1 + g_2, cost)
             self.commons_acc[idx] += g_c
             self.spent_acc[idx] += cost
             self.age[idx] += 1
@@ -289,6 +297,7 @@ class WorldV2(World):
         self.commons_acc[s] = 0.0
         self.contrib[s] = 0.0
         self.h[s] = 0.0
+        self._on_birth(s)
         self.gen[s] = self.gen[parents] + 1
         self.lineage[s] = self.lineage[parents]
         return k
