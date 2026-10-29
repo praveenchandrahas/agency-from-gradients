@@ -27,8 +27,9 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S10: England-style dissipative adaptation, no selection | **H10a-c supported (by construction), H10d-e not** (20 seeds/arm). See below |
 | S8: total entropy as an explicit objective | **Confirmatory run done** (5 optimisation runs per kappa): H8a and H8c supported, H8b not |
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
+| Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
-| Predictive-information probe | **Not implemented** |
+| Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
 ## Try it live
 
@@ -61,6 +62,14 @@ Reading the screenshots: they are single seeded runs chosen to illustrate the in
 [`explainer/index.html`](explainer/index.html) is a scroll-through page for non-specialists. A waterfall illustration of "energy always spills", a live pond (the same model drawn as swimming creatures, glowing energy motes and wells, not a grid), the real 30-seed results in plain words, and a switchboard that replays the actual ablation data. It also lists what the work does not show. Published by the Pages workflow at the site root, with the technical grid view at `/lab/`.
 
 <p align="center"><img src="docs/screenshots/06-explainer-pond.png" alt="The explainer's live pond: glowing creatures, grass motes and wells" width="100%"></p>
+
+### The film and the explainer site (`learn/`)
+
+For anyone who wants the ideas and the experiments explained without running anything:
+
+- **The site** (`learn/index.html`, published at `/learn/`): the idea, the five conditions, the design rule, the simulated world, every experiment S0-S10 with its predictions, numbers and what the result does not show, England's dissipative adaptation with an interactive bias dial, and a FAQ. Every number is copied from the reports in `docs/results/`.
+- **The film** (`learn/film.html`, published at `/learn/film.html`, and `learn/agency-from-gradients-film.mp4`): 3 minutes 42 seconds, ten chapters, no sound, captions drawn on screen. The small world in chapter 5 is an illustration with hand-written rules, not a recorded run.
+- Both are single self-contained files with fonts inlined. Rebuild with `python3 learn/build.py` (the sources are in `learn/src/`; the build needs the three `@fontsource` npm packages listed in `build.py`). The MP4 is rendered by stepping the film's canvas frame by frame (`window.__render(t)`) into ffmpeg.
 
 ## Hypotheses and falsifiers
 

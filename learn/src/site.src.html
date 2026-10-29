@@ -1,0 +1,460 @@
+<title>Agency from Gradients</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="An idea about where agency comes from, the simulations built to test it, and what they found, explained for anyone.">
+<style>
+/*FONTFACES*/
+/* Layout: a long reading page. Sticky section bar, wide hero, then sections of text with one interactive element each. The thermal ramp (sun to ember to magenta to indigo) is the only decoration. */
+:root{
+  --bg:#F3F6F9; --surface:#FFFFFF; --ink:#101B28; --mute:#53657A; --line:#D3DCE6; --soft:#E8EEF4;
+  --sun:#D77A00; --ember:#C23D14; --mag:#A92A66; --ind:#4B3DB0; --cool:#0F7F92;
+  --ok:#1B7A53; --no:#B93232; --mix:#8F5B00; --on-accent:#FFFFFF; --accent:#C23D14;
+  --font-display:"Bricolage Grotesque Variable","Bricolage Grotesque",system-ui,sans-serif;
+  --font-body:"Source Serif 4 Variable","Source Serif 4",Georgia,serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ramp:linear-gradient(90deg,#FFB347,#FF6A3D,#D6457F,#6A55D6);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1020; --surface:#111A2E; --ink:#E9EFF6; --mute:#93A4BA; --line:#26334A; --soft:#16223A;
+  --sun:#FFB347; --ember:#FF6A3D; --mag:#D6457F; --ind:#8E7BF0; --cool:#58D0DC;
+  --ok:#4CC38A; --no:#FF6B6B; --mix:#F5C451; --on-accent:#0A1020; --accent:#FF6A3D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1020; --surface:#111A2E; --ink:#E9EFF6; --mute:#93A4BA; --line:#26334A; --soft:#16223A;
+  --sun:#FFB347; --ember:#FF6A3D; --mag:#D6457F; --ind:#8E7BF0; --cool:#58D0DC;
+  --ok:#4CC38A; --no:#FF6B6B; --mix:#F5C451; --on-accent:#0A1020; --accent:#FF6A3D; color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:19px;line-height:1.6;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.in{max-width:1040px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--sun);outline-offset:2px;border-radius:3px}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.015em;text-wrap:balance}
+h2{font-size:clamp(28px,4vw,42px);line-height:1.1;font-weight:700}
+h3{font-size:22px;line-height:1.2;font-weight:600}
+p{margin:0 0 1em;max-width:66ch}
+.eyebrow{font:500 12px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin:0 0 14px}
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--bg);border-bottom:1px solid var(--line)}
+.nav .in{display:flex;align-items:center;gap:14px;height:54px}
+.brand{font:700 17px var(--font-display);color:var(--ink);text-decoration:none;white-space:nowrap}
+.links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.links::-webkit-scrollbar{display:none}
+.links a{font:500 12px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);text-decoration:none;padding:8px 10px;border-radius:4px;white-space:nowrap}
+.links a:hover{color:var(--ink)}
+.links a.on{color:var(--ink);background:var(--soft)}
+.tbtn{font:500 12px var(--font-mono);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:4px;padding:8px 10px;cursor:pointer;min-height:36px}
+/* hero */
+.hero{padding-block:72px 56px}
+.hero h1{font-size:clamp(40px,7vw,78px);line-height:1.02;font-weight:800;max-width:15ch}
+.rampbar{height:8px;border-radius:4px;background:var(--ramp);margin:26px 0 28px;max-width:560px}
+.lede{font-size:clamp(21px,2.4vw,26px);line-height:1.45;max-width:36em;color:var(--ink)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{font:600 15px var(--font-display);text-decoration:none;border-radius:6px;padding:13px 20px;min-height:46px;display:inline-flex;align-items:center;border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:hover{filter:brightness(1.08)}
+.caveat{margin-top:34px;padding:16px 18px;border-left:4px solid var(--sun);background:var(--surface);max-width:66ch;font-size:17px;border-radius:0 6px 6px 0}
+/* sections */
+section{padding-block:68px;border-top:1px solid var(--line)}
+section>.in>h2{margin-bottom:22px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;min-width:0}
+.card h3{margin-bottom:8px}
+.card p{font-size:17px;margin-bottom:.7em}
+.card p:last-child{margin-bottom:0}
+.mute{color:var(--mute)}
+.mono{font-family:var(--font-mono)}
+/* widgets */
+.widget{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;margin-top:26px}
+.widget h3{margin-bottom:4px}
+.ctrl{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.ctrl label{font:500 13px var(--font-mono);color:var(--mute);display:flex;flex-direction:column;gap:6px;min-width:200px;flex:1}
+.ctrl output{color:var(--ink);font-weight:500}
+input[type=range]{width:100%;accent-color:var(--accent)}
+canvas.cv,svg.chart{width:100%;height:auto;display:block}
+.readout{font-size:17px;margin:12px 0 0;min-height:3.2em}
+/* chips */
+.v{display:inline-flex;align-items:center;gap:6px;font:600 11.5px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:4px 10px 4px 8px;border:1.5px solid currentColor;white-space:nowrap}
+.v svg{width:13px;height:13px}
+.v-ok{color:var(--ok)} .v-no{color:var(--no)} .v-mix{color:var(--mix)} .v-na{color:var(--mute)}
+/* scoreboard */
+.score{display:flex;height:44px;border-radius:6px;overflow:hidden;gap:3px;margin:18px 0 12px}
+.score span{display:flex;align-items:center;justify-content:center;font:600 13px var(--font-mono);color:var(--bg);min-width:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 13px var(--font-mono);color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+/* experiments */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
+.fchip{font:500 13px var(--font-mono);color:var(--mute);background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;min-height:38px}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.exp{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
+.exp summary{list-style:none;cursor:pointer;padding:18px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.exp summary::-webkit-details-marker{display:none}
+.exp summary .id{font:700 15px var(--font-mono);color:var(--mute);min-width:44px}
+.exp summary .q{font:600 20px/1.25 var(--font-display);flex:1 1 280px;min-width:0}
+.exp summary::after{content:"+";font:500 22px var(--font-mono);color:var(--mute);margin-left:auto}
+.exp[open] summary::after{content:"\2212"}
+.exp .body{padding:2px 20px 22px;display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+.exp .body h4{font:600 12px var(--font-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 6px}
+.exp .body p{font-size:17px;margin-bottom:.6em}
+.hyp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.hyp li{display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:1.4}
+.hyp li .v{flex:none;margin-top:1px}
+.hyp li b{font-family:var(--font-mono);font-weight:500}
+.notshown{border-left:3px solid var(--line);padding-left:14px}
+/* chart svg */
+svg.chart text{font-family:var(--font-mono);font-size:11.5px;fill:var(--mute)}
+svg.chart text.val{fill:var(--ink)}
+svg.chart .axis{stroke:var(--mute);stroke-width:1.2}
+svg.chart .whisk{stroke:var(--ink);stroke-width:1.6}
+/* faq */
+details.faq{border-bottom:1px solid var(--line);padding:14px 0}
+details.faq summary{cursor:pointer;font:600 19px var(--font-display);list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.faq summary::-webkit-details-marker{display:none}
+details.faq summary::after{content:"+";font-family:var(--font-mono);color:var(--mute)}
+details.faq[open] summary::after{content:"\2212"}
+details.faq p{margin-top:10px;font-size:17px}
+table.t{border-collapse:collapse;width:100%;font-size:16px}
+table.t th,table.t td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{font:600 12px var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.tw{overflow-x:auto}
+footer{padding-block:48px 80px;border-top:1px solid var(--line);font-size:16px;color:var(--mute)}
+footer .in{display:flex;flex-wrap:wrap;gap:12px 28px}
+@media (max-width:640px){body{font-size:18px}.hero{padding-block:48px 36px}section{padding-block:48px}.brand{font-size:15px}}
+</style>
+
+<div class="nav"><div class="in">
+  <a class="brand" href="#top">Agency from Gradients</a>
+  <nav class="links" id="links" aria-label="Sections"></nav>
+  <button class="tbtn" id="theme" type="button" aria-label="Switch colour theme">Theme</button>
+</div></div>
+
+<header class="hero" id="top"><div class="in">
+  <p class="eyebrow">A research project, explained</p>
+  <h1>Can we grow an agent instead of designing one?</h1>
+  <div class="rampbar" aria-hidden="true"></div>
+  <p class="lede">Almost every artificial agent is handed a goal. Life never was. This project asks which features of the early Earth are needed for agents to appear without a goal being installed, and tests that in simulated worlds, with the predictions written down first.</p>
+  <div class="ctas">
+    <a class="btn pri" href="https://praveenchandrahas.github.io/agency-from-gradients/learn/film.html" target="_blank" rel="noopener">Watch the 4-minute film</a>
+    <a class="btn" href="https://praveenchandrahas.github.io/agency-from-gradients/" target="_blank" rel="noopener">Open the live pond</a>
+    <a class="btn" href="https://praveenchandrahas.github.io/agency-from-gradients/lab/" target="_blank" rel="noopener">Open the lab view</a>
+  </div>
+  <p class="caveat"><b>Read this first.</b> This is a hypothesis tested in toy worlds. Most of the results so far are negative, and this page says so. Nothing here shows how agency arose on Earth.</p>
+</div></header>
+
+<section id="idea"><div class="in">
+  <p class="eyebrow">The idea</p>
+  <h2>Energy flows downhill, and structures that use the flow stick around</h2>
+  <div class="grid g2">
+    <div>
+      <p>Sunlight is concentrated energy. Left alone it turns into heat and spreads out. That difference, concentrated against spread-out, is called a <b>gradient</b>, and the universe is full of them.</p>
+      <p>Anything that happens to drain a gradient well, a flame, a hurricane, a plant, tends to persist while the gradient lasts. Plants drain sunlight. But plants never use all of it, so something else can live off what they leave: a grazer, then a hunter, then the things that break down what is left.</p>
+      <p>The hypothesis: at every stage, whatever uses the leftovers best persists, and that chain eventually produced living things that sense and choose. We call those <b>agents</b>. The project does not assume this is true. It asks which ingredients of the chain are doing the work.</p>
+    </div>
+    <div class="widget" style="margin-top:0" id="ladder">
+      <h3>Try it: how much gets used?</h3>
+      <p class="mute" style="font-size:16px">Each rung captures a share of the energy that reaches it. What it leaves behind is available to the next rung.</p>
+      <div class="ctrl">
+        <label for="cap">Share each rung captures <output id="capo">35%</output><input id="cap" type="range" min="5" max="90" value="35"></label>
+        <label for="rungs">Number of rungs <output id="rungo">4</output><input id="rungs" type="range" min="1" max="6" value="4"></label>
+      </div>
+      <svg class="chart" id="ladsvg" viewBox="0 0 520 250" role="img" aria-label="Bars showing energy captured by each rung and energy left unused"></svg>
+      <p class="readout" id="ladread" aria-live="polite"></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="conditions"><div class="in">
+  <p class="eyebrow">Five conditions</p>
+  <h2>What the early Earth had, and what we switch on and off</h2>
+  <p>The simulations keep five features of the early Earth that might be doing the work. Each can be turned off, one at a time and in every combination. If agents still appear without a feature, that feature was not needed.</p>
+  <div class="grid g3" id="condgrid"></div>
+</div></section>
+
+<section id="rule"><div class="in">
+  <p class="eyebrow">The design rule</p>
+  <h2>Nothing is paid for entropy</h2>
+  <div class="grid g2">
+    <div>
+      <p><b>Entropy</b> here means how much energy a system turns into spread-out heat. A busy ecosystem produces more of it than bare rock under the same sun.</p>
+      <p>The rule: creatures are selected only by whether they stay alive and make copies of themselves. Entropy production is measured by the experimenter and never handed to the creatures as a reward.</p>
+      <p>This does not mean the two are unrelated. Energy helps you survive, so a creature that takes in more energy also produces more heat. What the rule forbids is a separate prize for entropy.</p>
+    </div>
+    <div class="card">
+      <h3>Why not just reward it?</h3>
+      <p>Life does not. Living things carry learned internal signals tied to energy and balance, such as hunger and satisfaction. None of them refers to entropy.</p>
+      <p>Rewarding entropy directly also puts the answer in the question: if you pay for it, finding it proves little. And as we tested, it can reward the wrong behaviour, burning energy for its own sake. See the experiments on rewarding entropy below.</p>
+      <p>If the aim is to build agents rather than explain them, rewarding it is a fair design choice. We tested that too.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="world"><div class="in">
+  <p class="eyebrow">The simulated world</p>
+  <h2>A small pond with a ladder of energy sources</h2>
+  <p>Creatures live on a wrap-around grid. They can move, stay still, pay energy to open a well, eat, copy themselves and die. Everything that goes in is accounted for: the energy that enters the world equals the energy creatures take up plus the energy lost as heat, and the code checks this on every step.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Grass</h3><p>Spread thinly everywhere, regrows slowly. Easy to eat, never much. This is the bottom rung.</p></div>
+    <div class="card"><h3>Small wells</h3><p>Rich, but locked. One creature can pay energy to open one. Others on the same square share the payoff, which makes opening one a gamble.</p></div>
+    <div class="card"><h3>Big wells</h3><p>Very rich, and they only open if several creatures pay at the same time. They appear where small wells have been drained.</p></div>
+  </div>
+  <div class="widget">
+    <h3>Three versions of the world</h3>
+    <div class="tw"><table class="t">
+      <thead><tr><th>Version</th><th>Creature</th><th>Extras</th></tr></thead>
+      <tbody>
+        <tr><td><b>v1</b></td><td>27-gene instinct rule that treats directions the same way</td><td>The ladder above, 32 by 32 cells.</td></tr>
+        <tr><td><b>v2</b></td><td>About 2,070 genes, with memory</td><td>Seasons, walls, danger zones, a scent signal creatures can emit, heritable body size.</td></tr>
+        <tr><td><b>v3</b></td><td>About 5,400 genes, with memory</td><td>Day and night, drifting food, wandering danger, recombination of two parents, a larger world.</td></tr>
+      </tbody></table></div>
+    <p class="mute" style="font-size:16px;margin-top:12px">The running versions live on the project site: the pond view for watching, the lab view for the grid. This page only explains them.</p>
+  </div>
+</div></section>
+
+<section id="experiments"><div class="in">
+  <p class="eyebrow">The experiments</p>
+  <h2>What we predicted, and what happened</h2>
+  <p>Every experiment had its predictions written down before the confirmatory run, in a file that was committed to the repository first. Each prediction has a verdict. Open any card for what we did, the numbers, and what the result does not show. Bars show the estimate, with a line for the 95% interval.</p>
+  <div id="scoreboard"></div>
+  <div class="filters" id="filters" role="group" aria-label="Filter experiments"></div>
+  <div id="explist"></div>
+</div></section>
+
+<section id="england"><div class="in">
+  <p class="eyebrow">Jeremy England's idea</p>
+  <h2>Do driven systems drift toward absorbing more energy?</h2>
+  <div class="grid g2">
+    <div>
+      <p>The physicist Jeremy England argued that when a system is pushed by an energy source and can rearrange itself, rearrangements that absorb and dissipate more of that energy are more likely to stick. No selection or reproduction is needed for this. He called it <b>dissipative adaptation</b>.</p>
+      <p><b>Where the theory stands.</b> A related 2013 bound on how much heat a self-copier must give off has been challenged: a <a href="https://arxiv.org/pdf/2404.01130" target="_blank" rel="noopener">2024 analysis</a> argues it is not physically meaningful in general. Dissipative adaptation itself has support from simulations and a few experiments, and a <a href="https://arxiv.org/pdf/2009.04006" target="_blank" rel="noopener">recent review</a> describes the link to agent-like behaviour as speculative.</p>
+      <p><b>How we tested it.</b> No births and no deaths. Creatures re-draw their instincts only through a rule that keeps a change more often when it absorbed more energy. The dial shows what that kind of bias does in the simplest possible setting.</p>
+      <p>Result: the biased creatures took in more energy than unbiased ones, which is what the rule builds in, but they did not climb to the big wells. So the rule alone produced nothing that looks like agency.</p>
+    </div>
+    <div class="widget" style="margin-top:0">
+      <h3>Try it: the bias dial</h3>
+      <p class="mute" style="font-size:16px">Forty possible ways a structure could be arranged. Each absorbs a different amount of energy (the bars). The line shows how likely the structure is to end up in each one.</p>
+      <div class="ctrl"><label for="beta">Bias toward absorbing more <output id="betao">0</output><input id="beta" type="range" min="-10" max="10" value="0" step="1"></label></div>
+      <canvas class="cv" id="engcv" width="520" height="220" role="img" aria-label="Bars of absorption for 40 arrangements with a line for the probability of each"></canvas>
+      <p class="readout" id="engread" aria-live="polite"></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="learned"><div class="in">
+  <p class="eyebrow">What we learned so far</p>
+  <h2>Three things the results say, and three they do not</h2>
+  <div class="grid g2">
+    <div class="card"><h3>What they say</h3>
+      <p><b>Selection by survival helps a little.</b> Entropy production rose by 2.3 units over random parents, a small but clear effect.</p>
+      <p><b>Our central prediction was wrong.</b> We expected scarcity, inheritance and death to be required to reach the big wells. Removing any of them made reaching them more common.</p>
+      <p><b>Paying for entropy yields a furnace.</b> Optimising it directly beat our best hand-written forager by burning energy, and giving creatures a learned reward produced no sign of agency by our tests.</p></div>
+    <div class="card"><h3>What they do not say</h3>
+      <p><b>Nothing about Earth.</b> These are toy worlds. Whether they capture what mattered is the main assumption.</p>
+      <p><b>Nothing against bigger genomes in general.</b> Our large-genome world killed most runs before learning could start, so the test was uninformative about what a large genome can do.</p>
+      <p><b>Nothing final about agency.</b> Our two tests of agency are crude. One of them was distorted by how it handled the random comparison group, and the other had no positive control.</p></div>
+  </div>
+</div></section>
+
+<section id="next"><div class="in">
+  <p class="eyebrow">Check our work</p>
+  <h2>Everything is open, including the failures</h2>
+  <div class="grid g3">
+    <div class="card"><h3>The predictions</h3><p>One preregistration file per experiment, committed before the confirmatory run, with an outcome section added afterwards and a log of any deviation.</p></div>
+    <div class="card"><h3>The data</h3><p>Every run's numbers are in the repository as CSV, with the report generated from them.</p></div>
+    <div class="card"><h3>The code</h3><p>The world, the experiments and 53 tests that check the energy accounting. Long runs are reproducible from the repository's Actions tab.</p></div>
+  </div>
+  <div class="widget">
+    <h3>What comes next</h3>
+    <p>The open questions are practical. A better test of agency, with a positive control so that a null result means something. A larger world that big genomes can survive in, so they get the chance to learn. And a direct test of whether the explanation for why inheritance avoided the big wells holds up.</p>
+    <p class="mute" style="font-size:16px;margin:0">The repository is at <a href="https://github.com/praveenchandrahas/agency-from-gradients" target="_blank" rel="noopener">github.com/praveenchandrahas/agency-from-gradients</a>.</p>
+  </div>
+</div></section>
+
+<section id="faq"><div class="in">
+  <p class="eyebrow">Plain answers</p>
+  <h2>Questions people ask</h2>
+  <div id="faqlist"></div>
+</div></section>
+
+<footer><div class="in">
+  <span>Agency from Gradients, by Praveen Chandrahas.</span>
+  <a href="https://github.com/praveenchandrahas/agency-from-gradients" target="_blank" rel="noopener">Source</a>
+  <a href="https://praveenchandrahas.github.io/agency-from-gradients/" target="_blank" rel="noopener">Live pond</a>
+  <a href="https://praveenchandrahas.github.io/agency-from-gradients/learn/film.html" target="_blank" rel="noopener">The film</a>
+</div></footer>
+
+<script>
+(() => {
+"use strict";
+const $ = (s, r=document) => r.querySelector(s);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html!==undefined) e.innerHTML = html; return e; };
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const redrawers = [];
+
+// ---------- theme
+const root = document.documentElement;
+try{ const s = localStorage.getItem("agf-theme"); if(s) root.setAttribute("data-theme", s); }catch(e){}
+$("#theme").addEventListener("click", () => {
+  const dark = (root.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark";
+  const next = dark ? "light" : "dark"; root.setAttribute("data-theme", next);
+  try{ localStorage.setItem("agf-theme", next); }catch(e){}
+  redrawers.forEach(f => f());
+});
+
+// ---------- nav
+const SECTIONS = [["idea","The idea"],["conditions","Conditions"],["rule","The rule"],["world","The world"],["experiments","Experiments"],["england","England"],["learned","Lessons"],["faq","FAQ"]];
+const links = $("#links");
+SECTIONS.forEach(([id,l]) => { const a = el("a",null,l); a.href = "#"+id; a.dataset.id = id; links.appendChild(a); });
+if("IntersectionObserver" in window){
+  const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) links.querySelectorAll("a").forEach(a => a.classList.toggle("on", a.dataset.id === e.target.id)); }), {rootMargin:"-30% 0px -60% 0px"});
+  SECTIONS.forEach(([id]) => { const s = document.getElementById(id); if(s) io.observe(s); });
+}
+
+// ---------- svg chart: estimates with 95% interval whiskers
+function dotChart(items, o={}){
+  const W = 520, L = o.labelW || 150, R = 70, rowH = 34, top = 14, H = top + items.length*rowH + 26;
+  const lo = o.min, hi = o.max, X = v => L + (v-lo)/(hi-lo)*(W-L-R);
+  let s = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${(o.alt||"Chart").replace(/"/g,"&quot;")}">`;
+  if(lo < 0 && hi > 0) s += `<line class="axis" x1="${X(0)}" x2="${X(0)}" y1="${top-6}" y2="${H-24}"/>`;
+  else s += `<line class="axis" x1="${X(lo)}" x2="${X(lo)}" y1="${top-6}" y2="${H-24}"/>`;
+  items.forEach((it,i) => { const y = top + i*rowH, base = X(Math.max(lo,Math.min(0,hi))), x = X(it.v), c = `var(--${it.c||"cool"})`;
+    s += `<text x="0" y="${y+13}">${it.l}</text><rect x="${Math.min(base,x)}" y="${y}" width="${Math.max(2,Math.abs(x-base))}" height="16" rx="3" fill="${c}"/>`;
+    if(it.lo !== undefined) s += `<line class="whisk" x1="${X(it.lo)}" x2="${X(it.hi)}" y1="${y+8}" y2="${y+8}"/><line class="whisk" x1="${X(it.lo)}" x2="${X(it.lo)}" y1="${y+3}" y2="${y+13}"/><line class="whisk" x1="${X(it.hi)}" x2="${X(it.hi)}" y1="${y+3}" y2="${y+13}"/>`;
+    s += `<text class="val" x="${Math.max(x, it.hi!==undefined?X(it.hi):x)+8}" y="${y+13}">${it.t}</text>`; });
+  s += `<text x="0" y="${H-6}">${o.axis||""}</text></svg>`; return s;
+}
+
+// ---------- ladder widget
+function ladder(){
+  const c = Number($("#cap").value)/100, n = Number($("#rungs").value);
+  $("#capo").textContent = Math.round(c*100)+"%"; $("#rungo").textContent = n;
+  let left = 100; const items = [];
+  for(let i=0;i<n;i++){ const got = left*c; items.push({l:`Rung ${i+1}`, v:got, t:got.toFixed(0), c:["sun","ember","mag","ind","cool","ok"][i%6]}); left -= got; }
+  items.push({l:"Unused (heat)", v:left, t:left.toFixed(0), c:"mute"});
+  const svg = dotChart(items,{min:0,max:100,alt:"Energy captured by each rung and left unused",labelW:110,axis:"energy units out of 100"});
+  $("#ladsvg").outerHTML = svg.replace('<svg class="chart"','<svg class="chart" id="ladsvg"');
+  const used = 100-left;
+  $("#ladread").textContent = n===1 ? `One rung uses ${used.toFixed(0)} of the 100 units. The rest is wasted as heat.` :
+    `${n} rungs together use ${used.toFixed(0)} of the 100 units. With one rung it would be ${(c*100).toFixed(0)}. ${c>.7 ? "When the first rung takes almost everything, later rungs starve." : "Each extra rung lives on what the earlier ones left."}`;
+}
+$("#cap").addEventListener("input",ladder); $("#rungs").addEventListener("input",ladder); ladder(); redrawers.push(ladder);
+
+// ---------- conditions
+const COND = [
+ ["A ladder of energy sources","Easy energy first, then richer pools that cost something to open.","Without a ladder there is nothing to climb, and no reason for anything new to appear.","In the world: grass, small wells, big wells. The ladder-off world has only grass."],
+ ["Scarcity","There is never enough for everyone.","If food is unlimited there is no pressure to do better than your neighbour.","Test: an abundant-food version of the world."],
+ ["Heredity with variation","Offspring copy their parents, with small random changes.","This is what lets successful instincts accumulate over generations.","Test: children get fresh random instincts instead of a copy."],
+ ["A cost of dying","Running out of energy ends you. There is no free restart.","If failure costs nothing, nothing is selected.","Test: a version where starving creatures are topped up instead of dying."],
+ ["Succession","New energy sources appear where earlier ones were drained.","This is the 'leftovers' step of the idea: each rung opens because the one below was used.","Test: big wells appear anywhere instead of only where small wells ran dry."]];
+const cg = $("#condgrid");
+COND.forEach(c => cg.appendChild(el("div","card",`<h3>${c[0]}</h3><p>${c[1]}</p><p class="mute"><b>Why it might matter.</b> ${c[2]}</p><p class="mute"><b>${c[3].split(":")[0]}:</b>${c[3].slice(c[3].indexOf(":")+1)}</p>`)));
+
+// ---------- hypotheses and experiments (numbers copied from the repository reports)
+const V = {ok:["Supported","ok"], no:["Not supported","no"], fail:["Falsified","no"], nf:["Not falsified","mix"], pass:["Check passed","ok"], con:["Supported, by construction","mix"], na:["Not run","na"]};
+const ICON = {ok:'<svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7 L5 10 L11 3"/></svg>',
+  no:'<svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3 L10 10 M10 3 L3 10"/></svg>',
+  mix:'<svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2.5 5 H10.5 M2.5 8.5 H10.5"/></svg>',
+  na:'<svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6.5 H10"/></svg>'};
+const vchip = k => { const [t,g] = V[k]; return `<span class="v v-${g}">${ICON[g]}${t}</span>`; };
+const EXPS = [
+ {id:"S1",q:"Does selecting for survival beat random parents?",st:"ok",grp:"ok",
+  did:"Four ways of choosing parents were compared over 30 runs each: by surplus energy (survival), by heat produced, by food eaten, and at random.",
+  hyp:[["H1","Selection by survival raises entropy production over random parents","ok","+2.34 [1.08, 3.66]"]],
+  chart:{items:[{l:"Survival minus random",v:2.34,lo:1.08,hi:3.66,t:"+2.34",c:"ok"}],min:-1,max:5,axis:"change in entropy production",alt:"Entropy gain of survival selection"},
+  not:"The effect is small. The random-parents control still lets starvation remove creatures, so the comparison only isolates who has children. Selecting for food eaten did about as well, so the gain is not specific to survival."},
+ {id:"S2",q:"Which conditions are really needed to reach the big wells?",st:"no",grp:"no",
+  did:"All 16 combinations of scarcity, heredity, death and succession, 30 runs each. We predicted that each of the first three was needed.",
+  hyp:[["H2","Each of scarcity, heredity and death is needed to reach the big wells","fail","all three reversed"]],
+  chart:{items:[{l:"Scarcity off",v:.27,lo:.03,hi:.50,t:"+0.27",c:"no"},{l:"Heredity off",v:.73,lo:.57,hi:.90,t:"+0.73",c:"no"},{l:"Death off",v:.53,lo:.33,hi:.73,t:"+0.53",c:"no"},{l:"Succession off",v:.10,lo:-.13,hi:.33,t:"+0.10",c:"mute"}],min:-.3,max:1.1,axis:"off minus on: change in share reaching big wells",alt:"Effect of removing each condition"},
+  not:"Removing a condition raised access to the big wells for scarcity, heredity and death. For succession the effect was not shown. The reason is unclear. A likely guess, that paying to open a well helps others more than yourself, was tested next and was not confirmed. Also, reaching a big well once is not the same as using it steadily: evolved creatures got only 1 to 6 per cent of their energy there."},
+ {id:"S4",q:"Does inheritance help creatures recover from being displaced?",st:"mix",grp:"mix",
+  did:"Creatures were moved and drained, then watched to see whether they recovered. We compared the full world with the version without heredity, and checked the energy accounting.",
+  hyp:[["H3","Heredity contributes to recovery","ok","+0.220 [0.189, 0.249]"],["H4","Paying for entropy does not beat survival selection at reaching big wells","nf","-0.10 [-0.30, 0.10]"],["H5","Energy accounting check","pass","1.080 [1.017, 1.143]"]],
+  chart:{items:[{l:"Heredity effect",v:.22,lo:.189,hi:.249,t:"+0.22",c:"ok"}],min:-.1,max:.4,axis:"change in recovery (full minus no heredity)",alt:"Heredity effect on recovery"},
+  not:"Random parents gave nearly the same gain (0.259 against 0.270), so what is inherited is mostly better grass-finding filtered by starvation. It is a narrower result than agency. Not falsified means we did not find a difference, which is not proof there is none."},
+ {id:"S6",q:"Is opening a well a public good that selection punishes?",st:"no",grp:"no",
+  did:"We made the benefit private: the harvest on a well was split by each creature's recent contribution, so free-riders gain less. 30 runs per cell.",
+  hyp:[["H6a","Private benefit raises the big-well share","no","+0.024 [-0.023, 0.075]"],["H6b","With private benefit, heredity helps reach big wells","no","-0.017 [-0.059, 0.032]"]],
+  chart:{items:[{l:"Private benefit",v:.024,lo:-.023,hi:.075,t:"+0.02",c:"mute"},{l:"Heredity effect",v:-.017,lo:-.059,hi:.032,t:"-0.02",c:"mute"}],min:-.12,max:.12,axis:"change in big-well share of energy",alt:"Private benefit test"},
+  not:"The direction was as predicted for the first test, but the interval includes zero. The simple free-rider story is not confirmed, so something else makes inherited instincts avoid the big wells."},
+ {id:"S7",q:"Do bigger genomes and more generations help?",st:"no",grp:"no",
+  did:"A creature with about 5,400 genes and memory, a lower mutation rate, recombination, a larger world and a richer environment, compared with random parents, the small 29-gene creature and the hand-written forager. 20 runs each, up to 200,000 steps. Earlier small pilots had hinted the same.",
+  hyp:[["H7a","Big genome beats random parents on big-well energy share","no","0.000 [-0.001, 0.000]"],["H7b","Big genome beats the small creature","no","-0.037 [-0.092, -0.001]"],["H7c","Big genome improves during its own run","no","-0.020 [-0.033, -0.008]"]],
+  chart:{items:[{l:"5,400 genes",v:.0005,t:"0.00",c:"ind"},{l:"29 genes",v:.037,lo:.001,hi:.09,t:"0.04",c:"cool"},{l:"Hand-written",v:.399,lo:.295,hi:.501,t:"0.40",c:"sun"}],min:0,max:.6,axis:"share of energy from big wells",alt:"Big-well share by creature type"},
+  not:"Nine in ten big-genome runs went extinct (70 per cent for random parents, 20 per cent for the small creature and the forager), so most of those results come from runs that ended early. The test shows this package fails at this budget. It does not show a big genome cannot do better in a gentler world. Five changes were bundled, so we cannot say which hurt."},
+ {id:"S8",q:"What if entropy is the objective?",st:"mix",grp:"mix",
+  did:"A single shared controller was tuned directly to maximise the world's total entropy production. Nothing rewards survival. 5 tuning runs per setting.",
+  hyp:[["H8a","Tuned controller beats the hand-written forager on entropy","ok","+6.85 [0.58, 11.11]"],["H8b","It spends more of its actions on opening wells (a furnace)","no","+0.27 [-0.01, 0.44]"],["H8c","The gain is larger when heat counts for more","ok","+12.96 [6.58, 17.54]"]],
+  chart:{items:[{l:"Random",v:19,t:"19",c:"mute"},{l:"Hand-written",v:29,t:"29",c:"sun"},{l:"Tuned",v:35.8,lo:29.5,hi:40.1,t:"36",c:"ember"}],min:0,max:48,axis:"entropy production rate",alt:"Entropy rate by controller"},
+  not:"The objective counts a creature's heat as worth three times passive loss, so energy capture is rewarded by construction. The tuned controller is closer to a furnace than a forager. It shows what maximises an assumed quantity, not that the assumption holds."},
+ {id:"S9",q:"Does a reward learned during a lifetime produce agency?",st:"no",grp:"no",
+  did:"Creatures learned during their lives from their own energy change, or from the heat they gave off. Survival selection stayed on. We then tested whether their memory predicts their own future energy gain, and whether they recover from being displaced. 20 runs per arm.",
+  hyp:[["H9a","Energy learning raises the prediction test","no","+0.003 [-0.025, 0.032]"],["H9b","Heat learning raises the prediction test","no","+0.002 [-0.022, 0.029]"],["H9c","Energy learning raises recovery","no","-0.077 [-0.144, -0.012]"],["H9d","Heat learning is worse than energy learning for recovery","no","+0.180 [0.114, 0.245]"]],
+  chart:{items:[{l:"No learning",v:.480,t:"0.48",c:"mute"},{l:"From energy",v:.457,t:"0.46",c:"cool"},{l:"From heat",v:.458,t:"0.46",c:"ember"}],min:0,max:.7,axis:"recovery of evolved creatures",alt:"Recovery of evolved creatures in three arms"},
+  not:"The sign reversals in H9c and H9d come from the comparison group, not from better creatures. Evolved creatures recovered equally in all three arms. What changed was how well random creatures recovered, which learning from energy helped and learning from heat hurt. The prediction test stayed near zero everywhere and has no positive control, so a null cannot tell a missing ability from a weak test."},
+ {id:"S10",q:"Does England's bias, alone, produce agent-like behaviour?",st:"mix",grp:"mix",
+  did:"No births, no deaths. Creatures re-drew their instincts only through a rule that keeps a change more often if it absorbed (or dissipated) more energy. Controls: a rule with no bias, and the opposite bias. 20 runs per arm.",
+  hyp:[["H10a","Absorption bias beats no bias on energy intake","con","+0.036 [0.023, 0.049]"],["H10b","Dissipation bias beats no bias on intake","con","+0.041 [0.031, 0.051]"],["H10c","Absorption bias beats the opposite bias","con","+0.089 [0.074, 0.104]"],["H10d","Absorption bias raises the big-well share","no","-0.033 [-0.070, 0.004]"],["H10e","Dissipation bias raises the big-well share","no","-0.013 [-0.050, 0.023]"]],
+  chart:{items:[{l:"Opposite bias",v:.110,t:"0.11",c:"mute"},{l:"No bias",v:.163,t:"0.16",c:"cool"},{l:"Absorption bias",v:.200,t:"0.20",c:"sun"}],min:0,max:.28,axis:"energy taken in per creature per step",alt:"Intake by rule"},
+  not:"The first three results are built into the rule, which is a way of climbing a score. They are not evidence that real matter behaves this way. The measure itself rewards grazing, the hand-written forager scores worst on it, and the creatures did not climb to the big wells. We did not code the last hypothesis into the analysis script as preregistered; we computed it from the same output and logged the omission."},
+ {id:"S0",q:"Do earlier evolved genomes show the same pattern?",st:"na",grp:"na",did:"A re-analysis of saved genome trajectories from an earlier study.",hyp:[],chart:null,not:"Written against an assumed file format and never run on the real files."},
+ {id:"S5",q:"Could shrinking, not growing, explain the pattern?",st:"na",grp:"na",did:"A counter-test of Barrow's argument that efficiency, not scale, drives the ladder.",hyp:[],chart:null,not:"Not implemented."}];
+// scoreboard from the hypothesis list
+const cnt = {ok:0,pass:0,nf:0,con:0,no:0,fail:0};
+EXPS.forEach(e => e.hyp.forEach(h => cnt[h[2]]++));
+const total = Object.values(cnt).reduce((a,b)=>a+b,0);
+const SB = [["ok","Supported","ok"],["pass","Check passed","ok"],["con","Supported by construction","mix"],["nf","Not falsified","mix"],["no","Not supported","no"],["fail","Falsified","no"]];
+const sc = $("#scoreboard");
+sc.innerHTML = `<h3>${total} predictions, by verdict</h3><div class="score" role="img" aria-label="${SB.map(s => cnt[s[0]]+" "+s[1]).join(", ")}">` +
+  SB.filter(s => cnt[s[0]]).map(s => `<span style="flex:${cnt[s[0]]};background:var(--${s[2]==="ok"?"ok":s[2]==="no"?"no":"mix"})">${cnt[s[0]]}</span>`).join("") +
+  `</div><div class="legend">${SB.filter(s => cnt[s[0]]).map(s => `<span><i style="background:var(--${s[2]==="ok"?"ok":s[2]==="no"?"no":"mix"})"></i>${s[1]} ${cnt[s[0]]}</span>`).join("")}</div><p class="mute" style="font-size:16px;margin-top:12px">Counting predictions says little about whether the idea is right. Several of the supported ones are checks that the rule or the accounting works.</p>`;
+// filters + list
+const FILT = [["all","All"],["ok","Supported"],["mix","Mixed"],["no","Not supported"],["na","Not run"]];
+let filt = "all";
+const fl = $("#filters"), list = $("#explist");
+FILT.forEach(([k,l]) => { const b = el("button","fchip",l); b.type = "button"; b.setAttribute("aria-pressed", k==="all"); b.addEventListener("click",() => { filt = k; fl.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x===b)); drawList(); }); fl.appendChild(b); });
+function drawList(){
+  list.innerHTML = "";
+  EXPS.filter(e => filt==="all" || e.grp===filt).forEach(e => {
+    const d = el("details","exp");
+    const overall = {ok:"ok",no:"no",mix:"mix",na:"na"}[e.grp];
+    const lab = {ok:"Supported",no:"Not supported",mix:"Mixed",na:"Not run"}[e.grp];
+    d.innerHTML = `<summary><span class="id">${e.id}</span><span class="q">${e.q}</span><span class="v v-${overall}">${ICON[overall]}${lab}</span></summary>
+      <div class="body"><div><h4>What we did</h4><p>${e.did}</p>${e.hyp.length ? `<h4 style="margin-top:14px">Predictions</h4><ul class="hyp">${e.hyp.map(h => `<li>${vchip(h[2])}<span><b>${h[0]}</b> ${h[1]}.<br><span class="mute mono" style="font-size:13px">${h[3]}</span></span></li>`).join("")}</ul>` : ""}</div>
+      <div>${e.chart ? `<h4>The numbers</h4>${dotChart(e.chart.items,e.chart)}` : ""}<div class="notshown" style="margin-top:12px"><h4>What it does not show</h4><p>${e.not}</p></div></div></div>`;
+    list.appendChild(d);
+  });
+}
+drawList();
+
+// ---------- England bias dial
+(function(){
+  const cv = $("#engcv"), g = cv.getContext("2d"); const N = 40;
+  let a = []; { let s = 11; const r = () => (s = (s*1664525 + 1013904223) >>> 0) / 4294967296; for(let i=0;i<N;i++) a.push(.15 + .85*r()*r()*1.0 + (i%9===0 ? .1 : 0)); a = a.map(v => Math.min(1,v)); }
+  function draw(){
+    const beta = Number($("#beta").value); $("#betao").textContent = (beta>0?"+":"")+beta;
+    const w = a.map(v => Math.exp(beta*v)), Z = w.reduce((x,y) => x+y,0), p = w.map(x => x/Z);
+    const W = cv.width, H = cv.height, pad = 28, bw = (W-pad*2)/N, pmax = Math.max(...p);
+    g.clearRect(0,0,W,H); g.fillStyle = css("--soft"); 
+    a.forEach((v,i) => { g.fillStyle = css("--sun"); g.globalAlpha = .55; g.fillRect(pad+i*bw+2,H-pad-v*(H-pad*2),bw-4,v*(H-pad*2)); });
+    g.globalAlpha = 1; g.strokeStyle = css("--ink"); g.lineWidth = 2; g.beginPath(); p.forEach((q,i) => { const x = pad+i*bw+bw/2, y = H-pad-q/pmax*(H-pad*2)*.92; i ? g.lineTo(x,y) : g.moveTo(x,y); }); g.stroke();
+    g.fillStyle = css("--mute"); g.font = "12px "+css("--font-mono"); g.fillText("40 possible arrangements",pad,H-8); g.textAlign = "right"; g.fillText("bars: energy absorbed   line: chance of ending up there",W-pad,14); g.textAlign = "left";
+    const ex = p.reduce((s,q,i) => s+q*a[i],0), base = a.reduce((x,y) => x+y,0)/N;
+    $("#engread").textContent = beta===0 ? `No bias: every arrangement is equally likely. Average absorption ${base.toFixed(2)}.` : `Average absorption ${ex.toFixed(2)} against ${base.toFixed(2)} with no bias. ${beta>0 ? "The bias is a built-in assumption here. The open question is whether nature does this, and whether it leads anywhere near agents." : "The opposite bias favours the arrangements that absorb least."}`;
+  }
+  $("#beta").addEventListener("input",draw); draw(); redrawers.push(draw);
+})();
+
+// ---------- FAQ
+const FAQ = [
+ ["Is this a theory of how life began?","No. It is a set of toy-world experiments about which ingredients of a proposed chain, from gradients to life to agents, are needed. It makes no novelty claim and proves nothing about Earth."],
+ ["What counts as agency here?","We use two crude tests. One asks whether creatures that were displaced and drained can get back to a healthy energy level. The other asks whether a creature's memory predicts its own future energy gain better than what it currently sees. Both are weak, and we say where."],
+ ["What is preregistration, and why bother?","Writing the predictions down in a dated file before running the confirmatory experiment, so that nobody, including us, can quietly pick the results that look good afterwards. It is why our failed predictions are visible."],
+ ["What do the numbers in brackets mean?","A 95% interval. If we reran the whole experiment many times, about 95% of such intervals would contain the true effect. If the interval includes zero, the data are consistent with no effect."],
+ ["Why did the big-genome runs die out?","The larger world was harsher: days and nights, drifting food and moving danger. Creatures that start with random instincts mostly could not stay alive long enough to evolve anything. That makes the test uninformative about big genomes in general."],
+ ["Can I run the simulations myself?","Yes. The live pond and the lab view are on the project site, and every experiment can be run from the repository."],
+ ["Is entropy the same as disorder?","Loosely. Here it counts how much usable energy gets turned into spread-out heat. More of it means more of the gradient was used."]];
+const fq = $("#faqlist"); FAQ.forEach(f => { const d = el("details","faq",`<summary>${f[0]}</summary><p>${f[1]}</p>`); fq.appendChild(d); });
+})();
+</script>

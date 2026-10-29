@@ -4,7 +4,7 @@ name: pages
 on:
   push:
     branches: [main]
-    paths: ["webapp/**", "explainer/**", ".github/workflows/pages.yml"]
+    paths: ["webapp/**", "explainer/**", "learn/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
       url: ${{ steps.d.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p site/lab && cp explainer/index.html site/index.html && cp webapp/index.html site/lab/index.html
+      - run: mkdir -p site/lab && cp explainer/index.html site/index.html && cp webapp/index.html site/lab/index.html && mkdir -p site/learn && cp learn/index.html learn/film.html learn/agency-from-gradients-film.mp4 site/learn/
       - uses: actions/upload-pages-artifact@v3
         with: { path: site }
       - id: d

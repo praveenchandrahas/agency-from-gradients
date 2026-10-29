@@ -1,0 +1,423 @@
+<title>Agency from Gradients, the film</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A three-minute animated explainer of the agency-from-gradients idea and what its simulations found.">
+<style>
+/*FONTFACES*/
+/* Layout: one 16:9 stage with a transport bar and chapter chips under it, transcript below. Single dark look by choice (a film). */
+:root{
+  --bg:#0A1020; --panel:#111A2E; --ink:#E9EFF6; --mute:#93A4BA; --line:#26334A;
+  --sun:#FFB347; --ember:#FF6A3D; --mag:#D6457F; --ind:#6A55D6; --cool:#58D0DC;
+  --font-display:"Bricolage Grotesque Variable","Bricolage Grotesque",system-ui,sans-serif;
+  --font-body:"Source Serif 4 Variable","Source Serif 4",Georgia,serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);margin:0;
+  padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+header h1{font:700 22px/1.1 var(--font-display);margin:0;letter-spacing:-.01em}
+header a{font:500 12px var(--font-mono);color:var(--mute);text-decoration:none;letter-spacing:.06em;text-transform:uppercase}
+header a:hover,header a:focus-visible{color:var(--ink);outline:none;text-decoration:underline}
+.stage{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;background:#0A1020;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+canvas{display:block;width:100%;height:100%}
+.overlay{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:13%;pointer-events:none}
+.overlay[hidden]{display:none}
+.bigplay{pointer-events:auto;background:transparent;border:0;padding:0;cursor:pointer;color:var(--ink)}
+.bigplay span{width:68px;height:68px;border-radius:50%;background:rgba(10,16,32,.72);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.bigplay svg{margin-left:6px}
+.bigplay:focus-visible span{outline:3px solid var(--sun);outline-offset:4px}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn{font:500 13px var(--font-mono);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px 12px;cursor:pointer;min-height:38px}
+.btn:hover{border-color:var(--mute)}
+.btn:focus-visible,select:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+.btn[aria-pressed="true"]{border-color:var(--cool);color:var(--cool)}
+.time{font:500 13px var(--font-mono);color:var(--mute);font-variant-numeric:tabular-nums;min-width:90px}
+.scrub{flex:1 1 220px;min-width:0;position:relative;height:38px;display:flex;align-items:center}
+input[type=range]{width:100%;margin:0;accent-color:var(--ember)}
+select{font:500 13px var(--font-mono);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:8px;min-height:38px}
+.chapters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 12px var(--font-mono);color:var(--mute);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;min-height:32px}
+.chip:hover{color:var(--ink);border-color:var(--mute)}
+.chip.on{color:var(--bg);background:var(--sun);border-color:var(--sun)}
+.chip:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+summary{cursor:pointer;font:600 15px var(--font-display)}
+details ol{margin:12px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:10px;max-width:70ch;line-height:1.5;color:var(--ink)}
+details li span{font:500 12px var(--font-mono);color:var(--mute)}
+.note{font-size:14px;color:var(--mute);max-width:75ch;line-height:1.5;margin:0}
+@media (max-width:560px){.time{min-width:0}}
+</style>
+<div class="wrap">
+  <header>
+    <h1>Agency from gradients</h1>
+    <a href="https://github.com/praveenchandrahas/agency-from-gradients" target="_blank" rel="noopener">Source and results</a>
+  </header>
+  <div class="stage" id="stage">
+    <canvas id="cv" width="1280" height="720" role="img" aria-label="Animated explainer. A full transcript is below the player."></canvas>
+    <div class="overlay" id="ov"><button class="bigplay" id="bigplay" aria-label="Play the film"><span><svg width="26" height="30" viewBox="0 0 34 38" aria-hidden="true"><path d="M2 2 L32 19 L2 36 Z" fill="currentColor"/></svg></span></button></div>
+  </div>
+  <div class="bar">
+    <button class="btn" id="play" aria-label="Play or pause">Play</button>
+    <span class="time" id="time">0:00 / 0:00</span>
+    <div class="scrub"><input type="range" id="seek" min="0" max="1000" value="0" aria-label="Seek"></div>
+    <label class="time" for="speed" style="min-width:0">Speed</label>
+    <select id="speed" aria-label="Playback speed"><option value="0.75">0.75x</option><option value="1" selected>1x</option><option value="1.5">1.5x</option></select>
+    <button class="btn" id="fs" aria-label="Full screen">Full screen</button>
+  </div>
+  <div class="chapters" id="chapters" role="group" aria-label="Chapters"></div>
+  <details>
+    <summary>Read the film instead (transcript)</summary>
+    <ol id="transcript"></ol>
+  </details>
+  <p class="note">The film has no sound; the words are on screen and in the transcript. The small world in chapter 5 is an illustration with hand-written rules, not a recorded run. Every number in chapters 6 and 7 comes from the repository's preregistered experiments. <a href="https://praveenchandrahas.github.io/agency-from-gradients/learn/agency-from-gradients-film.mp4" target="_blank" rel="noopener" style="color:var(--sun)">Download the MP4</a> to share it. <a href="https://praveenchandrahas.github.io/agency-from-gradients/learn/" target="_blank" rel="noopener" style="color:var(--sun)">Read the explainer site</a>.</p>
+</div>
+<script>
+(() => {
+"use strict";
+const W = 1280, H = 720;
+const COL = {bg:"#0A1020", ink:"#E9EFF6", mute:"#93A4BA", line:"#26334A", sun:"#FFB347", ember:"#FF6A3D", mag:"#D6457F", ind:"#6A55D6", cool:"#58D0DC", good:"#4CC38A", bad:"#FF6B6B", amber:"#F5C451", panel:"#111A2E"};
+const F = {disp:'"Bricolage Grotesque Variable","Bricolage Grotesque",system-ui,sans-serif', body:'"Source Serif 4 Variable","Source Serif 4",Georgia,serif', mono:'"JetBrains Mono",ui-monospace,Menlo,monospace'};
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+let SCALE = 1;
+function setScale(s){ SCALE = s; cv.width = W*s; cv.height = H*s; }
+
+// ---------- helpers
+const clamp = (x,a=0,b=1) => Math.min(b, Math.max(a, x));
+const ease = x => { x = clamp(x); return x*x*(3-2*x); };
+const lerp = (a,b,t) => a + (b-a)*t;
+const seg = (t,a,b) => ease((t-a)/(b-a));
+function rng(seed){ let a = seed>>>0; return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a>>>15, 1|a); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; }; }
+function hex(c){ return [parseInt(c.slice(1,3),16), parseInt(c.slice(3,5),16), parseInt(c.slice(5,7),16)]; }
+function mix(c1,c2,t){ const a=hex(c1), b=hex(c2); return `rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`; }
+const RAMP = [COL.sun, COL.ember, COL.mag, COL.ind];
+function ramp(t){ t = clamp(t)*(RAMP.length-1); const i = Math.min(RAMP.length-2, Math.floor(t)); return mix(RAMP[i], RAMP[i+1], t-i); }
+function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+function font(c,kind,size,weight){ c.font = `${weight||400} ${size}px ${F[kind]}`; }
+function wrap(c,text,maxW){ const words = text.split(" "), lines = []; let cur = ""; for(const w of words){ const t = cur ? cur+" "+w : w; if(c.measureText(t).width > maxW && cur){ lines.push(cur); cur = w; } else cur = t; } if(cur) lines.push(cur); return lines; }
+function text(c,s,x,y,{kind="body",size=24,weight=400,color=COL.ink,align="left",maxW=0,lh=1.3,alpha=1,spacing=0}={}){
+  c.save(); font(c,kind,size,weight); c.fillStyle = color; c.globalAlpha *= alpha; c.textAlign = align; c.textBaseline = "alphabetic";
+  if(spacing && "letterSpacing" in c) c.letterSpacing = spacing+"px";
+  const lines = maxW ? wrap(c,s,maxW) : [s];
+  lines.forEach((l,i) => c.fillText(l,x,y+i*size*lh));
+  c.restore(); return lines.length;
+}
+function dot(c,x,y,r,color,alpha=1){ c.save(); c.globalAlpha *= alpha; c.fillStyle = color; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); c.restore(); }
+function glow(c,x,y,r,color,alpha=1){ const g = c.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,color); g.addColorStop(1,"rgba(0,0,0,0)"); c.save(); c.globalAlpha *= alpha; c.fillStyle = g; c.beginPath(); c.arc(x,y,r,0,7); c.fill(); c.restore(); }
+function line(c,x1,y1,x2,y2,color,w=2,alpha=1){ c.save(); c.globalAlpha *= alpha; c.strokeStyle = color; c.lineWidth = w; c.lineCap = "round"; c.beginPath(); c.moveTo(x1,y1); c.lineTo(x2,y2); c.stroke(); c.restore(); }
+function chip(c,x,y,label,kind,alpha=1){
+  const map = {ok:[COL.good,"SUPPORTED"], no:[COL.bad,"NOT SUPPORTED"], fail:[COL.bad,"FALSIFIED"], mix:[COL.amber,"MIXED"]};
+  const [col,lab] = map[kind]; label = label || lab;
+  c.save(); c.globalAlpha *= alpha; font(c,"mono",13,500); if("letterSpacing" in c) c.letterSpacing = "1.2px";
+  const w = c.measureText(label).width + 44; rr(c,x,y,w,28,14); c.fillStyle = "rgba(0,0,0,.35)"; c.fill(); c.strokeStyle = col; c.lineWidth = 1.5; c.stroke();
+  c.strokeStyle = col; c.lineWidth = 2.2; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath();
+  if(kind==="ok"){ c.moveTo(x+12,y+14); c.lineTo(x+16,y+18); c.lineTo(x+23,y+9); }
+  else if(kind==="mix"){ c.moveTo(x+12,y+12); c.lineTo(x+23,y+12); c.moveTo(x+12,y+17); c.lineTo(x+23,y+17); }
+  else { c.moveTo(x+12,y+9); c.lineTo(x+22,y+19); c.moveTo(x+22,y+9); c.lineTo(x+12,y+19); }
+  c.stroke(); c.fillStyle = col; c.textBaseline = "middle"; c.fillText(label,x+32,y+15); c.restore(); return w;
+}
+
+// ---------- background shared by all scenes
+function background(c,T){
+  c.fillStyle = COL.bg; c.fillRect(0,0,W,H);
+  const g = c.createRadialGradient(W*.5,H*1.05,40,W*.5,H*1.05,H*1.1); g.addColorStop(0,"rgba(255,106,61,.16)"); g.addColorStop(.5,"rgba(214,69,127,.06)"); g.addColorStop(1,"rgba(10,16,32,0)");
+  c.fillStyle = g; c.fillRect(0,0,W,H);
+}
+// ---------- captions (drawn into the picture so an exported file keeps them)
+function caption(c,s,a){
+  if(!s) return; c.save(); c.globalAlpha *= a; font(c,"body",27,500);
+  const lines = wrap(c,s,1020), lh = 36, bh = lines.length*lh + 26, y = H-34-bh;
+  rr(c,(W-1080)/2,y,1080,bh,10); c.fillStyle = "rgba(8,13,26,.82)"; c.fill();
+  lines.forEach((l,i) => { c.fillStyle = COL.ink; c.textAlign = "center"; c.fillText(l,W/2,y+34+i*lh); }); c.restore();
+}
+function chapterTag(c,n,label){ text(c,`${n}  ·  ${label.toUpperCase()}`,48,52,{kind:"mono",size:14,weight:500,color:COL.mute,spacing:2}); }
+
+// ---------- scene 5 mini-world, pre-simulated deterministically
+const WORLD = (() => {
+  const R = rng(7), cols = 20, rows = 15, steps = 260;
+  const grass = new Float32Array(cols*rows);
+  const blobs = [[4,4],[14,3],[6,11],[16,11],[10,7]];
+  const rich = new Float32Array(cols*rows);
+  for(let y=0;y<rows;y++) for(let x=0;x<cols;x++){ let v = 0; for(const b of blobs) v += Math.exp(-((x-b[0])**2+(y-b[1])**2)/9); rich[y*cols+x] = Math.min(1,v); grass[y*cols+x] = rich[y*cols+x]*.7; }
+  const wells = [{x:2,y:8,t:1,lock:3,prog:0,open:false},{x:17,y:7,t:1,lock:3,prog:0,open:false},{x:10,y:13,t:1,lock:3,prog:0,open:false},{x:10,y:2,t:2,lock:12,prog:0,open:false}];
+  const ag = Array.from({length:16},(_,i) => ({x:Math.floor(R()*cols),y:Math.floor(R()*rows),e:6+R()*4}));
+  const snaps = []; let inj = 0, cap = 0, heat = 0;
+  for(let s=0;s<steps;s++){
+    for(let i=0;i<grass.length;i++){ const add = Math.min(1-grass[i], .012*(.3+rich[i])); grass[i] += add; inj += add; }
+    const here = wells.map(() => 0);
+    for(const a of ag){
+      // move: toward the richest neighbour, drawn toward wells that are near (the "scent")
+      let best = null, bs = -1e9;
+      for(const [dx,dy] of [[0,0],[1,0],[-1,0],[0,1],[0,-1]]){
+        const nx = (a.x+dx+cols)%cols, ny = (a.y+dy+rows)%rows; let sc = grass[ny*cols+nx] + R()*.15;
+        for(const w of wells){ const d = Math.hypot(nx-w.x,ny-w.y); if(d < 7) sc += (w.t===2?1.6:1.0)*(1-d/7)*(w.open?.2:1); }
+        if(sc > bs){ bs = sc; best = [nx,ny,dx,dy]; }
+      }
+      const moved = best[2]||best[3]; a.x = best[0]; a.y = best[1]; if(moved){ a.e -= .02; heat += .02; }
+      const wi = wells.findIndex(w => w.x===a.x && w.y===a.y);
+      if(wi>=0 && (!wells[wi].open || R()<.2)){ here[wi]++; a.e -= .05; heat += .05; a.inv = s; }
+      const eat = Math.min(grass[a.y*cols+a.x], .25); grass[a.y*cols+a.x] -= eat; a.e += eat*3; cap += eat*3; a.e -= .03; heat += .03;
+    }
+    wells.forEach((w,i) => { if(w.t===1){ w.prog = Math.min(w.lock*2, w.prog + here[i]*1 - .02); if(w.prog >= w.lock) w.open = true; if(w.prog <= 0) w.open = false; }
+      else { w.prog = Math.max(0, Math.min(w.lock*2, w.prog + (here[i]>=3 ? here[i] : -.4))); w.open = w.prog >= w.lock; } });
+    // opened wells feed whoever stands on them
+    wells.forEach((w,i) => { if(w.open && here[i]>0){ const g = Math.min(w.t===2?3.2:1.2, 99); cap += g; ag.filter(a => a.x===w.x && a.y===w.y).forEach(a => a.e += g/here[i]); inj += g; } });
+    snaps.push({g:Float32Array.from(grass), a:ag.map(a => [a.x,a.y,a.e,a.inv===s?1:0]), w:wells.map(w => [w.prog/w.lock, w.open?1:0]), inj, cap, heat});
+  }
+  return {cols,rows,steps,snaps,wells};
+})();
+
+// ---------- scenes
+const SCENES = [];
+function scene(title,len,draw,caps){ SCENES.push({title,len,draw,caps}); }
+
+// 0 title
+scene("Title",8,(c,t) => {
+  const k = seg(t,.2,2.2);
+  for(let i=0;i<40;i++){ const r = rng(i+1), x = r()*W, ph = r(), s = .25+r()*.5, y = H - ((t*40*s + ph*H) % H); glow(c,x,y,18+r()*30,ramp(1-y/H),.25*(1-y/H)+.05); }
+  const bw = 760*k; const g = c.createLinearGradient(260,0,1020,0); RAMP.forEach((col,i)=>g.addColorStop(i/(RAMP.length-1),col));
+  c.fillStyle = g; rr(c,260,300,bw,10,5); c.fill();
+  text(c,"Agency from gradients",W/2,250,{kind:"disp",size:84,weight:700,align:"center",alpha:seg(t,0,1.4)});
+  text(c,"Can we grow an agent, instead of designing one?",W/2,368,{kind:"body",size:32,align:"center",color:COL.mute,alpha:seg(t,1.8,3.2)});
+  text(c,"A simulation project, its preregistered tests, and what happened",W/2,430,{kind:"mono",size:15,align:"center",color:COL.mute,spacing:1,alpha:seg(t,3.2,4.4)});
+},[[0.8,7.5,"An idea about where agency comes from, and the experiments that tried to break it."]]);
+
+// 1 question
+scene("The question",16,(c,t) => {
+  chapterTag(c,1,"The question");
+  // left: designed agent
+  const a = seg(t,.5,2);
+  rr(c,90,210,430,300,12); c.fillStyle = COL.panel; c.globalAlpha = a; c.fill(); c.globalAlpha = 1;
+  text(c,"How we build agents today",120,255,{kind:"mono",size:13,color:COL.mute,spacing:1.5,alpha:a});
+  rr(c,130,290,350,64,8); c.save(); c.globalAlpha *= a; c.strokeStyle = COL.sun; c.lineWidth = 2; c.stroke(); c.restore();
+  text(c,"objective: maximise X",305,330,{kind:"disp",size:26,weight:600,align:"center",color:COL.sun,alpha:a});
+  line(c,305,356,305,410,COL.sun,2,a*seg(t,2,3)); 
+  dot(c,305,448,26,COL.cool,a*seg(t,2.6,3.4)); text(c,"agent",305,495,{kind:"mono",size:13,align:"center",color:COL.mute,alpha:seg(t,2.8,3.6)});
+  // right: life
+  const b = seg(t,5,6.5);
+  rr(c,760,210,430,300,12); c.fillStyle = COL.panel; c.globalAlpha = b; c.fill(); c.globalAlpha = 1;
+  text(c,"How life got started",790,255,{kind:"mono",size:13,color:COL.mute,spacing:1.5,alpha:b});
+  c.save(); c.globalAlpha *= b; c.setLineDash([6,6]); c.strokeStyle = COL.mute; c.lineWidth = 1.5; rr(c,800,290,350,64,8); c.stroke(); c.restore();
+  text(c,"no objective handed over",975,330,{kind:"disp",size:24,weight:500,align:"center",color:COL.mute,alpha:b});
+  for(let i=0;i<14;i++){ const r = rng(i+40); const ang = r()*6.283, rad = 14+r()*52*seg(t,7,12); dot(c,975+Math.cos(ang+t*.2)*rad,452+Math.sin(ang+t*.2)*rad*.7,5+r()*5,ramp(r()*.6),b*seg(t,6.8,8)); }
+  text(c,"?",W/2,400,{kind:"disp",size:90,weight:700,align:"center",color:COL.ember,alpha:seg(t,9,10.5)});
+},[[0.6,5,"Almost every artificial agent is handed a goal: maximise this number."],[5.2,9.5,"Life was never handed one. It showed up anyway, and some of it became agents."],[9.8,15.5,"So: what has to be true of a world for agents to appear in it?"]]);
+
+// 2 gradients
+scene("Gradients",24,(c,t) => {
+  chapterTag(c,2,"Energy flows downhill");
+  const names = ["Sunlight","Plants","Grazers","Hunters","Decomposers"], cap = [1,.55,.3,.16,.08];
+  const x0 = 150, dx = 245, y0 = 190, dy = 62;
+  for(let i=0;i<5;i++){
+    const on = seg(t,1+i*3.8,2+i*3.8);
+    const x = x0+i*dx, y = y0+i*dy;
+    if(i>0){ // stream from previous node
+      const px = x0+(i-1)*dx, py = y0+(i-1)*dy;
+      const n = Math.round(26*cap[i-1]);
+      for(let k=0;k<n;k++){ const ph = ((t*.55 + k/n) % 1), s = ph; const xx = lerp(px+34,x-34,s), yy = lerp(py,y,s) + Math.sin(s*9+k)*4; dot(c,xx,yy,3+2*cap[i-1],ramp((i-1)/4),on*(1-.5*s)); }
+    }
+    glow(c,x,y,60+70*cap[i],ramp(i/4),.35*on);
+    dot(c,x,y,14+24*cap[i],ramp(i/4),on);
+    // heat leaking up and away
+    for(let k=0;k<5;k++){ const ph = ((t*.4 + k/5 + i*.13) % 1); dot(c,x+Math.sin(ph*7+k+i)*18,y-30-ph*70*(.4+cap[i]),2.5,COL.ember,on*(1-ph)*.8); }
+    text(c,names[i],x,y+60+22*cap[i],{kind:"disp",size:20,weight:600,align:"center",alpha:on});
+  }
+  text(c,"heat",1160,150,{kind:"mono",size:13,color:COL.ember,align:"center",spacing:1.5,alpha:seg(t,3,5)});
+  text(c,"leaks away at every step",1160,172,{kind:"mono",size:12,color:COL.mute,align:"center",alpha:seg(t,3,5)});
+},[[0.8,5.5,"Energy always flows from concentrated to spread-out: sunlight to heat. That difference is a gradient."],[5.8,12,"Whatever structure drains a gradient well tends to stay around. Plants drain sunlight."],[12.2,18.5,"At every step some energy is left over, and a new kind of structure can feed on the leftovers."],[18.8,23.5,"Our hypothesis: life, and then agents, are the latest rungs of this ladder."]]);
+
+// 3 five conditions
+const CONDS = [
+ ["A ladder of gradients","Easy energy, then harder, richer pools above it."],
+ ["Scarcity","There is never enough for everyone."],
+ ["Heredity + variation","Offspring copy parents, with small random changes."],
+ ["A cost of dying","Death removes you. There are no free restarts."],
+ ["Succession","New rungs open where earlier ones were drained."]];
+function icon(c,i,cx,cy,t,on){
+  c.save(); c.globalAlpha *= on;
+  if(i===0){ [[150,COL.sun],[96,COL.ember],[46,COL.mag]].forEach(([w,col],k) => { rr(c,cx-75,cy+34-k*34,w,22,6); c.fillStyle = col; c.fill(); }); }
+  if(i===1){ for(let k=0;k<15;k++){ const x = cx-60+(k%5)*30, y = cy-30+Math.floor(k/5)*30; const gone = ((k*7)%15)/15 < .5*(.5+.5*Math.sin(t*1.2)); dot(c,x,y,9,COL.good,gone?.15:1); } }
+  if(i===2){ dot(c,cx-60,cy,16,COL.cool); const sh = .5+.5*Math.sin(t*2); line(c,cx-40,cy,cx+10,cy-26,COL.mute,2); line(c,cx-40,cy,cx+10,cy+26,COL.mute,2); dot(c,cx+30,cy-26,13,COL.cool); dot(c,cx+30,cy+26,13,mix(COL.cool,COL.mag,.35+.4*sh)); glow(c,cx+30,cy+26,24,COL.mag,.35*sh); }
+  if(i===3){ dot(c,cx,cy,26,COL.mute,.6); line(c,cx-18,cy-18,cx+18,cy+18,COL.bad,5); line(c,cx+18,cy-18,cx-18,cy+18,COL.bad,5); }
+  if(i===4){ const m = .5+.5*Math.sin(t*1.1); [0,1].forEach(k => { rr(c,cx-70+k*70,cy+10-k*40,60,40+k*30,6); c.fillStyle = k===0 ? mix(COL.sun,"#3A4358",m) : mix("#3A4358",COL.mag,m); c.fill(); }); }
+  c.restore();
+}
+scene("Five conditions",24,(c,t) => {
+  chapterTag(c,3,"Five conditions to test");
+  for(let i=0;i<5;i++){
+    const on = seg(t,1+i*3.6,2+i*3.6), x = 44+i*(220+28), y = 170+(1-on)*20;
+    c.save(); c.globalAlpha = .25+.75*on; rr(c,x,y,220,380,12); c.fillStyle = COL.panel; c.fill(); c.strokeStyle = on>.99 && t<19.5 && Math.floor((t-1)/3.6)===i ? COL.sun : COL.line; c.lineWidth = 1.5; c.stroke(); c.restore();
+    icon(c,i,x+110,y+105,t,on);
+    text(c,CONDS[i][0],x+110,y+225,{kind:"disp",size:22,weight:600,align:"center",alpha:on,maxW:190,lh:1.15});
+    text(c,CONDS[i][1],x+20,y+300,{kind:"body",size:17,color:COL.mute,alpha:on,maxW:182,lh:1.35});
+  }
+},[[0.8,5,"We list five ingredients that Earth had, and ask which ones are load-bearing."],[5.2,12.5,"A ladder of energy sources. Scarcity. Heredity with variation. A real cost of death."],[12.7,19,"And succession: new energy sources open up where the earlier ones were drained."],[19.2,23.5,"Each one is switched on and off, in every combination, and measured."]]);
+
+// 4 the rule
+scene("The rule",20,(c,t) => {
+  chapterTag(c,4,"The rule");
+  // left panel: no reward
+  const a = seg(t,.5,2);
+  rr(c,70,170,520,330,12); c.fillStyle = COL.panel; c.globalAlpha = a; c.fill(); c.globalAlpha = 1;
+  text(c,"We do not pay for entropy",100,215,{kind:"disp",size:24,weight:600,alpha:a});
+  dot(c,200,330,28,COL.cool,a); const coin = seg(t,2,4); dot(c,360-coin*70,330,18,COL.sun,a*(1-seg(t,4,5))); text(c,"+",360-coin*70,337,{kind:"disp",size:22,weight:700,align:"center",color:COL.bg,alpha:a*(1-seg(t,4,5))});
+  line(c,300,290,420,370,COL.bad,5,seg(t,4.2,5.2)); line(c,420,290,300,370,COL.bad,5,seg(t,4.2,5.2));
+  text(c,"no reward signal for how much heat a creature makes",100,430,{kind:"body",size:19,color:COL.mute,alpha:seg(t,4.5,6),maxW:460});
+  // right panel: persistence and a read-only meter
+  const b = seg(t,7,8.5);
+  rr(c,690,170,520,330,12); c.fillStyle = COL.panel; c.globalAlpha = b; c.fill(); c.globalAlpha = 1;
+  text(c,"Selection: stay alive and make copies",720,215,{kind:"disp",size:24,weight:600,alpha:b});
+  const R = rng(99);
+  for(let i=0;i<30;i++){ const x = 740+(i%10)*40, y = 270+Math.floor(i/10)*46, cyc = (t*.25 + R()) % 1; const state = cyc < .35 ? 0 : cyc < .55 ? 1 : 2; // alive, dying, copying
+    const alpha = state===1 ? 1-(cyc-.35)/.2 : 1; dot(c,x,y,10,state===2 ? COL.good : COL.cool,b*alpha); if(state===2) dot(c,x+14,y+8,7,COL.good,b*(cyc-.55)/.45); }
+  text(c,"Entropy production is only measured.",720,440,{kind:"body",size:19,color:COL.ink,alpha:seg(t,10.5,12),maxW:460});
+  const m = clamp(.5+.2*Math.sin(t)) ; rr(c,1150,260,22,170,4); c.save(); c.globalAlpha = b; c.strokeStyle = COL.mute; c.lineWidth = 1.5; c.stroke(); c.fillStyle = COL.ember; c.fillRect(1152,430-168*m,18,168*m); c.restore();
+  text(c,"read-only",1161,252,{kind:"mono",size:11,align:"center",color:COL.mute,alpha:b});
+},[[0.8,6.8,"The rule: nothing is rewarded for producing entropy."],[7.2,13.5,"Creatures that stay alive and reproduce are the ones that remain. Entropy production is only measured."],[14,19.5,"Energy still helps you survive, so the two are linked. But there is no separate prize."]]);
+
+// 5 toy world
+scene("The toy world",26,(c,t) => {
+  chapterTag(c,5,"The toy world (illustration)");
+  const Wd = WORLD, cs = 28, ox = 70, oy = 130, i = Math.min(Wd.steps-1, Math.floor(t*10)), s = Wd.snaps[i];
+  rr(c,ox-6,oy-6,Wd.cols*cs+12,Wd.rows*cs+12,10); c.fillStyle = "#0D1628"; c.fill(); c.strokeStyle = COL.line; c.lineWidth = 1.5; c.stroke();
+  for(let y=0;y<Wd.rows;y++) for(let x=0;x<Wd.cols;x++){ const v = s.g[y*Wd.cols+x]; if(v>.05) dot(c,ox+x*cs+cs/2,oy+y*cs+cs/2,2+v*8,COL.good,.12+.5*v); }
+  Wd.wells.forEach((w,k) => { const [pr,op] = s.w[k], big = w.t===2, r = big ? 18 : 11, x = ox+w.x*cs+cs/2, y = oy+w.y*cs+cs/2; const col = big ? COL.mag : COL.sun;
+    if(op) glow(c,x,y,big?70:42,col,.55); c.save(); c.lineWidth = 3; c.strokeStyle = "rgba(255,255,255,.18)"; c.beginPath(); c.arc(x,y,r,0,7); c.stroke(); c.strokeStyle = col; c.beginPath(); c.arc(x,y,r,-1.57,-1.57+6.283*clamp(pr)); c.stroke(); c.restore(); if(op) dot(c,x,y,big?9:5,col); });
+  s.a.forEach(([x,y,e,inv]) => { const px = ox+x*cs+cs/2, py = oy+y*cs+cs/2; dot(c,px,py,6,COL.cool); c.save(); c.strokeStyle = "rgba(88,208,220,.45)"; c.lineWidth = 1.5; c.beginPath(); c.arc(px,py,9+Math.min(6,e*.4),0,7); c.stroke(); c.restore(); if(inv) dot(c,px,py-14-((t*30)%12),2.5,COL.ember,.9); });
+  // legend + ledger
+  const lx = 700; text(c,"What you are looking at",lx,150,{kind:"disp",size:22,weight:600});
+  [[COL.good,"Grass: spread thin, grows back slowly"],[COL.sun,"Small wells: one creature can pay energy to open one"],[COL.mag,"Big well: needs several creatures paying at once"],[COL.cool,"Creatures: eat, pay, copy themselves, die"]].forEach(([col,lab],k) => { dot(c,lx+8,190+k*40,7,col); text(c,lab,lx+28,196+k*40,{kind:"body",size:18,color:COL.ink,maxW:480}); });
+  text(c,"Energy ledger (this run so far)",lx,380,{kind:"disp",size:19,weight:600});
+  const tot = Math.max(s.inj,1); [["Energy in",s.inj,COL.sun],["Taken up by creatures",s.cap,COL.cool],["Lost as heat",s.heat,COL.ember]].forEach(([lab,v,col],k) => { const y = 412+k*40; text(c,lab,lx,y+14,{kind:"mono",size:12,color:COL.mute}); rr(c,lx+200,y,300,16,5); c.fillStyle = "#16223A"; c.fill(); rr(c,lx+200,y,Math.max(4,300*clamp(v/tot)),16,5); c.fillStyle = col; c.fill(); });
+  text(c,"Hand-written rules for the creatures, like our hand-coded forager. Not a recorded run.",lx,555,{kind:"mono",size:12,color:COL.mute,maxW:480,lh:1.5});
+},[[0.8,7,"Our toy world: grass everywhere, small energy wells, and a big well that only opens if several creatures pay together."],[7.4,15,"Creatures move, eat, pay to open wells, copy themselves and die."],[15.4,21,"Every unit of energy is accounted for. Energy in equals energy taken up plus energy lost as heat."],[21.4,25.5,"Real runs use evolved creatures. This one uses hand-written rules, to show what the world allows."]]);
+
+// chart helpers for results scenes
+function card(c,x,y,w,h,alpha){ c.save(); c.globalAlpha *= alpha; rr(c,x,y,w,h,12); c.fillStyle = COL.panel; c.fill(); c.strokeStyle = COL.line; c.lineWidth = 1.5; c.stroke(); c.restore(); }
+function diffChart(c,x,y,w,items,lo,hi,a,labelW=140){
+  const px = v => x+labelW+(v-lo)/(hi-lo)*(w-labelW);
+  c.save(); c.globalAlpha *= a; line(c,px(0),y-6,px(0),y+items.length*44-12,COL.mute,1.5);
+  items.forEach((it,k) => { const yy = y+k*44, p0 = px(0), p1 = px(it.d);
+    text(c,it.l,x,yy+10,{kind:"mono",size:13,color:COL.mute});
+    rr(c,Math.min(p0,p1),yy,Math.abs(p1-p0),16,3); c.fillStyle = it.col||COL.ember; c.fill();
+    line(c,px(it.lo),yy+8,px(it.hi),yy+8,COL.ink,2); line(c,px(it.lo),yy+3,px(it.lo),yy+13,COL.ink,2); line(c,px(it.hi),yy+3,px(it.hi),yy+13,COL.ink,2);
+    text(c,it.t,Math.max(p1,px(it.hi))+8,yy+13,{kind:"mono",size:12,color:COL.ink}); });
+  c.restore();
+}
+function barChart(c,x,y,w,items,max,a,labelW=170){
+  const px = v => x+labelW+v/max*(w-labelW-70);
+  c.save(); c.globalAlpha *= a;
+  items.forEach((it,k) => { const yy = y+k*44; text(c,it.l,x,yy+12,{kind:"mono",size:13,color:COL.mute}); rr(c,px(0),yy,Math.max(3,px(it.v)-px(0)),18,3); c.fillStyle = it.col||COL.cool; c.fill();
+    if(it.lo!==undefined){ line(c,px(it.lo),yy+9,px(it.hi),yy+9,COL.ink,2); line(c,px(it.lo),yy+3,px(it.lo),yy+15,COL.ink,2); line(c,px(it.hi),yy+3,px(it.hi),yy+15,COL.ink,2); }
+    text(c,it.t,px(it.hi!==undefined?it.hi:it.v)+8,yy+14,{kind:"mono",size:12,color:COL.ink}); });
+  c.restore();
+}
+
+// 6 what happened
+scene("What we found",34,(c,t) => {
+  chapterTag(c,6,"What happened");
+  const pos = [[40,150],[440,150],[840,150]], cw = 380, ch = 400;
+  const a0 = seg(t,.8,2), a1 = seg(t,9,10.5), a2 = seg(t,19,20.5);
+  card(c,pos[0][0],pos[0][1],cw,ch,a0); card(c,pos[1][0],pos[1][1],cw,ch,a1); card(c,pos[2][0],pos[2][1],cw,ch,a2);
+  // A
+  text(c,"Selection helps a little",pos[0][0]+24,pos[0][1]+44,{kind:"disp",size:24,weight:600,alpha:a0,maxW:330});
+  chip(c,pos[0][0]+24,pos[0][1]+66,"","ok",a0);
+  text(c,"Entropy produced: staying-alive selection minus random parents",pos[0][0]+24,pos[0][1]+140,{kind:"body",size:16,color:COL.mute,alpha:a0,maxW:330});
+  diffChart(c,pos[0][0]+24,pos[0][1]+215,cw-48,[{l:"+2.34",d:2.34,lo:1.08,hi:3.66,t:"[1.1, 3.7]",col:COL.good}],-1,5,a0*seg(t,2.5,4),60);
+  text(c,"A small effect, and weaker than it looks: the control still has some selection.",pos[0][0]+24,pos[0][1]+300,{kind:"body",size:15,color:COL.mute,alpha:a0*seg(t,4,6),maxW:330});
+  // B
+  text(c,"Our own prediction failed",pos[1][0]+24,pos[1][1]+44,{kind:"disp",size:24,weight:600,alpha:a1,maxW:330});
+  chip(c,pos[1][0]+24,pos[1][1]+66,"","fail",a1);
+  text(c,"We predicted each condition is needed to reach the big wells. Removing it made reaching them more common.",pos[1][0]+24,pos[1][1]+126,{kind:"body",size:16,color:COL.mute,alpha:a1,maxW:330});
+  diffChart(c,pos[1][0]+24,pos[1][1]+228,cw-48,[{l:"scarcity",d:.27,lo:.03,hi:.50,t:"",col:COL.bad},{l:"heredity",d:.73,lo:.57,hi:.90,t:"",col:COL.bad},{l:"mortality",d:.53,lo:.33,hi:.73,t:"",col:COL.bad}],-.1,1.05,a1*seg(t,11,13),86);
+  text(c,"off minus on; right of zero means removing it helped",pos[1][0]+24,pos[1][1]+372,{kind:"mono",size:13,color:COL.mute,alpha:a1*seg(t,12,14),maxW:330,lh:1.3});
+  // C
+  text(c,"Bigger brains did not help",pos[2][0]+24,pos[2][1]+44,{kind:"disp",size:24,weight:600,alpha:a2,maxW:330});
+  chip(c,pos[2][0]+24,pos[2][1]+66,"","no",a2);
+  text(c,"Share of energy from the big wells, 20 runs each. 5,300 genes, 29 genes, hand-coded.",pos[2][0]+24,pos[2][1]+126,{kind:"body",size:16,color:COL.mute,alpha:a2,maxW:330});
+  barChart(c,pos[2][0]+24,pos[2][1]+210,cw-48,[{l:"5,300 genes",v:.0005,t:"0.00",col:COL.ind},{l:"29 genes",v:.037,lo:.001,hi:.09,t:"0.04",col:COL.cool},{l:"hand-coded",v:.399,lo:.295,hi:.501,t:"0.40",col:COL.sun}],.55,a2*seg(t,21.5,23.5),110);
+  text(c,"9 in 10 of the big-genome runs went extinct.",pos[2][0]+24,pos[2][1]+372,{kind:"mono",size:13,color:COL.ink,alpha:a2*seg(t,24,26),maxW:330});
+},[[0.8,8.5,"Selection by staying alive did raise entropy production, but only a little."],[9,18.5,"Our own prediction failed: taking away scarcity, heredity or death made the big wells easier to reach, not harder."],[19,28,"We then gave creatures 2,000 to 5,300 genes. They did no better than 29. Most big-genome populations died out."],[28.5,33.5,"We report these as they came out, including the failures."]]);
+
+// 7 what if we reward entropy
+scene("Rewarding entropy",36,(c,t) => {
+  chapterTag(c,7,"What if we do reward it?");
+  const pos = [[40,150],[440,150],[840,150]], cw = 380, ch = 400;
+  const a0 = seg(t,.8,2), a1 = seg(t,11,12.5), a2 = seg(t,22,23.5);
+  card(c,pos[0][0],pos[0][1],cw,ch,a0); card(c,pos[1][0],pos[1][1],cw,ch,a1); card(c,pos[2][0],pos[2][1],cw,ch,a2);
+  text(c,"Optimise entropy directly",pos[0][0]+24,pos[0][1]+44,{kind:"disp",size:24,weight:600,alpha:a0,maxW:330});
+  chip(c,pos[0][0]+24,pos[0][1]+66,"","mix",a0);
+  text(c,"It beat our best hand-coded forager on entropy. It did so by constantly burning energy, a furnace.",pos[0][0]+24,pos[0][1]+126,{kind:"body",size:16,color:COL.mute,alpha:a0,maxW:330});
+  barChart(c,pos[0][0]+24,pos[0][1]+240,cw-48,[{l:"random",v:19,t:"19",col:COL.mute},{l:"hand-coded",v:29,t:"29",col:COL.sun},{l:"optimised",v:35.8,lo:29.5,hi:40.1,t:"36",col:COL.ember}],48,a0*seg(t,3,5),100);
+  text(c,"Entropy rate. 5 optimisation runs.",pos[0][0]+24,pos[0][1]+372,{kind:"mono",size:13,color:COL.mute,alpha:a0*seg(t,5,6)});
+  text(c,"Learn a reward in a lifetime",pos[1][0]+24,pos[1][1]+44,{kind:"disp",size:24,weight:600,alpha:a1,maxW:330});
+  chip(c,pos[1][0]+24,pos[1][1]+66,"","no",a1);
+  text(c,"Creatures learned from their own energy gain or heat. Evolved creatures recovered no better either way.",pos[1][0]+24,pos[1][1]+126,{kind:"body",size:16,color:COL.mute,alpha:a1,maxW:330});
+  barChart(c,pos[1][0]+24,pos[1][1]+240,cw-48,[{l:"no learning",v:.48,t:"0.48",col:COL.mute},{l:"from energy",v:.457,t:"0.46",col:COL.cool},{l:"from heat",v:.458,t:"0.46",col:COL.ember}],.6,a1*seg(t,14,16),100);
+  text(c,"Recovery of evolved agents, 20 runs each. Memory probe near zero in all arms.",pos[1][0]+24,pos[1][1]+372,{kind:"mono",size:13,lh:1.3,color:COL.mute,alpha:a1*seg(t,16,17),maxW:330});
+  text(c,"England-style bias",pos[2][0]+24,pos[2][1]+44,{kind:"disp",size:24,weight:600,alpha:a2,maxW:330});
+  chip(c,pos[2][0]+24,pos[2][1]+66,"","mix",a2);
+  text(c,"No selection at all. Changes kept more often if they absorb more energy. The population took in more energy, but did not climb to the big wells.",pos[2][0]+24,pos[2][1]+126,{kind:"body",size:16,color:COL.mute,alpha:a2,maxW:330});
+  barChart(c,pos[2][0]+24,pos[2][1]+240,cw-48,[{l:"opposite bias",v:.110,t:"0.11",col:COL.mute},{l:"random keep",v:.163,t:"0.16",col:COL.cool},{l:"absorbed bias",v:.200,t:"0.20",col:COL.sun}],.26,a2*seg(t,25,27),110);
+  text(c,"Energy in per creature per step. The first result is built into the rule.",pos[2][0]+24,pos[2][1]+372,{kind:"mono",size:13,lh:1.3,color:COL.mute,alpha:a2*seg(t,27,28.5),maxW:330});
+},[[0.8,10.5,"Reverse the design: make entropy the goal. The optimiser makes more entropy than our best forager, by burning energy."],[11,21.5,"Give each creature a reward it learns from during its life. No sign of agency by our probes."],[22,31,"Jeremy England argued that driven systems drift toward absorbing and dissipating more. We test that rule here."],[31.5,35.5,"It absorbs more energy, as built. It does not climb the ladder."]]);
+
+// 8 where this stands
+scene("Where this stands",24,(c,t) => {
+  chapterTag(c,8,"Where this stands");
+  const L = [["A hypothesis, not a proof.","These are toy worlds. Whether they capture what mattered on Earth is the big assumption."],["Mostly negative so far.","Our central prediction failed, and neither bigger genomes nor an entropy reward produced agency."],["The measures are weak.","Our tests of agency are crude. The next step is a better probe, with a positive control."],["A world big genomes can survive in.","Most big-genome runs died out, so they never had the chance to learn anything."]];
+  L.forEach((l,i) => { const a = seg(t,1+i*4.5,2.2+i*4.5), y = 170+i*105; rr(c,90,y,6,78,3); c.fillStyle = ramp(i/3); c.globalAlpha = a; c.fill(); c.globalAlpha = 1;
+    text(c,l[0],120,y+28,{kind:"disp",size:28,weight:600,alpha:a}); text(c,l[1],120,y+62,{kind:"body",size:19,color:COL.mute,alpha:a,maxW:1000}); });
+},[[0.8,6,"What this shows: a hypothesis, tested in toy worlds, with mostly negative results so far."],[6.3,15,"The tests of agency are weak, and the larger worlds were too harsh."],[15.3,23,"The next step is better probes, and a world that big genomes can survive in."]]);
+
+// 9 end
+scene("End",10,(c,t) => {
+  const k = seg(t,.2,2);
+  const g = c.createLinearGradient(260,0,1020,0); RAMP.forEach((col,i)=>g.addColorStop(i/(RAMP.length-1),col)); c.fillStyle = g; rr(c,260,330,760,8,4); c.fill();
+  text(c,"agency-from-gradients",W/2,290,{kind:"disp",size:60,weight:700,align:"center",alpha:k});
+  text(c,"github.com/praveenchandrahas/agency-from-gradients",W/2,400,{kind:"mono",size:22,align:"center",color:COL.ink,alpha:seg(t,1,2.5)});
+  text(c,"Preregistered tests. Failures included. Live simulations on the project site.",W/2,450,{kind:"body",size:22,align:"center",color:COL.mute,alpha:seg(t,2,3.5)});
+},[]);
+
+// ---------- timeline
+let acc = 0; const TOTAL = SCENES.reduce((s,sc) => (sc.start = s, s + sc.len), 0);
+const FADE = .5;
+function render(T){
+  T = clamp(T,0,TOTAL-1e-3);
+  const c = ctx; c.setTransform(SCALE,0,0,SCALE,0,0);
+  background(c,T);
+  const si = SCENES.findIndex(sc => T >= sc.start && T < sc.start+sc.len), sc = SCENES[si], t = T - sc.start;
+  const a = Math.min(1, t/FADE, (sc.len-t)/FADE);
+  c.save(); c.globalAlpha = Math.max(0,a); sc.draw(c,t); c.restore();
+  const cap = sc.caps.find(k => t >= k[0] && t < k[1]);
+  if(cap) caption(c,cap[2],Math.min(1,(t-cap[0])/.3,(cap[1]-t)/.3));
+}
+window.__render = (T) => { render(T); }; window.__total = TOTAL; window.__setScale = setScale;
+
+// ---------- player
+const $ = id => document.getElementById(id);
+const playB = $("play"), big = $("bigplay"), ov = $("ov"), seek = $("seek"), timeL = $("time"), chap = $("chapters"), tr = $("transcript");
+let T = 3.2, playing = false, last = 0, speed = 1;
+const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+SCENES.forEach((sc,i) => { if(sc.title==="Title") return; const b = document.createElement("button"); b.className = "chip"; b.textContent = sc.title; b.dataset.i = i; b.addEventListener("click",() => { T = sc.start+.05; if(!playing) draw(); else {} }); chap.appendChild(b); });
+SCENES.forEach(sc => { sc.caps.forEach(k => { const li = document.createElement("li"); li.innerHTML = `<span>${fmt(sc.start+k[0])} · ${sc.title}</span><br>`; li.appendChild(document.createTextNode(k[2])); tr.appendChild(li); }); });
+function draw(){
+  render(T); seek.value = Math.round(T/TOTAL*1000); timeL.textContent = `${fmt(T)} / ${fmt(TOTAL)}`;
+  const si = SCENES.findIndex(sc => T >= sc.start && T < sc.start+sc.len); chap.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", Number(b.dataset.i)===si));
+}
+function loop(now){ if(!playing) return; const dt = (now-last)/1000; last = now; T += dt*speed; if(T >= TOTAL-.05){ T = TOTAL-.05; playing = false; setUI(); } draw(); if(playing) requestAnimationFrame(loop); }
+function setUI(){ playB.textContent = playing ? "Pause" : (T >= TOTAL-.1 ? "Replay" : "Play"); ov.hidden = playing || T > 3.3; }
+function toggle(){ if(!playing && T >= TOTAL-.1) T = 0; playing = !playing; if(playing){ last = performance.now(); requestAnimationFrame(loop); } setUI(); draw(); }
+playB.addEventListener("click",toggle); big.addEventListener("click",() => { T = 0; playing = false; toggle(); });
+seek.addEventListener("input",() => { T = seek.value/1000*TOTAL; draw(); setUI(); });
+$("speed").addEventListener("change",e => { speed = Number(e.target.value); });
+$("fs").addEventListener("click",() => { try{ const st = $("stage"); (document.fullscreenElement ? document.exitFullscreen() : st.requestFullscreen()); }catch(e){} });
+document.addEventListener("keydown",e => { if(e.target.tagName==="INPUT"||e.target.tagName==="SELECT") return; if(e.code==="Space"){ e.preventDefault(); toggle(); } if(e.code==="ArrowRight"){ T = Math.min(TOTAL-.1,T+5); draw(); } if(e.code==="ArrowLeft"){ T = Math.max(0,T-5); draw(); } });
+setScale(Math.min(2,Math.max(1,window.devicePixelRatio||1)));
+const ready = (document.fonts && document.fonts.load) ? Promise.all([document.fonts.load('700 40px "Bricolage Grotesque Variable"'),document.fonts.load('500 20px "Source Serif 4 Variable"'),document.fonts.load('500 14px "JetBrains Mono"')]).catch(()=>{}) : Promise.resolve();
+ready.then(() => { draw(); setUI(); window.__ready = true; });
+draw(); setUI();
+})();
+</script>
