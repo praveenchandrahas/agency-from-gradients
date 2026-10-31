@@ -215,7 +215,8 @@ def analyze(d, out):
         L.append(f"- H11b best log10 gain, 1e14 yr minus 1e11 yr: {fmt(d, 2)} [{fmt(lo, 2)}, {fmt(hi, 2)}] -> {judge(lo, hi, lo > 0)}")
 
     def cmp(arm_x, arm_y, h, label, test, method="phaseA_best"):
-        x, y = _per_seed(rows, arm=arm_x, horizon=h, method=method), _per_seed(rows, arm=arm_y, horizon=h, method=method)
+        ax_, ay_ = ("main" if arm_x == "default" else arm_x), ("main" if arm_y == "default" else arm_y)
+        x, y = _per_seed(rows, arm=ax_, horizon=h, method=method), _per_seed(rows, arm=ay_, horizon=h, method=method)
         if not x or not y:
             L.append(f"- {label} @ {h}: missing data"); return None
         ss = [s for s in TEST_SEEDS if s in x and s in y]

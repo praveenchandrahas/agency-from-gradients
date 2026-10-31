@@ -60,8 +60,8 @@ Re-optimise (Phase A search) under each ablation and report best strategy and ga
 ## Pilot (seeds >= 1000; not evidence)
 Pilot runs (training seeds 1000-1003, short ES) preceded the confirmatory dispatch. They showed: (i) baseline calibrates to 3.13e104 kB; (ii) the first model version let accretion and mergers pool more mass into a few holes than a bound domain contains (BH entropy ~1e121 at 1e14 yr, above what the domain mass allows); this was an exploit of my own model and is fixed (see deviation 2); (iii) after the fix, best strategies at 1e14 yr gave gains of order 1e108 to 1e111 kB, with collectors first and mergers/feeding after; (iv) pure single-lever strategies without collectors do nothing because the work reservoir starts nearly empty (a consequence of the cost model, not a bug); (v) collectors alone slightly lower photon entropy at short horizons because baseline dust already reprocesses 30% of starlight at 20 K and stored work defers entropy. Priors in the hypotheses were written before these pilots; none was changed.
 
-## Outcome
-To be filled after the confirmatory run.
+## Outcome (Actions run 41221558500, seeds 0-19, 64 jobs)
+H11a supported at all horizons. H11b not supported (-0.21 [-0.48, 0.06]). H11c supported (+2.2 to +2.4 decades). H11d not supported (Phase B 0.5 to 1.4 decades below Phase A; expected). H11e supported. H11f mixed (supported only at 1e14 yr, 10^117.7; unphysical assumption). H11g within tolerance. H11h supported at 1e11 and 1e12, not at 1e14 (intervals slightly wider than +-0.5). Exploit audit: no ledger violation (max relative error 2.5e-15); one model exploit (unbounded hole mass) was found in the pilot and fixed before the confirmatory run. Reports: `docs/results/s11/`.
 
 ## Deviation log
 1. Seed work reservoir w0 set to 1e-3 Msun c^2 (one stellar lifetime of energy) after the first pilot showed 1e-15 cannot bootstrap collectors.

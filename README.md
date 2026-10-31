@@ -25,6 +25,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S7-v3: combined package (recombination, low mutation, 3x arena, ~5,300 genes, richer world), preregistered | **H7a, H7b, H7c not supported** (20 seeds/arm). 90% of big-genome runs went extinct. See below |
 | S9: private reward learned in a lifetime (energy vs heat) | **H9a-d not supported** (20 seeds/arm). See below |
 | S10: England-style dissipative adaptation, no selection | **H10a-c supported (by construction), H10d-e not** (20 seeds/arm). See below |
+| S11: best way to increase the entropy of a lifeless toy universe (cosmic ledger, levers plus open-ended search) | **Confirmatory run done**: H11a, c, e supported; H11b, d not; H11f, h mixed (20 held-out parameter draws). See below |
 | S8: total entropy as an explicit objective | **Confirmatory run done** (5 optimisation runs per kappa): H8a and H8c supported, H8b not |
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
@@ -276,12 +277,22 @@ docs/DESIGN.md
 docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
 PREREGISTRATION.md   H1-H5
-PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md
+PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md, PREREGISTRATION_S11.md
 ```
 
 ## License
 
 Apache-2.0. See [`LICENSE`](LICENSE).
+
+
+### S11: the best way to increase the entropy of a lifeless universe (consistency check, not a discovery)
+
+Preregistered in `PREREGISTRATION_S11.md`; code in `src/agency_gradients/cosmos/` and `src/agency_gradients/experiments/s11_cosmic_entropy.py`; results in `docs/results/s11/` (report, summary, CSV). A stylised closed-ledger universe (flat LCDM, stars, remnants, SMBHs calibrated to 3.1e104 k_B, photons, bound domains, reach cone, action costs) and a controller choosing among six levers, searched by a lever grid plus evolution strategies (Phase A) and by a small neural policy (Phase B).
+
+- **Best strategy**: build starlight collectors for energy, then feed gas into black holes and merge them. Gain over do-nothing about 10^110 k_B at 100 Gyr, 1e12 and 1e14 yr; more than 99.99% is black-hole entropy (area law, S proportional to M squared).
+- **Open-ended search found nothing the levers missed**: the neural policy was 0.5 to 1.4 decades worse (H11d not supported).
+- **No time gain after 100 Gyr** in this model (H11b not supported); reach and bound-domain mass set the magnitude (H11c supported). Costs matter at x10 and above. Removing the radiator-area limit opens an unphysical photon route (10^117.7 at 1e14 yr), flagged.
+- **For the thesis**: the entropy-maximal structure is a black hole and the optimal controller is an engineer; an entropy objective alone does not favour life or intelligence, and the model excludes life by assumption. Matching the literature is a consistency check. See `docs/results/s11/s11_summary.md` for caveats and the exploit audit.
 
 ### S7-v3 confirmatory: the combined package did not work (negative result)
 
