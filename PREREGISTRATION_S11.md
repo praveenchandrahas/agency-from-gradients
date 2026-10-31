@@ -58,10 +58,15 @@ Re-optimise (Phase A search) under each ablation and report best strategy and ga
 - Connection to the thesis: report whether the result supports or complicates "the entropy-maximal structure is a black hole, not an agent". The model excludes life by assumption and so cannot test whether life increases entropy.
 
 ## Pilot (seeds >= 1000; not evidence)
-To be filled after pilot.
+Pilot runs (training seeds 1000-1003, short ES) preceded the confirmatory dispatch. They showed: (i) baseline calibrates to 3.13e104 kB; (ii) the first model version let accretion and mergers pool more mass into a few holes than a bound domain contains (BH entropy ~1e121 at 1e14 yr, above what the domain mass allows); this was an exploit of my own model and is fixed (see deviation 2); (iii) after the fix, best strategies at 1e14 yr gave gains of order 1e108 to 1e111 kB, with collectors first and mergers/feeding after; (iv) pure single-lever strategies without collectors do nothing because the work reservoir starts nearly empty (a consequence of the cost model, not a bug); (v) collectors alone slightly lower photon entropy at short horizons because baseline dust already reprocesses 30% of starlight at 20 K and stored work defers entropy. Priors in the hypotheses were written before these pilots; none was changed.
 
 ## Outcome
 To be filled after the confirmatory run.
 
 ## Deviation log
-(empty at registration)
+1. Seed work reservoir w0 set to 1e-3 Msun c^2 (one stellar lifetime of energy) after the first pilot showed 1e-15 cannot bootstrap collectors.
+2. Exploit found and fixed during pilots: hole mass was unbounded by domain size. Added (a) a per-hole accretion cap equal to the domain baryon mass, (b) a rule that a merged pair must fit within one domain, (c) 80 mass bins (to 1e24 Msun) so the no-domain ablation can run. Also fixed a numpy view-aliasing bug that broke the mass-energy ledger in the merger step (caught by the ledger check, relative error 1e-4).
+3. Float64 resolution: differences in the ~3e104 BH total below ~1e89 kB are rounding noise; gains with absolute value < 1e90 kB are set to 0 in the objective and the analysis (NOISE_FLOOR). Photon/matter components are reported separately and are not affected.
+4. Accounting convention: work energy W stored by collectors but never spent by the horizon is not counted as entropy (it is organised energy). Reported as W_final.
+5. Experiment script is src/agency_gradients/experiments/s11_cosmic_entropy.py, not top-level experiments/.
+6. Analysis details not fully specified at registration: H11a judged per horizon; H11f compares the photon-component gain of the collectors-only grid strategy without the area limit to the BH-component gain of the best default Phase A policy; ES run counts: 5 per horizon for the main arm, 3 per ablation arm.
