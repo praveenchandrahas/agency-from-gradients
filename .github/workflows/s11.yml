@@ -1,0 +1,92 @@
+name: s11
+# Confirmatory S11 (PREREGISTRATION_S11.md). Trigger: Actions -> s11 -> Run workflow.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        horizon: ["1e11", "1e12", "1e14"]
+        es: [0, 1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run
+        run: python -m agency_gradients.experiments.s11_cosmic_entropy --arm main --horizon ${{ matrix.horizon }} --es-seed ${{ matrix.es }} --out out
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="s11/${GITHUB_RUN_ID}-main-${{ matrix.horizon }}-${{ matrix.es }}"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }
+  ablate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        horizon: ["1e11", "1e12", "1e14"]
+        arm: [no_bh_levers, "bh_x0.1", "bh_x10", no_reach_limit, "cost_x0.5", cost_x2, cost_x1000, probe_c, "probe_0.1c", domain_1e12, domain_1e16, domain_none, no_area_limit, "eta_0.05", "eta_0.3", no_accretion_capture]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run
+        run: python -m agency_gradients.experiments.s11_cosmic_entropy --arm "${{ matrix.arm }}" --horizon ${{ matrix.horizon }} --n-es 3 --out out
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="s11/${GITHUB_RUN_ID}-abl-${{ matrix.arm }}-${{ matrix.horizon }}"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }
+  far:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run
+        run: python -m agency_gradients.experiments.s11_cosmic_entropy --arm far --out out
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="s11/${GITHUB_RUN_ID}-far"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }
