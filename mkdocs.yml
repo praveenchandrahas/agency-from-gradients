@@ -1,0 +1,80 @@
+site_name: agency-from-gradients
+site_description: Can agency arise without a built-in objective? A preregistered simulation suite on energy gradients, selection by persistence, and what the toy worlds do and do not show.
+site_url: https://praveenchandrahas.github.io/agency-from-gradients/docs/
+site_author: Praveen Chandrahas
+repo_url: https://github.com/praveenchandrahas/agency-from-gradients
+repo_name: praveenchandrahas/agency-from-gradients
+edit_uri: edit/main/docs/
+copyright: Apache-2.0 licensed
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - The idea:
+      - The idea: idea.md
+      - Hypotheses and falsifiers: hypotheses.md
+  - The simulation:
+      - The world: world.md
+      - World v2: world-v2.md
+      - The cosmic ledger (S11): cosmos.md
+      - Design reference: DESIGN.md
+  - Results:
+      - Overview: results/index.md
+      - S1 to S5, the main run: results/main.md
+      - S6, the free-rider test: results/s6.md
+      - S7, bigger genomes: results/s7.md
+      - S8, entropy as the goal: results/s8.md
+      - S9, learned private reward: results/s9.md
+      - S10, dissipative adaptation: results/s10.md
+      - S11, a lifeless universe: results/s11.md
+  - Using the repo:
+      - How to run: running.md
+      - Try it live: try-it.md
+      - Known limitations: limitations.md
