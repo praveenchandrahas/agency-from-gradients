@@ -4,7 +4,7 @@ name: pages
 on:
   push:
     branches: [main]
-    paths: ["webapp/**", "explainer/**", "learn/**", ".github/workflows/pages.yml"]
+    paths: ["webapp/**", "explainer/**", "learn/**", "docs/**", "mkdocs.yml", "requirements-docs.txt", ".github/workflows/pages.yml"]
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,6 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p site/lab && cp explainer/index.html site/index.html && cp webapp/index.html site/lab/index.html && mkdir -p site/learn && cp learn/index.html learn/film.html learn/agency-from-gradients-film.mp4 site/learn/
+      # The docs site goes to /docs/, next to the explainer (/), the grid view (/lab/) and the film (/learn/).
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --strict --site-dir site/docs
       - uses: actions/upload-pages-artifact@v3
         with: { path: site }
       - id: d

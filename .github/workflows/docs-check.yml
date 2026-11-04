@@ -1,0 +1,19 @@
+name: docs-check
+# Builds the MkDocs site in strict mode on pull requests, so a broken link or a
+# bad nav entry fails the PR instead of failing the deploy after merge.
+# Deploys nothing. Publishing is done by pages.yml on push to main.
+on:
+  pull_request:
+    paths: ["docs/**", "mkdocs.yml", "requirements-docs.txt", ".github/workflows/docs-check.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --strict --site-dir /tmp/site
