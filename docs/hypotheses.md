@@ -16,6 +16,8 @@ That is what the preregistration files are.
     - [`PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION.md): H1 to H5
     - [`PREREGISTRATION_S6.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S6.md) to [`S11`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S11.md): the follow-ups
 
+The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md). It reads the results against the hypothesis, separates the sufficiency and necessity claims, and treats the later experiments as diagnostics rather than confirmatory evidence.
+
 ## The protocol
 
 - **Confirmatory seeds:** 0 to 29, 20,000 steps, default configuration.

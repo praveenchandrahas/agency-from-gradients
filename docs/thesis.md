@@ -1,7 +1,7 @@
 # The thesis, rebuilt from the hypothesis
 
-!!! warning "Draft for review"
-    This is a rebuild of the thesis document, not a new result. Every number comes from the preregistered experiments already reported. The change is one of order and emphasis: the hypothesis comes first, the predictions are derived from it, the evidence is read against those predictions, and the revised claim comes last.
+!!! warning "Status: published draft for review"
+    This page is part of the documentation site. It is a rebuild of the thesis document, not a new result. Every number comes from the preregistered experiments already reported. The change is one of order and emphasis: the hypothesis comes first, the predictions are derived from it, the evidence is read against those predictions, and the revised claim comes last.
 
     The [earlier draft](https://github.com/praveenchandrahas/agency-from-gradients/blob/thesis-v2-s12/docs/thesis-v2.md) starts from cosmic inevitability and works back to a proposed experiment. This page starts from the claim the suite was built to test.
 
@@ -224,7 +224,7 @@ What I would keep as an open question:
 
 The original hypothesis treated the conditions as the cause. The failures point to a different variable: **the range of states the population is selected across**.
 
-> **H6 (candidate, untested).** Persistence selection produces viability restoration only when the selection environment contains the perturbations used to test restoration. A static world selects narrow niche competence. A world that repeatedly displaces and depletes agents selects restoration.
+> **H13 (candidate, untested).** Persistence selection produces viability restoration only when the selection environment contains the perturbations used to test restoration. A static world selects narrow niche competence. A world that repeatedly displaces and depletes agents selects restoration.
 
 This is not a reward for restoration. Both arms would select only on persistence and reproduction. The difference is the distribution of experiences, not the objective.
 
@@ -242,7 +242,7 @@ This hypothesis is closer to the original design rule than the five-condition li
 These are the tests the rebuild implies. None has been run.
 
 1. **Density-matched ablation.** Hold population size fixed across conditions. If removing mortality still raises Tier 2 use, the effect is not density. If it disappears, H2 was measuring the population cap.
-2. **A static-versus-variable selection experiment.** Two arms, the same persistence rule. The static arm never displaces agents; the variable arm subjects them to the displacement used in the restoration test. Compare recovery on a common test. This is the direct test of H6.
+2. **A static-versus-variable selection experiment.** Two arms, the same persistence rule. The static arm never displaces agents; the variable arm subjects them to the displacement used in the restoration test. Compare recovery on a common test. This is the direct test of H13.
 3. **A sustained-use metric.** Replace `t2_reached` with Tier 2 share, time to first sustained opening, and individual investment traces. Separate "someone opened it once" from "the population uses it."
 4. **A policy-class control.** A hand-coded ladder-user proves the world has headroom, but it does not prove that the generic policy class can represent the rule. A curriculum or a shaped exploration bonus would test that separately.
 5. **A gentler v3, preregistered.** Viable seeding, an easier start, a longer grace period. Log how extinct runs are handled before the run, not after.

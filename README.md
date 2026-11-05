@@ -30,6 +30,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
+| Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
 ## Try it live
@@ -75,6 +76,8 @@ For anyone who wants the ideas and the experiments explained without running any
 ## Hypotheses and falsifiers
 
 Written down before any confirmatory run: [`PREREGISTRATION.md`](PREREGISTRATION.md).
+
+The argument is rebuilt from that hypothesis in [`docs/thesis.md`](docs/thesis.md). It separates the sufficiency claim from the necessity claim (H2), states the circularity problem in defining agency as viability restoration, reads the later experiments as diagnostics rather than confirmatory evidence, and ends with the revised thesis and a candidate next hypothesis (H13: restoration is selected only when the selection environment contains the disturbance used to test it). It is published as a draft for review.
 
 ## Quick start
 
@@ -274,6 +277,7 @@ explainer/         plain-language scroll page with a live pond (index.html is ge
 analysis/          figure scripts
 tests/
 docs/DESIGN.md
+docs/thesis.md    thesis rebuilt from the hypothesis
 docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
 PREREGISTRATION.md   H1-H5
