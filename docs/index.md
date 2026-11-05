@@ -46,6 +46,7 @@ Most of the later experiments, built to find out why, came back negative too. I 
 
 - **[The idea](idea.md)** explains the argument and where it comes from.
 - **[Hypotheses and falsifiers](hypotheses.md)** lists what I wrote down before looking, and what would change my mind.
+- **[The thesis, rebuilt from the hypothesis](thesis.md)** states the claim first, derives the predictions, reads the evidence against them, and ends with the revised thesis.
 - **[The world](world.md)** describes the simulation in plain language.
 - **[Results](results/index.md)** has every experiment, its numbers, and what it does *not* show.
 - **[How to run](running.md)** gets you from `pip install` to your own results.
