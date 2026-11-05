@@ -224,7 +224,7 @@ What I would keep as an open question:
 
 The original hypothesis treated the conditions as the cause. The failures point to a different variable: **the range of states the population is selected across**.
 
-> **H6 (candidate, untested).** Persistence selection produces viability restoration only when the selection environment contains the perturbations used to test restoration. A static world selects narrow niche competence. A world that repeatedly displaces and depletes agents selects restoration.
+> **H13 (candidate, untested).** Persistence selection produces viability restoration only when the selection environment contains the perturbations used to test restoration. A static world selects narrow niche competence. A world that repeatedly displaces and depletes agents selects restoration.
 
 This is not a reward for restoration. Both arms would select only on persistence and reproduction. The difference is the distribution of experiences, not the objective.
 
@@ -242,7 +242,7 @@ This hypothesis is closer to the original design rule than the five-condition li
 These are the tests the rebuild implies. None has been run.
 
 1. **Density-matched ablation.** Hold population size fixed across conditions. If removing mortality still raises Tier 2 use, the effect is not density. If it disappears, H2 was measuring the population cap.
-2. **A static-versus-variable selection experiment.** Two arms, the same persistence rule. The static arm never displaces agents; the variable arm subjects them to the displacement used in the restoration test. Compare recovery on a common test. This is the direct test of H6.
+2. **A static-versus-variable selection experiment.** Two arms, the same persistence rule. The static arm never displaces agents; the variable arm subjects them to the displacement used in the restoration test. Compare recovery on a common test. This is the direct test of H13.
 3. **A sustained-use metric.** Replace `t2_reached` with Tier 2 share, time to first sustained opening, and individual investment traces. Separate "someone opened it once" from "the population uses it."
 4. **A policy-class control.** A hand-coded ladder-user proves the world has headroom, but it does not prove that the generic policy class can represent the rule. A curriculum or a shaped exploration bonus would test that separately.
 5. **A gentler v3, preregistered.** Viable seeding, an easier start, a longer grace period. Log how extinct runs are handled before the run, not after.
