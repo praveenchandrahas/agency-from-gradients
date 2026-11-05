@@ -4,6 +4,10 @@
 
 <sub><i>The banner is an illustration. Its example charts are mock-ups, not results, and its design table is a sketch: the ablations actually implemented are food scarcity, heredity, mortality and succession (see below), and there is no memory ablation.</i></sub>
 
+**New here? Start with the explainer website: [praveenchandrahas.github.io/agency-from-gradients/learn/](https://praveenchandrahas.github.io/agency-from-gradients/learn/)**
+
+No install needed. It explains the idea, the experiments and what they do not show, in plain words.
+
 **agency-from-gradients** is a simulation suite built on one design hypothesis: if we want artificial agency, we should reproduce the conditions under which it arose on Earth, not hand agents an objective.
 
 The argument starts from first principles. Structures that drain energy gradients persist, and each new structure feeds on what the last left unexhausted, from stars to supernovae to life. Life is the one case we know where this succession produced agents. The suite asks which of its conditions are load-bearing: a ladder of gradients, finite and contested resources, heredity with variation, a real cost of death, and succession.

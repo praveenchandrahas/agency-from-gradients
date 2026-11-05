@@ -4,6 +4,9 @@
 
 *The banner is an illustration. Its example charts are mock-ups, not results.*
 
+!!! tip "New here? Start with the explainer website"
+    **[Open the explainer website](https://praveenchandrahas.github.io/agency-from-gradients/learn/)**. No install needed. It explains the idea, the experiments and what they do not show, in plain words.
+
 Can agency arise without anyone handing the agent an objective?
 
 That is the question. This repo is my attempt to answer it with code, not with an argument.
