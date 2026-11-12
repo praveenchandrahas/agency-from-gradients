@@ -18,6 +18,8 @@ That is what the preregistration files are.
 
 The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md). It reads the results against the hypothesis, separates the sufficiency and necessity claims, and treats the later experiments as diagnostics rather than confirmatory evidence.
 
+What comes next is in [Why the next experiment starts before life](before-life.md). S14 is a **draft** preregistration. It is not frozen, and nothing has been run.
+
 ## The protocol
 
 - **Confirmatory seeds:** 0 to 29, 20,000 steps, default configuration.

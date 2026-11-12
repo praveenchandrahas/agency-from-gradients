@@ -30,6 +30,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
+| S14: before the replicator. A driven chemistry with no agents, genomes or fitness | **Draft preregistration only** ([`PREREGISTRATION_S14.md`](PREREGISTRATION_S14.md)). No engine, no runs. Reasoning in [`docs/before-life.md`](docs/before-life.md). There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
@@ -256,6 +257,7 @@ All long runs can be started from the repo's Actions tab: `confirmatory-runs` (S
 - If big deposits are still not found under individual selection: kin sharing (benefits shared among relatives), larger populations, and sexual recombination.
 - Bring the v2 world into the explainer's pond.
 - S5: add an efficiency pathway and deplete gradients, to see whether populations go thermodynamically quiet (Barrow's miniaturisation counter-argument).
+- S14: start before the replicator. A thermodynamically consistent driven chemistry, asking only whether self-copying appears. Draft preregistration; needs a new engine. S12 (a parameter sweep of the pond world, draft PR #2) is parked behind it. H13 remains a candidate.
 - Predictive-information probe, which needs the MLP policy to evolve (or a memory-bearing equivariant variant).
 - Run S0 on the real Study 2 trajectories.
 
@@ -278,10 +280,12 @@ analysis/          figure scripts
 tests/
 docs/DESIGN.md
 docs/thesis.md    thesis rebuilt from the hypothesis
+docs/before-life.md   why the next experiment (S14) starts before the replicator
 docs/results/     confirmatory reports and CSVs; pilot/ holds pilots (not evidence)
 docs/screenshots/
 PREREGISTRATION.md   H1-H5
 PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md, PREREGISTRATION_S11.md
+PREREGISTRATION_S14.md   DRAFT, not frozen, not run
 ```
 
 ## License
