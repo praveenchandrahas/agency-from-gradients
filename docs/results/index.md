@@ -17,6 +17,7 @@ If you only read one result, read H2 on the [main run page](main.md). It failed,
 | [S9](s9.md) | A learned private reward | 20 per arm | Not supported |
 | [S10](s10.md) | Dissipative adaptation, no selection | 20 per arm | Not supported |
 | [S11](s11.md) | The best entropy raiser in a lifeless universe | 20 parameter draws | A black-hole engineer |
+| [S14](s14.md) | Before the replicator: does a driven soup start copying itself? | 200 chemistries | Not supported. No closed set was even possible |
 
 S5, Barrow's counter-test, is **not implemented**. S0, the re-analysis of earlier genome trajectories, is implemented against an *assumed* data format and has never run on the real files.
 
@@ -24,7 +25,7 @@ S5, Barrow's counter-test, is **not implemented**. S0, the re-analysis of earlie
 
 Honesty about provenance matters, so here it is.
 
-- **S7-v3, S8, S9, S10, S11:** per-run CSVs are on the [`ci-results` branch](https://github.com/praveenchandrahas/agency-from-gradients/tree/ci-results).
+- **S7-v3, S8, S9, S10, S11, S14:** per-run CSVs are on the [`ci-results` branch](https://github.com/praveenchandrahas/agency-from-gradients/tree/ci-results).
 - **S1 to S4 and S6:** those CSVs are **not** in the repo. Reproduce them with the [commands here](../running.md). Seeds 0 to 29 take roughly 30 to 60 minutes per experiment on two cores.
 
 Numbers on these pages are copied from the README results tables, which in turn come from the generated reports.

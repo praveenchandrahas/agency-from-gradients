@@ -41,6 +41,7 @@ Most of the later experiments, built to find out why, came back negative too. I 
 | [S9](results/s9.md) | Does a learned private reward produce agency? | **Not supported** |
 | [S10](results/s10.md) | Does England-style dissipative adaptation climb the ladder? | **Not supported** |
 | [S11](results/s11.md) | What best raises the entropy of a lifeless universe? | **A black-hole engineer**, as the literature suggests |
+| [S14](results/s14.md) | With no agents at all, does a driven soup start copying itself? | **Not supported**. In 0 of 200 chemistries was a closed set even possible |
 
 ## How the site is organised
 

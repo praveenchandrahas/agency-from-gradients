@@ -18,7 +18,7 @@ That is what the preregistration files are.
 
 The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md). It reads the results against the hypothesis, separates the sufficiency and necessity claims, and treats the later experiments as diagnostics rather than confirmatory evidence.
 
-What came next is in [Why the next experiment starts before life](before-life.md). S14 is preregistered in [`PREREGISTRATION_S14.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). It was frozen on `main` before its confirmatory run.
+What came next is in [Why the next experiment starts before life](before-life.md). S14 is preregistered in [`PREREGISTRATION_S14.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). It was frozen on `main` before its confirmatory run. [The result](results/s14.md) is a null.
 
 ## The protocol
 
@@ -64,6 +64,7 @@ These came after the main run. That changes their status.
 | **S9** | Does a learned private reward produce agency? | H9a to H9d | None supported |
 | **S10** | Does dissipative adaptation, with no selection, climb the ladder? | H10a to H10e | H10a to c supported by construction, H10d and H10e not |
 | **S11** | What best raises the entropy of a lifeless universe? | H11a to H11h | Mostly supported. H11b and H11d not |
+| **S14** | With no agents, genomes or fitness, does a driven soup start copying itself? | H14a to H14d | H14a and H14b not supported. H14c and H14d not run |
 
 ## Things I chose not to claim
 

@@ -44,7 +44,7 @@ The large-genome pilots, and then the S7 run, did not show the behaviour the the
 
 It was needed to get enough generations per run. But it is itself pressure, not neutral background.
 
-## Three more, from later work
+## Five more, from later work
 
 ### 10. S7-v3 extinction
 
@@ -57,6 +57,14 @@ A null result cannot separate "no predictive information" from "the probe is too
 ### 12. S11 excludes life by assumption
 
 So it cannot say whether life raises entropy. And the result is a consistency check on published formulas, not a discovery.
+
+### 13. S14's null is structural
+
+In none of its 200 random chemistries was a closed catalytic set even possible. So S14 says nothing about whether copying would arise where one is possible. The catalysis density was my choice, and it sat just under the threshold.
+
+### 14. S14's soup is a toy
+
+Strings of at most six letters. A random catalysis table. Catalysts that never saturate. Tau-leaping, checked against the exact method only at equilibrium.
 
 ## Design bias, stated plainly
 

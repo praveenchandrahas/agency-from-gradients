@@ -30,7 +30,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | Plain-language explainer, live pond, GitHub Pages | Built; Pages workflow in place |
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
-| S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Preregistered and frozen** ([`PREREGISTRATION_S14.md`](PREREGISTRATION_S14.md)); engine in `src/agency_gradients/soup/`, 12 tests. Confirmatory run via the `s14` workflow. Reasoning in [`docs/before-life.md`](docs/before-life.md). There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
+| S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Confirmatory run done** (200 chemistries): **H14a and H14b not supported; H14c and H14d not run.** A closed catalytic set was structurally possible in 0 of 200 chemistries, so the dynamics were never tested. All gates passed. See below. There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
@@ -288,6 +288,16 @@ PREREGISTRATION.md   H1-H5
 PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md, PREREGISTRATION_S11.md
 PREREGISTRATION_S14.md   S14, frozen before its confirmatory run
 ```
+
+## S14: before the replicator (no agents, no genomes, no fitness)
+
+Preregistered in [`PREREGISTRATION_S14.md`](PREREGISTRATION_S14.md), frozen on `main` before the run; reasoning in [`docs/before-life.md`](docs/before-life.md); engine in `src/agency_gradients/soup/`; write-up in [`docs/results/s14.md`](docs/results/s14.md); raw runs in `s14/43258823346-*` on the `ci-results` branch. A flow reactor of binary polymers (length 1 to 6), a fuel and a heat bath. Every reaction is reversible and obeys local detailed balance. Entropy production is recorded from the free-energy books and is never used by the dynamics.
+
+- **All gates passed**: closed-box relaxation to the Boltzmann composition, exact mass and fuel ledgers, the single-event detailed-balance identity (worst error 2e-11), agreement of flux-based entropy production with the books, no structure without a drive, and a detector that fired on 10 of 10 designed copiers and 0 of 10 "mineral" controls.
+- **H14a (copying appears): not supported.** 0 of 200 random chemistries at the top drive. H14b (more drive, more copying): not supported. H14c and H14d: not run, nothing emerged.
+- **The null is structural.** In 0 of 200 chemistries did the catalysis table contain any closed set. The dynamics were never put to the test. Post hoc and not preregistered: on fresh chemistries, a closed set is possible in 0 of 200 at one catalysed join per polymer per kind (the frozen value), 60 at two, 165 at three, 198 at five.
+- **Controls, descriptive**: the designed copier and the mineral control dissipate about the same (8,070 against 8,077 k_B per residence time). Sterilised, the mineral soup is back within one residence time; the copier stays dead for 100. Copying is not needed for dissipation here, and what can be inherited can be lost.
+- This says nothing about early Earth and does not measure agency.
 
 ## License
 

@@ -76,6 +76,7 @@ nav:
       - S9, learned private reward: results/s9.md
       - S10, dissipative adaptation: results/s10.md
       - S11, a lifeless universe: results/s11.md
+      - S14, before the replicator: results/s14.md
   - Using the repo:
       - How to run: running.md
       - Try it live: try-it.md

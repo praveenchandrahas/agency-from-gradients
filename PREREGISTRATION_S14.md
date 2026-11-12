@@ -290,8 +290,21 @@ Measured in pilots on one laptop core. A quiet run takes 2 to 4 seconds. A run w
 
 ## Deviation log
 
-(none yet)
+- **Which chemistry the closed-box gate used.** The file did not say. The code uses plumbing chemistry 1000, the same one as in the pilot. So the gate 1 numbers in the confirmatory run are identical to the pilot's. The gate is a check on the engine, not on a seed, so I do not think this matters. It is recorded.
+- **Ledgers of the sterilised twins** were not checked by gate 2. Only the 1,820 main runs were. No twin was run in arm R, because nothing met the closure criterion.
+- No other deviation.
 
-## Outcome
+## Outcome (Actions run 43258823346, commit fe50486, chemistries 0 to 199)
 
-(not run)
+All gates passed.
+
+- **H14a not supported.** E in 0 of 200 chemistries at the top drive: 0.000 [0.000, 0.000]. No threshold variant changes it. Closure alone: 0 of 200.
+- **H14b not supported.** 0.000 [0.000, 0.000].
+- **H14c and H14d not run.** No arm R run met E.
+- **Could it close at all?** No. A closed set was structurally possible in 0 of 200 chemistries. So the null is about the catalysis tables. The dynamics were never tested.
+- **Controls.** The detector fired in 10 of 10 runs of arm P and 0 of 10 of arm M. Capture 0.611 against 0.586. Entropy rate 8,070 against 8,077 k_B per residence time. Twin lag 100 (censored) in every P run, 0 in every M run. Shuffle percentile 0.964 against 0.494.
+- **Exploratory, arm C:** 0 of 200.
+
+**Post hoc, not preregistered.** On fresh chemistries 2000 to 2199, structure only: a closed set is possible in 0 of 200 at one catalysed join per polymer per kind, 60 at two, 165 at three, 198 at five. The frozen value sat just under a sharp threshold.
+
+Report: `s14/43258823346-report/` on the `ci-results` branch. Write-up: `docs/results/s14.md`.

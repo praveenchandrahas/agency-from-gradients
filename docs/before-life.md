@@ -1,7 +1,7 @@
 # Why the next experiment starts before life
 
 !!! warning "Status: a decision record"
-    This page records a decision and the reasoning behind it. It reports no result. The experiment it leads to, S14, has a [frozen preregistration](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). Its outcome, once the run is in, belongs on the results pages, not here.
+    This page records a decision and the reasoning behind it. It reports no result. The experiment it leads to, S14, has a [frozen preregistration](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). Its outcome is on [the S14 results page](results/s14.md): a null, and a narrow one.
 
 ## The proposal
 
