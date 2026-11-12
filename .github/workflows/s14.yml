@@ -1,0 +1,89 @@
+name: s14
+# Confirmatory S14 (PREREGISTRATION_S14.md). Trigger: Actions -> s14 -> Run workflow.
+# Arm R runs once. Do not re-dispatch to "get a better draw".
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arm: R, chem0: 0, chems: 20 }
+          - { arm: R, chem0: 20, chems: 20 }
+          - { arm: R, chem0: 40, chems: 20 }
+          - { arm: R, chem0: 60, chems: 20 }
+          - { arm: R, chem0: 80, chems: 20 }
+          - { arm: R, chem0: 100, chems: 20 }
+          - { arm: R, chem0: 120, chems: 20 }
+          - { arm: R, chem0: 140, chems: 20 }
+          - { arm: R, chem0: 160, chems: 20 }
+          - { arm: R, chem0: 180, chems: 20 }
+          - { arm: N, chem0: 0, chems: 100 }
+          - { arm: N, chem0: 100, chems: 100 }
+          - { arm: C, chem0: 0, chems: 100 }
+          - { arm: C, chem0: 100, chems: 100 }
+          - { arm: P, chem0: 0, chems: 10 }
+          - { arm: M, chem0: 0, chems: 10 }
+          - { arm: gates, chem0: 0, chems: 0 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Run
+        run: |
+          echo "commit ${GITHUB_SHA}" > RUN_INFO.txt; python -c "import numpy, sys; print('numpy', numpy.__version__, 'python', sys.version.split()[0])" >> RUN_INFO.txt
+          mkdir -p out && cp RUN_INFO.txt out/
+          python -m agency_gradients.experiments.s14_soup --arm "${{ matrix.arm }}" --chem0 ${{ matrix.chem0 }} --chems ${{ matrix.chems }} --workers 4 --out out
+      - name: Publish results to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="s14/${GITHUB_RUN_ID}-${{ matrix.arm }}-${{ matrix.chem0 }}"
+          mkdir -p /tmp/res/$D && cp -r out/. /tmp/res/$D/
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r /tmp/res/$D/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 10 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }
+  analyze:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e .
+      - name: Collect this run's results and analyse
+        run: |
+          git clone --quiet --branch ci-results --depth 1 "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/res
+          mkdir -p in && cp -r /tmp/res/s14/${GITHUB_RUN_ID}-* in/
+          ls in
+          set +e
+          python -m agency_gradients.experiments.s14_soup --analyze in --out report
+          echo "ANALYSIS_EXIT=$?" >> $GITHUB_ENV
+      - name: Publish the report to the ci-results branch
+        if: always()
+        run: |
+          set -e
+          D="s14/${GITHUB_RUN_ID}-report"
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub && git checkout -q ci-results
+            mkdir -p "$D" && cp -r "$GITHUB_WORKSPACE/report/." "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::report was not pushed"; exit 1; }
+      - name: Fail if a gate failed
+        run: test "${ANALYSIS_EXIT}" = "0" || { echo "::error::a gate failed or the analysis did not complete (exit ${ANALYSIS_EXIT})"; exit 1; }

@@ -1,7 +1,7 @@
 # Why the next experiment starts before life
 
 !!! warning "Status: a decision record"
-    This page records a decision and the reasoning behind it. It reports no result. The experiment it leads to, S14, is a [draft preregistration](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). No engine exists yet. Nothing has been run.
+    This page records a decision and the reasoning behind it. It reports no result. The experiment it leads to, S14, has a [frozen preregistration](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). Its outcome, once the run is in, belongs on the results pages, not here.
 
 ## The proposal
 
@@ -144,12 +144,18 @@ I should write this part too.
 
 So the fair summary is this. S14 asks the deeper question and risks the emptier answer. H13 asks a narrower question and risks far less.
 
-I chose to preregister S14 first. I did not choose to run it first. That is still open.
+I chose to preregister S14 first. Then I chose to run it first too.
+
+I made that second choice knowing the paragraph above. And knowing one more thing. Before the run, the arithmetic already leaned toward a null: a closed set needs several catalysed steps that all point back into the same small set, and with a random table that coincidence is rare. The preregistration says so, in advance, under "My expectations".
+
+So why run it? Because a guess is not a result. And because the run was built to say *why*, if it is a null: whether a closed set was even possible in each chemistry, or possible and never lit.
+
+H13 is next in line.
 
 ## What would reverse it
 
 - **A gate fails.** If the engine cannot show detailed balance, or the books do not close, there is no S14.
-- **The cost is out of reach.** Then the pond experiments come first, starting with H13.
+- **The cost is out of reach.** It was not. A quiet run takes a few seconds.
 - **Someone has already done it.** Then I should read their paper, not rebuild it.
 
 ## How S14 guards against my own bias

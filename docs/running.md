@@ -4,7 +4,7 @@
 
 ```bash
 pip install -e ".[dev]"
-pytest -q          # about 10 seconds
+pytest -q          # under a minute
 ```
 
 The only runtime dependency is `numpy`. Python 3.10 or newer.
@@ -15,7 +15,7 @@ This one matters more than any command.
 
 | Seeds | Use |
 |---|---|
-| **0 to 29** for S1 to S6. **0 to 19** for S7, S9, S10 and S11. **0 to 4** for S8's optimisation runs | Confirmatory. Report these. |
+| **0 to 29** for S1 to S6. **0 to 19** for S7, S9, S10 and S11. **0 to 4** for S8's optimisation runs. **Chemistries 0 to 199** for S14 | Confirmatory. Report these. |
 | **1000 and above** | Pilots and debugging. **Never** report as evidence. |
 
 Why? A pilot that looks good tempts you to tune. Tune on the seeds you will report, and you have fooled yourself. So the two sets never mix.
@@ -61,6 +61,8 @@ Why? A pilot that looks good tempts you to tune. Tune on the seeds you will repo
     S7 pilots run 100,000 steps per run.
 
     S9 and S10 live in `src/agency_gradients/experiments/` and take the same `--seeds`, `--seed0` and `--steps` flags. S11 is different. It is organised by arm and horizon, with `--arm`, `--horizon`, `--es-seed` and `--n-es`. Check each module's `--help` before you start. The confirmatory S9 to S11 runs were dispatched through GitHub Actions.
+
+    S14 is different again. It has no agents. It is organised by arm and chemistry: `python -m agency_gradients.experiments.s14_soup --arm R --chem0 1000 --chems 4 --out out` runs four pilot chemistries at all four drives, `--arm gates` runs the engine checks, and `--analyze DIR` builds the report. Its confirmatory run was dispatched through the `s14` workflow.
 
 === "S0"
 

@@ -18,7 +18,7 @@ That is what the preregistration files are.
 
 The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md). It reads the results against the hypothesis, separates the sufficiency and necessity claims, and treats the later experiments as diagnostics rather than confirmatory evidence.
 
-What comes next is in [Why the next experiment starts before life](before-life.md). S14 is a **draft** preregistration. It is not frozen, and nothing has been run.
+What came next is in [Why the next experiment starts before life](before-life.md). S14 is preregistered in [`PREREGISTRATION_S14.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). It was frozen on `main` before its confirmatory run.
 
 ## The protocol
 
