@@ -2,6 +2,8 @@
 
 <p align="center"><img src="docs/banner.png" alt="Banner: agency-from-gradients. Can agency arise without a built-in objective? Simulate, ablate, measure. A torus world with low, medium and high energy reservoirs, and agents that move, consume, invest, reproduce and die." width="100%"></p>
 
+> **Start here (blog readers):** [`starlight/`](starlight/) is a small, self-contained model of the hypothesis. 256 lines of engine, runs in minutes, with its predictions written down before the runs. Read [`starlight/README.md`](starlight/README.md) first, then [`starlight/RESULTS.md`](starlight/RESULTS.md). The rest of this repo is the longer record, including the experiments that failed.
+
 <sub><i>The banner is an illustration. Its example charts are mock-ups, not results, and its design table is a sketch: the ablations actually implemented are food scarcity, heredity, mortality and succession (see below), and there is no memory ablation.</i></sub>
 
 **agency-from-gradients** is a simulation suite built on one design hypothesis: if we want artificial agency, we should reproduce the conditions under which it arose on Earth, not hand agents an objective.
@@ -31,6 +33,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Confirmatory run done** (200 chemistries): **H14a and H14b not supported; H14c and H14d not run.** A closed catalytic set was structurally possible in 0 of 200 chemistries, so the dynamics were never tested. All gates passed. See below. There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
+| Starlight: a from-scratch minimal model of the hypothesis chain (capture, behaviour, furnace control). Separate engine in `starlight/` | **Confirmatory run done** (20 seeds per cell): 11 of 11 preregistered predictions supported. Entropy itself was not selected: a heritable furnace only drifted when free and was purged when costly. See `starlight/RESULTS.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
