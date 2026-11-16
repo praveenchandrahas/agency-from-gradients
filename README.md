@@ -31,6 +31,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | Explainer film and website (`learn/`) | Built: a 3:42 animated film (HTML player and MP4) and a long-form explainer site with interactive widgets |
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Confirmatory run done** (200 chemistries): **H14a and H14b not supported; H14c and H14d not run.** A closed catalytic set was structurally possible in 0 of 200 chemistries, so the dynamics were never tested. All gates passed. See below. There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
+| Starlight: a from-scratch minimal model of the hypothesis chain (capture, behaviour, furnace control). Separate engine in `starlight/` | **Confirmatory run done** (20 seeds per cell): 11 of 11 preregistered predictions supported. Entropy itself was not selected: a heritable furnace only drifted when free and was purged when costly. See `starlight/RESULTS.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
