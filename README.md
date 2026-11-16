@@ -2,6 +2,8 @@
 
 <p align="center"><img src="docs/banner.png" alt="Banner: agency-from-gradients. Can agency arise without a built-in objective? Simulate, ablate, measure. A torus world with low, medium and high energy reservoirs, and agents that move, consume, invest, reproduce and die." width="100%"></p>
 
+> **Start here (blog readers):** [`starlight/`](starlight/) is a small, self-contained model of the hypothesis. 256 lines of engine, runs in minutes, with its predictions written down before the runs. Read [`starlight/README.md`](starlight/README.md) first, then [`starlight/RESULTS.md`](starlight/RESULTS.md). The rest of this repo is the longer record, including the experiments that failed.
+
 <sub><i>The banner is an illustration. Its example charts are mock-ups, not results, and its design table is a sketch: the ablations actually implemented are food scarcity, heredity, mortality and succession (see below), and there is no memory ablation.</i></sub>
 
 **agency-from-gradients** is a simulation suite built on one design hypothesis: if we want artificial agency, we should reproduce the conditions under which it arose on Earth, not hand agents an objective.
