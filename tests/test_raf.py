@@ -77,6 +77,9 @@ class RafNetworkTests(unittest.TestCase):
             perturbation_time_s=1.0,
         )
         self.assertEqual(len(rows), 4)
+        self.assertEqual({row["pre_perturbation_background_rate_factor"] for row in rows}, {1.0})
+        self.assertEqual(len({row["food_remaining_at_perturbation"] for row in rows}), 1)
+        self.assertEqual({row["post_perturbation_background_rate_factor"] for row in rows}, {1.0, 0.1})
 
 
 if __name__ == "__main__":
