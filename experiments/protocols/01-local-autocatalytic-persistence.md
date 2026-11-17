@@ -53,7 +53,7 @@ These values are determined by illustrative model parameters. They are not empir
 
 The experiment fails its numerical checks if the solution becomes negative, entropy production is materially negative, or the integrated state does not approach the analytic fixed point. A failure of the predicted feed response would falsify this model's specific kinetic expectation, not the broader thermodynamic emergence programme.
 
-Even a successful run does not demonstrate spontaneous formation of X, self-maintenance of a bounded chemical compartment, replication with heredity, selection, or abiogenesis. The chemostats are ideal reservoirs and their maintenance costs are outside the model boundary.
+Even a successful run does not demonstrate spontaneous seed-free formation of X: the initial condition contains X and the reverse R2 reaction supplies additional X from chemostatted D. It also does not demonstrate self-maintenance of a bounded chemical compartment, replication with heredity, selection, or abiogenesis. The chemostats are ideal reservoirs and their maintenance costs are outside the model boundary.
 
 
 ## Position in the research sequence
