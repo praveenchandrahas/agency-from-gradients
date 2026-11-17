@@ -136,3 +136,18 @@ raf-network --json
 ```
 
 See [the theory note](../../theory/05-collective-autocatalysis.md) and [experiment protocol](../../experiments/protocols/02-raf-batch-network.md). The first model remains documented above and can be run with `chemical-network`.
+
+
+## Third experiment: perturbation and recovery
+
+The RAF-like model can now remove a selected fraction of X and Y after an initial establishment period, then measure the subsequent recovery. The default sweep crosses 90%, 99% and 99.9% catalyst removal with uncatalysed background-rate factors 1, 0.1, 0.01 and 0.001.
+
+Run:
+
+```bash
+raf-network --perturb-sweep --json
+```
+
+This is physical removal of catalyst material, not reversible inactivation. Conservation is checked against the remaining post-removal inventory. The energetic cost of separation is not included.
+
+See [theory and interpretation](../../theory/05-collective-autocatalysis.md#8-perturbation-and-recovery-experiment) and [Experiment 03](../../experiments/protocols/03-catalyst-removal-recovery.md).
