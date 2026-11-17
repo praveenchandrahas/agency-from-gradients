@@ -4,6 +4,9 @@ from thermodynamic_emergence.open_reactor import (
     OpenReactorConfig,
     run_open_reactor_recovery_sweep,
     simulate_open_reactor_perturbation,
+    run_open_reactor_seed_sweep,
+    run_open_reactor_washout_sweep,
+    run_open_reactor_horizon_sweep,
 )
 
 
@@ -81,6 +84,46 @@ class OpenReactorRecoveryTests(unittest.TestCase):
                 self.short_config(), perturbation_time_s=1.0,
                 post_perturbation_catalyst_feed_activity=0.0,
             )
+
+
+    def test_seed_sweep_uses_positive_feed_values_and_reports_seed_dependence(self):
+        rows = run_open_reactor_seed_sweep(
+            self.short_config(),
+            catalyst_feed_activities=(1.0e-8, 1.0e-10),
+            perturbation_time_s=1.0,
+            removal_fraction=0.99,
+        )
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(
+            {row["post_perturbation_catalyst_feed_activity"] for row in rows},
+            {1.0e-8, 1.0e-10},
+        )
+        self.assertTrue(all(row["post_perturbation_catalyst_feed_activity"] > 0 for row in rows))
+
+    def test_washout_sweep_covers_flow_and_removal(self):
+        rows = run_open_reactor_washout_sweep(
+            self.short_config(),
+            flow_rates_s=(0.02, 0.05),
+            removal_fractions=(0.9, 0.99),
+            perturbation_time_s=1.0,
+        )
+        self.assertEqual(len(rows), 4)
+        self.assertEqual({row["flow_rate_s"] for row in rows}, {0.02, 0.05})
+        self.assertEqual({row["removal_fraction"] for row in rows}, {0.9, 0.99})
+
+    def test_horizon_sweep_reports_post_event_steadiness(self):
+        rows = run_open_reactor_horizon_sweep(
+            self.short_config(),
+            durations_s=(2.0, 3.0),
+            perturbation_time_s=1.0,
+            removal_fraction=0.99,
+        )
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(
+            {row["post_perturbation_observation_s"] for row in rows},
+            {1.0, 2.0},
+        )
+        self.assertTrue(all("post_perturbation_operational_ness_detected" in row for row in rows))
 
 
 if __name__ == "__main__":
