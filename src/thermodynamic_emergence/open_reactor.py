@@ -433,3 +433,106 @@ def run_open_reactor_recovery_sweep(
                 "post_perturbation_ness_max_species_cv": d["post_perturbation_ness_max_species_cv"],
             })
     return rows
+
+
+
+def run_open_reactor_seed_sweep(
+    base: OpenReactorConfig | None = None,
+    *,
+    catalyst_feed_activities: tuple[float, ...] = (1.0e-8, 1.0e-10, 1.0e-12, 1.0e-14),
+    removal_fraction: float = 0.99,
+    perturbation_time_s: float = 150.0,
+) -> list[dict[str, float | bool | None]]:
+    """Quantify recovery sensitivity as the catalyst reservoir feed approaches zero.
+
+    The ideal-activity exchange law requires strictly positive reservoir
+    activities. This is a finite positive-feed limit study, not a zero-feed
+    or seed-free emergence experiment.
+    """
+    cfg = base or OpenReactorConfig()
+    rows = []
+    for feed in catalyst_feed_activities:
+        result = simulate_open_reactor_perturbation(
+            cfg,
+            perturbation_time_s=perturbation_time_s,
+            removal_fraction=removal_fraction,
+            post_perturbation_catalyst_feed_activity=feed,
+        )
+        d = result["diagnostics"]
+        rows.append({
+            "post_perturbation_catalyst_feed_activity": feed,
+            "removal_fraction": removal_fraction,
+            "fraction_of_removed_XY_recovered": d["fraction_of_removed_XY_recovered"],
+            "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
+            "final_XY_relative_to_unperturbed": d["final_XY_relative_to_unperturbed"],
+            "recovery_time_after_perturbation_s": d["recovery_time_after_perturbation_s"],
+            "pre_perturbation_operational_ness_detected": d["pre_perturbation_operational_ness_detected"],
+            "post_perturbation_operational_ness_detected": d["post_perturbation_operational_ness_detected"],
+            "post_perturbation_ness_relative_endpoint_drift": d["post_perturbation_ness_relative_endpoint_drift"],
+        })
+    return rows
+
+
+def run_open_reactor_washout_sweep(
+    base: OpenReactorConfig | None = None,
+    *,
+    flow_rates_s: tuple[float, ...] = (0.01, 0.025, 0.05, 0.1, 0.2),
+    removal_fractions: tuple[float, ...] = (0.9, 0.99, 0.999, 0.9999),
+    perturbation_time_s: float = 150.0,
+) -> list[dict[str, float | bool | None]]:
+    """Map catalyst recovery against dilution (washout) and perturbation size."""
+    cfg = base or OpenReactorConfig()
+    rows = []
+    for flow in flow_rates_s:
+        flow_cfg = OpenReactorConfig(**{**asdict(cfg), "flow_rate_s": flow})
+        for removal in removal_fractions:
+            result = simulate_open_reactor_perturbation(
+                flow_cfg,
+                perturbation_time_s=perturbation_time_s,
+                removal_fraction=removal,
+            )
+            d = result["diagnostics"]
+            rows.append({
+                "flow_rate_s": flow,
+                "removal_fraction": removal,
+                "pre_perturbation_X_plus_Y": d["X_plus_Y_before"],
+                "fraction_of_removed_XY_recovered": d["fraction_of_removed_XY_recovered"],
+                "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
+                "final_XY_relative_to_unperturbed": d["final_XY_relative_to_unperturbed"],
+                "recovery_time_after_perturbation_s": d["recovery_time_after_perturbation_s"],
+                "pre_perturbation_operational_ness_detected": d["pre_perturbation_operational_ness_detected"],
+                "post_perturbation_operational_ness_detected": d["post_perturbation_operational_ness_detected"],
+            })
+    return rows
+
+
+def run_open_reactor_horizon_sweep(
+    base: OpenReactorConfig | None = None,
+    *,
+    durations_s: tuple[float, ...] = (300.0, 600.0, 900.0),
+    perturbation_time_s: float = 150.0,
+    removal_fraction: float = 0.99,
+) -> list[dict[str, float | bool | None]]:
+    """Test whether recovery and NESS classification persist with longer horizons."""
+    cfg = base or OpenReactorConfig()
+    rows = []
+    for duration in durations_s:
+        horizon_cfg = OpenReactorConfig(**{**asdict(cfg), "duration_s": duration})
+        result = simulate_open_reactor_perturbation(
+            horizon_cfg,
+            perturbation_time_s=perturbation_time_s,
+            removal_fraction=removal_fraction,
+        )
+        d = result["diagnostics"]
+        rows.append({
+            "duration_s": duration,
+            "post_perturbation_observation_s": duration - perturbation_time_s,
+            "fraction_of_removed_XY_recovered": d["fraction_of_removed_XY_recovered"],
+            "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
+            "final_XY_relative_to_unperturbed": d["final_XY_relative_to_unperturbed"],
+            "recovery_time_after_perturbation_s": d["recovery_time_after_perturbation_s"],
+            "post_perturbation_operational_ness_detected": d["post_perturbation_operational_ness_detected"],
+            "post_perturbation_ness_relative_endpoint_drift": d["post_perturbation_ness_relative_endpoint_drift"],
+            "post_perturbation_ness_max_species_cv": d["post_perturbation_ness_max_species_cv"],
+        })
+    return rows
