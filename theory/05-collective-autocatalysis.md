@@ -216,3 +216,22 @@ The refined factorial experiment now holds the entire pre-perturbation history f
 This isolates the effect of the post-intervention background rate more cleanly. It still does not isolate catalyst-driven recovery from all possible nonlinear kinetic effects, and it remains a short, finite-batch, seeded model. The updated run is recorded separately in [results/raf_matched_recovery_sweep.json](../results/raf_matched_recovery_sweep.json). The primary comparison is the final X+Y abundance relative to the same unperturbed reference, alongside the fraction of pre-intervention X+Y restored and the remaining food inventory.
 
 The more general lesson is methodological: robustness comparisons should match the state at which the perturbation is applied. A common clock time is not sufficient when changing parameters also changes the trajectory leading up to the intervention.
+
+
+## 11. Matched-state sweep results
+
+The refined sweep is recorded in [results/raf_matched_recovery_sweep.json](../results/raf_matched_recovery_sweep.json). All 12 conditions share the same pre-perturbation state: at 5 s, total remaining food activity is approximately 0.1721. Only the background reaction factor after removal changes.
+
+The central result is that recovery is poor and strongly dependent on how much catalyst survives:
+
+| X and Y removed | Fraction of removed X+Y recovered | Final X+Y vs unperturbed |
+|---:|---:|---:|
+| 90% | about 6.3% | about 15.7% |
+| 99% | about 1.3% | about 2.2% |
+| 99.9% | about 0.16% | about 0.26% |
+
+Changing the post-intervention background factor from 1 to 0.001 has only a small effect on these outcomes. In this parameterization, the surviving catalyst abundance matters much more than the small uncatalysed background contribution during the recovery window.
+
+This is a negative result for the stronger resilience claim: the network does not robustly reconstruct its pre-perturbation abundance after severe catalyst removal. It can continue to amplify what remains, but the amplification is not sufficient to restore the original level within the remaining five seconds and finite food budget.
+
+The inference is strictly model-conditional. It does not show that real autocatalytic chemical systems cannot recover; the abstract rate laws, parameter values, network topology, intervention and timescale are all chosen. It does, however, prevent us from casually describing this toy RAF-like network as self-repairing or robust.
