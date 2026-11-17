@@ -136,5 +136,7 @@ A failed NESS test is also conditional: it may mean the selected feed, washout, 
 4. Compare different catalyst assignments under matched stoichiometry, feed, dilution and kinetic scale.
 5. Sweep feed chemical potentials and dilution to identify persistence regions, rather than selecting a single favourable parameter point.
 6. Add explicit pump, separation and reservoir-regeneration work only when the physical process and its thermodynamic boundary are specified.
+7. Map recovery across washout rates and perturbation severities, while checking that each pre-event reactor actually satisfies the operational NESS criterion.
+8. Perform a positive-seed-feed limit study and longer post-perturbation horizons. The current ideal-reservoir expression requires strictly positive feed activities, so this cannot be interpreted as a true zero-seed experiment.
 
 The next conceptual transition is not from NESS directly to life. It is from stationary dissipative chemistry to chemical structures that reproduce with heritable variation under sustained driving.

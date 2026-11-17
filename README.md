@@ -75,8 +75,9 @@ The next model places the same abstract network in a continuously fed and dilute
 
 - [Model, thermodynamic boundary and caveats](theory/06-open-reactor-ness.md)
 - [Experiment protocol](experiments/protocols/04-open-reactor-ness.md)
+- [Catalyst-removal recovery protocol](experiments/protocols/05-open-reactor-recovery.md) — includes positive-seed limit, washout and horizon sensitivity sweeps.
 - [Baseline and matched-flow summary](results/open_reactor_baseline_summary.json)
-- Run: `open-reactor`, `open-reactor --compare`, or `open-reactor --sweep --json`
+- Run: `open-reactor`, `open-reactor --compare`, `open-reactor --sweep --json`, or `open-reactor --perturb-sweep --json`. Sensitivity studies: `--seed-sweep`, `--washout-sweep`, and `--horizon-sweep`.
 
 The reservoir-exchange entropy term is not a complete engineering cost: mechanical pumping, mixing, temperature control and reservoir construction/maintenance remain outside the model. Every species also receives a small positive feed activity, including X and Y, so this model does not demonstrate seed-free emergence.
 
