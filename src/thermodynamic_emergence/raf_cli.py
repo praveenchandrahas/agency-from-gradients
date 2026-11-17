@@ -4,19 +4,25 @@ from __future__ import annotations
 import argparse
 import json
 
-from .raf import RafConfig, compare_catalysis, simulate_raf_network
+from .raf import RafConfig, compare_catalysis, run_perturbation_sweep, simulate_raf_network
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Simulate a finite-resource mutually catalytic network")
     parser.add_argument("--json", action="store_true", help="print the complete simulation result as JSON")
     parser.add_argument("--compare", action="store_true", help="compare mutual catalysis with the uncatalysed null")
+    parser.add_argument("--perturb-sweep", action="store_true", help="sweep catalyst removal and background rates")
     parser.add_argument("--duration", type=float, default=10.0, help="batch duration in seconds")
     parser.add_argument("--dt", type=float, default=1.0e-3, help="RK4 time step in seconds")
     args = parser.parse_args()
     config = RafConfig(duration_s=args.duration, time_step_s=args.dt)
-    result = compare_catalysis(config) if args.compare else simulate_raf_network(config)
-    if args.json:
+    if args.perturb_sweep:
+        result = run_perturbation_sweep(config)
+    elif args.compare:
+        result = compare_catalysis(config)
+    else:
+        result = simulate_raf_network(config)
+    if args.json or args.perturb_sweep:
         print(json.dumps(result, indent=2, sort_keys=True))
         return
     if args.compare:
