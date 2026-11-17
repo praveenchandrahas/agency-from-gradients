@@ -150,4 +150,4 @@ raf-network --perturb-sweep --json
 
 This is physical removal of catalyst material, not reversible inactivation. Conservation is checked against the remaining post-removal inventory. The energetic cost of separation is not included.
 
-See [theory and interpretation](../../theory/05-collective-autocatalysis.md#8-perturbation-and-recovery-experiment) and [Experiment 03](../../experiments/protocols/03-catalyst-removal-recovery.md).
+See [theory and interpretation](../../theory/05-collective-autocatalysis.md#8-perturbation-and-recovery-experiment), [Experiment 03](../../experiments/protocols/03-catalyst-removal-recovery.md), and [matched-state results](../../results/raf_matched_recovery_sweep.json).
