@@ -21,3 +21,17 @@ __all__ = [
     "calculate_earth_like_baseline",
     "earth_like_config",
 ]
+
+from .chemistry import (
+    ChemicalConfig,
+    equilibrium_catalyst_activity,
+    run_feed_sweep,
+    simulate_chemical_network,
+)
+
+__all__ += [
+    "ChemicalConfig",
+    "equilibrium_catalyst_activity",
+    "run_feed_sweep",
+    "simulate_chemical_network",
+]
