@@ -18,7 +18,7 @@ The supplied article *A New Physics Theory of Life* summarizes Jeremy England's 
 
 ## 3. Minimal reaction network
 
-The first model contains one dynamic autocatalyst X and three chemostatted reservoir species A, W and D:
+The first model contains one dynamic autocatalyst X and three chemostatted reservoir species A, W and D. The baseline also starts with a nonzero X activity, and the reverse R2 reaction continuously supplies a small amount of X from reservoir D. It is therefore a seeded-amplification experiment, not a seed-free emergence experiment:
 
 \[
 A + X \rightleftharpoons 2X + W \qquad (R_1)
