@@ -56,12 +56,16 @@ from .open_reactor import (
     OpenReactorConfig,
     compare_open_reactor,
     run_open_reactor_sweep,
+    run_open_reactor_recovery_sweep,
     simulate_open_reactor,
+    simulate_open_reactor_perturbation,
 )
 
 __all__ += [
     "OpenReactorConfig",
     "compare_open_reactor",
     "run_open_reactor_sweep",
+    "run_open_reactor_recovery_sweep",
     "simulate_open_reactor",
+    "simulate_open_reactor_perturbation",
 ]
