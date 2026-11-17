@@ -21,6 +21,7 @@ class OpenReactorConfig:
     feed_A: float = 1.0
     feed_B: float = 1.0
     background_feed_activity: float = 1.0e-8
+    catalyst_feed_activity: float = 1.0e-8
     flow_rate_s: float = 0.05
     production_forward_rate_s: float = 2.0e-2
     production_equilibrium_constant: float = 10.0
@@ -40,6 +41,7 @@ class OpenReactorConfig:
             "feed_A": self.feed_A,
             "feed_B": self.feed_B,
             "background_feed_activity": self.background_feed_activity,
+            "catalyst_feed_activity": self.catalyst_feed_activity,
             "flow_rate_s": self.flow_rate_s,
             "production_forward_rate_s": self.production_forward_rate_s,
             "production_equilibrium_constant": self.production_equilibrium_constant,
@@ -68,8 +70,8 @@ class OpenReactorConfig:
 
 
 def _feed_vector(cfg: OpenReactorConfig) -> list[float]:
-    return [cfg.feed_A, cfg.feed_B, cfg.background_feed_activity,
-            cfg.background_feed_activity, cfg.background_feed_activity,
+    return [cfg.feed_A, cfg.feed_B, cfg.catalyst_feed_activity,
+            cfg.catalyst_feed_activity, cfg.background_feed_activity,
             cfg.background_feed_activity, cfg.background_feed_activity,
             cfg.background_feed_activity]
 
@@ -132,12 +134,18 @@ def _rk4(state: list[float], dt: float, cfg: OpenReactorConfig) -> list[float]:
     return updated
 
 
-def simulate_open_reactor(config: OpenReactorConfig | None = None) -> dict[str, Any]:
+def simulate_open_reactor(
+    config: OpenReactorConfig | None = None,
+    *,
+    initial_state: list[float] | tuple[float, ...] | None = None,
+) -> dict[str, Any]:
     """Integrate the continuously fed and diluted network and diagnose NESS."""
     cfg = config or OpenReactorConfig()
     cfg.validate()
     feed = _feed_vector(cfg)
-    state = feed.copy()
+    state = feed.copy() if initial_state is None else [float(value) for value in initial_state]
+    if len(state) != len(SPECIES) or any(not math.isfinite(value) or value <= 0 for value in state):
+        raise ValueError("initial_state must contain eight finite, strictly positive activities")
     initial = state.copy()
     n = round(cfg.duration_s / cfg.time_step_s)
     sample_stride = max(1, n // 2000)
@@ -196,6 +204,7 @@ def simulate_open_reactor(config: OpenReactorConfig | None = None) -> dict[str, 
         "configuration": asdict(cfg),
         "species_order": list(SPECIES),
         "feed_activities": dict(zip(SPECIES, feed)),
+        "initial": dict(zip(SPECIES, initial)),
         "final": dict(zip(SPECIES, state)),
         "window_mean": dict(zip(SPECIES, means)),
         "reaction_fluxes_mol_L_s": dict(zip(["R1", "R2", "R3", "R4"], final_v)),
