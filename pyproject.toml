@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "thermodynamic-emergence-ledger"
 version = "0.1.0"
-description = "A zero-dimensional stellar-planetary energy, exergy and radiation-entropy ledger"
+description = "Thermodynamic accounting and local chemical disequilibrium research models"
 readme = "models/stellar_planet/README.md"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24"]
@@ -13,6 +13,8 @@ authors = [{ name = "Thermodynamic Emergence Research" }]
 
 [project.scripts]
 planetary-ledger = "thermodynamic_emergence.__main__:main"
+chemical-network = "thermodynamic_emergence.chemistry_cli:main"
+raf-network = "thermodynamic_emergence.raf_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

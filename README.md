@@ -41,6 +41,8 @@ A companion question asks how such structures alter energy capture, transformati
 - [Roadmap](ROADMAP.md) — staged research and modelling plan.
 - [Thermodynamic foundation: star–planet–space](theory/01-stellar-planetary-thermodynamics.md) — first energy, exergy and entropy accounting.
 - [Initial bibliography](references/README.md) — starting literature and reading priorities.
+- [Local chemical disequilibrium](theory/04-local-chemical-disequilibrium.md) — first single-autocatalyst model.
+- [Collective autocatalysis](theory/05-collective-autocatalysis.md) — finite-resource mutually catalytic RAF-like model.
 - [Contributing](CONTRIBUTING.md) — standards for research contributions.
 
 ## First executable model
@@ -53,6 +55,16 @@ The first model is a transparent zero-dimensional stellar–planetary ledger. It
 - [Albedo sensitivity data](results/albedo_sensitivity.csv)
 
 Run locally with python -m pip install -e . followed by python -m thermodynamic_emergence.
+
+## Second executable model: finite-resource mutual catalysis
+
+A second chemical model represents a small RAF-like network with food set {A, B}, reciprocal catalysts X and Y, finite food resources, explicit stoichiometry and reversible loss pathways. It compares finite-time conversion against an uncatalysed null. Catalysis accelerates kinetics but does not change equilibrium composition; the closed batch relaxes toward equilibrium and does not sustain a non-equilibrium steady state.
+
+- [Model and assumptions](theory/05-collective-autocatalysis.md)
+- [Experiment protocol](experiments/protocols/02-raf-batch-network.md)
+- [Perturbation/recovery protocol](experiments/protocols/03-catalyst-removal-recovery.md)
+- [Matched-state recovery results](results/raf_matched_recovery_sweep.json)
+- Run: `raf-network --compare` or `raf-network --perturb-sweep --json`
 
 ## Relationship to the earlier simulation
 
