@@ -117,3 +117,4 @@ References:
 - Hordijk, W., & Steel, M. (2018). “Autocatalytic Networks at the Basis of Life’s Origin and Organization.” *Life*, 8(4), 62. https://doi.org/10.3390/life8040062
 - Ameta, S., Matsubara, Y. J., Chakraborty, N., Krishna, S., & Thutupalli, S. (2021). “Self-Reproduction and Darwinian Evolution in Autocatalytic Chemical Reaction Systems.” *Life*, 11(4), 308. https://doi.org/10.3390/life11040308
 - Rao, R., & Esposito, M. (2016). “Nonequilibrium Thermodynamics of Chemical Reaction Networks: Wisdom from Stochastic Thermodynamics.” *Physical Review X*, 6, 041064. https://doi.org/10.1103/PhysRevX.6.041064
+- Remlein, B., Esposito, M., & Avanzini, F. (2025). “What is a chemostat? Insights from hybrid dynamics and stochastic thermodynamics.” *The Journal of Chemical Physics*. https://doi.org/10.1063/5.0267465
