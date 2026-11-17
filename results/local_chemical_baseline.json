@@ -44,8 +44,8 @@
   },
   "accounting": {
     "entropy_production_definition": "sum_r v_r * (-DeltaG_r) / T, with activities relative to the 1 mol/L standard state",
-    "free_energy_dissipation_rate_J_L_s": 2568.581103,
-    "integrated_entropy_production_J_L_K": 43109.8,
+    "free_energy_dissipation_rate_J_L_s": 2568.5789072058033,
+    "integrated_entropy_production_J_L_K": 42076.09318280386,
     "standard_concentration_mol_L": 1.0,
     "warning": "Ideal-solution chemostatted reaction-network estimate, not a complete planetary entropy budget."
   },
