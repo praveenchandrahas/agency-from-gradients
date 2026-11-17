@@ -18,7 +18,8 @@
   "reaction_network": {
     "R1": "A + X <-> 2X + W",
     "R2": "X <-> D",
-    "interpretation": "A, W and D are chemostatted reservoirs; X is the dynamic autocatalyst."
+    "interpretation": "A, W and D are chemostatted reservoirs; X is the dynamic autocatalyst.",
+    "seed_source": "The reverse R2 reaction converts reservoir D into X; this is seeded amplification, not seed-free emergence."
   },
   "final": {
     "catalyst_activity": 9.000011111097296,
@@ -53,6 +54,7 @@
     "A, W and D are abstract species; no specific prebiotic chemistry is represented.",
     "The model is well-mixed and has no spatial gradients, diffusion, compartments or mineral surfaces.",
     "Chemostats hold reservoir activities fixed; their pumps and external apparatus are outside the model boundary.",
+    "The baseline starts with nonzero X and reverse R2 supplies additional X from chemostatted D; this is not seed-free emergence.",
     "The model has autocatalysis but no heredity, mutation, lineage or Darwinian evolution.",
     "Reaction standard free energies are implied by illustrative equilibrium constants, not measured chemical data.",
     "Entropy production is for the specified idealized reaction network and boundary, not total entropy production of the environment."
