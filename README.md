@@ -37,7 +37,7 @@ A companion question asks how such structures alter energy capture, transformati
 - [Hypotheses](HYPOTHESES.md) — candidate hypotheses, predictions, nulls and proposed tests.
 - [Roadmap](ROADMAP.md) — staged research and modelling plan.
 - [Thermodynamic foundation: star–planet–space](theory/01-stellar-planetary-thermodynamics.md) — first energy, exergy and entropy accounting.
-- [Initial bibliography](references/README.md) — starting literature and reading priorities.
+- [Initial bibliography](references/README.md) — starting literature and reading priorities.\n- [Local chemical disequilibrium](theory/04-local-chemical-disequilibrium.md) — first single-autocatalyst model.\n- [Collective autocatalysis](theory/05-collective-autocatalysis.md) — finite-resource mutually catalytic RAF-like model.
 - [Contributing](CONTRIBUTING.md) — standards for research contributions.
 
 ## First executable model
@@ -51,7 +51,7 @@ The first model is a transparent zero-dimensional stellar–planetary ledger. It
 
 Run locally with python -m pip install -e . followed by python -m thermodynamic_emergence.
 
-## Relationship to the earlier simulation
+## Second executable model: finite-resource mutual catalysis\n\nA second chemical model represents a small RAF-like network with food set {A, B}, reciprocal catalysts X and Y, finite food resources, explicit stoichiometry and reversible loss pathways. It compares finite-time conversion against an uncatalysed null. Catalysis accelerates kinetics but does not change equilibrium composition; the closed batch relaxes toward equilibrium and does not sustain a non-equilibrium steady state.\n\n- [Model and assumptions](theory/05-collective-autocatalysis.md)\n- [Experiment protocol](experiments/protocols/02-raf-batch-network.md)\n- Run: `raf-network --compare`\n\n## Relationship to the earlier simulation
 
 The related repository [dissipative-agency-simulation](https://github.com/praveenchandrahas/dissipative-agency-simulation) investigates evolutionary energy-acquisition strategies in populations of already-existing entities. Its experiments on sensing, movement, competition and agency remain useful as a downstream research line.
 
