@@ -45,6 +45,7 @@ class RafConfig:
     loss_forward_rate_s: float = 1.0e-3
     loss_equilibrium_constant: float = 1.0e-4
     catalytic_strength: float = 100.0
+    background_rate_factor: float = 1.0
     duration_s: float = 10.0
     time_step_s: float = 1.0e-3
     standard_concentration_mol_L: float = 1.0
@@ -73,6 +74,10 @@ class RafConfig:
                 raise ValueError(f"{name} must be finite and positive")
         if not math.isfinite(self.catalytic_strength) or self.catalytic_strength < 0:
             raise ValueError("catalytic_strength must be finite and non-negative")
+        if not math.isfinite(self.background_rate_factor) or self.background_rate_factor < 0:
+            raise ValueError("background_rate_factor must be finite and non-negative")
+        if self.background_rate_factor == 0 and self.catalytic_strength == 0:
+            raise ValueError("at least one reaction-rate factor must be positive")
         steps = self.duration_s / self.time_step_s
         if abs(steps - round(steps)) > 1e-9:
             raise ValueError("duration_s must be an integer multiple of time_step_s")
@@ -86,8 +91,8 @@ def _rates(state: tuple[float, ...] | list[float], cfg: RafConfig) -> tuple[list
     klr = klf / cfg.loss_equilibrium_constant
     # Catalysis multiplies forward and reverse rates equally. It changes
     # kinetics but not the equilibrium constant or equilibrium composition.
-    v1 = (kpf * a - kpr * x * wx) * (1.0 + cfg.catalytic_strength * y)
-    v2 = (kpf * b - kpr * y * wy) * (1.0 + cfg.catalytic_strength * x)
+    v1 = (kpf * a - kpr * x * wx) * (cfg.background_rate_factor + cfg.catalytic_strength * y)
+    v2 = (kpf * b - kpr * y * wy) * (cfg.background_rate_factor + cfg.catalytic_strength * x)
     v3 = klf * x - klr * dx
     v4 = klf * y - klr * dy
     rates = [v1, v2, v3, v4]
@@ -225,3 +230,108 @@ def compare_catalysis(config: RafConfig | None = None) -> dict[str, Any]:
         "uncatalysed_integrated_entropy_production_J_L_K": null["diagnostics"]["integrated_reaction_entropy_production_J_L_K"],
         "equilibrium_warning": "The finite-time comparison measures kinetic acceleration. Catalysis does not change the equilibrium composition under the detailed-balance-preserving rate law.",
     }
+
+
+def simulate_perturbation(
+    config: RafConfig | None = None,
+    *,
+    perturbation_time_s: float = 5.0,
+    removal_fraction: float = 0.99,
+) -> dict[str, Any]:
+    """Remove a fraction of X and Y at a defined time and measure recovery."""
+    cfg = config or RafConfig()
+    cfg.validate()
+    if not math.isfinite(perturbation_time_s) or not 0 < perturbation_time_s < cfg.duration_s:
+        raise ValueError("perturbation_time_s must lie strictly between zero and duration_s")
+    if not math.isfinite(removal_fraction) or not 0 <= removal_fraction < 1:
+        raise ValueError("removal_fraction must be finite and in [0, 1)")
+    steps = perturbation_time_s / cfg.time_step_s
+    if abs(steps - round(steps)) > 1e-9:
+        raise ValueError("perturbation_time_s must be an integer multiple of time_step_s")
+
+    before_cfg = RafConfig(**{**asdict(cfg), "duration_s": perturbation_time_s})
+    before = simulate_raf_network(before_cfg)
+    pre = before["final"]
+    post_initial = dict(pre)
+    post_initial["X"] *= (1.0 - removal_fraction)
+    post_initial["Y"] *= (1.0 - removal_fraction)
+    remaining_cfg = RafConfig(**{
+        **asdict(cfg),
+        "duration_s": cfg.duration_s - perturbation_time_s,
+        "initial_food_A": post_initial["A"],
+        "initial_food_B": post_initial["B"],
+        "initial_X": post_initial["X"],
+        "initial_Y": post_initial["Y"],
+        "initial_W_X": post_initial["W_X"],
+        "initial_W_Y": post_initial["W_Y"],
+        "initial_D_X": post_initial["D_X"],
+        "initial_D_Y": post_initial["D_Y"],
+    })
+    after = simulate_raf_network(remaining_cfg)
+    pre_xy = pre["X"] + pre["Y"]
+    post_xy = post_initial["X"] + post_initial["Y"]
+    final_xy = after["diagnostics"]["X_plus_Y_activity"]
+    removed_xy = pre_xy - post_xy
+    recovery = (final_xy - post_xy) / removed_xy if removed_xy > 0 else 0.0
+    baseline = simulate_raf_network(cfg)
+    baseline_xy = baseline["diagnostics"]["X_plus_Y_activity"]
+    return {
+        "model": "finite_resource_mutual_catalysis_perturbation",
+        "configuration": asdict(cfg),
+        "perturbation_time_s": perturbation_time_s,
+        "removal_fraction": removal_fraction,
+        "pre_perturbation": pre,
+        "immediately_post_perturbation": post_initial,
+        "final_after_perturbation": after["final"],
+        "unperturbed_final": baseline["final"],
+        "diagnostics": {
+            "X_plus_Y_before": pre_xy,
+            "X_plus_Y_immediately_after": post_xy,
+            "X_plus_Y_final": final_xy,
+            "X_plus_Y_unperturbed_final": baseline_xy,
+            "fraction_of_removed_XY_recovered": recovery,
+            "fraction_of_preperturbation_XY_restored": final_xy / pre_xy if pre_xy else 0.0,
+            "final_XY_relative_to_unperturbed": final_xy / baseline_xy if baseline_xy else 0.0,
+            "food_remaining_at_perturbation": pre["A"] + pre["B"],
+            "food_remaining_at_end": after["final"]["A"] + after["final"]["B"],
+            "post_perturbation_moiety_balance_errors": after["diagnostics"]["moiety_balance_errors"],
+            "post_perturbation_integrated_entropy_production_J_L_K": after["diagnostics"]["integrated_reaction_entropy_production_J_L_K"],
+        },
+        "interpretation": "Recovery is measured after physical removal of X and Y. The post-perturbation conservation ledger starts from the remaining material; removed catalyst material is outside the reactor boundary. Recovery is conditional on residual food, background reaction and residual catalysts.",
+        "limitations": [
+            "The intervention removes catalyst material but does not model the physical separation mechanism or its energetic cost.",
+            "The network remains abstract and seeded; this is not spontaneous molecular assembly.",
+            "The finite batch has no replenishment or sustained driving and ultimately relaxes toward equilibrium.",
+            "A successful recovery in this model is not evidence of life, heredity or Darwinian evolution.",
+        ],
+    }
+
+
+def run_perturbation_sweep(
+    config: RafConfig | None = None,
+    *,
+    removal_fractions: tuple[float, ...] = (0.9, 0.99, 0.999),
+    background_factors: tuple[float, ...] = (1.0, 0.1, 0.01, 0.001),
+    perturbation_time_s: float = 5.0,
+) -> list[dict[str, float]]:
+    """Cross removal severity with uncatalysed background reaction factors."""
+    cfg = config or RafConfig()
+    rows = []
+    for background in background_factors:
+        for removal in removal_fractions:
+            run = simulate_perturbation(
+                RafConfig(**{**asdict(cfg), "background_rate_factor": background}),
+                perturbation_time_s=perturbation_time_s,
+                removal_fraction=removal,
+            )
+            d = run["diagnostics"]
+            rows.append({
+                "background_rate_factor": background,
+                "removal_fraction": removal,
+                "fraction_of_removed_XY_recovered": d["fraction_of_removed_XY_recovered"],
+                "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
+                "final_XY_relative_to_unperturbed": d["final_XY_relative_to_unperturbed"],
+                "food_remaining_at_perturbation": d["food_remaining_at_perturbation"],
+                "food_remaining_at_end": d["food_remaining_at_end"],
+            })
+    return rows
