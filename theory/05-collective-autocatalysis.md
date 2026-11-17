@@ -194,3 +194,14 @@ These metrics can exceed one or fall below zero in unusual parameter regimes; th
 The removal operation is a physical outflow of catalyst material. Consequently, the post-intervention conservation ledger is reset to the remaining reactor inventory. The energetic cost of separation/removal is not modelled. This is a material intervention, not a catalyst-inactivation experiment.
 
 A successful recovery result would show only that this seeded abstract network can regenerate some of its catalyst abundance under the remaining finite-resource conditions. It would not establish self-repair in the biological sense, spontaneous emergence, or persistence under continuous environmental forcing.
+
+
+## 9. Preliminary sweep result and an important confound
+
+The first automated 12-condition sweep is recorded in [results/raf_perturbation_sweep.json](../results/raf_perturbation_sweep.json). At the default background factor \(\epsilon=1\), the unperturbed network has already consumed most of its food by the 5 s intervention time: only about 0.172 of the initial total food activity remains. Following 90%, 99% and 99.9% removal, final X+Y is respectively about 15.9%, 3.33% and 1.57% of the matched unperturbed endpoint.
+
+At \(\epsilon=0.001\), about 1.639 total food activity remains at the same 5 s intervention time. The network is much less developed before intervention, but has substantially more remaining food. The final perturbed X+Y is about 83.1%, 75.0% and 41.6% of the matched unperturbed endpoint for the three removal fractions. The fraction of pre-intervention X+Y restored exceeds one in these cases because the post-intervention trajectory grows beyond its much smaller pre-intervention X+Y value.
+
+This is not evidence that a less-developed network is more robust. The fixed-time comparison changes at least two relevant state variables together: pre-intervention catalyst abundance and remaining food. It therefore does not isolate resilience at matched organizational maturity. The current result is best read as evidence that recovery depends strongly on resource availability and background kinetics in this particular model.
+
+**Required next control:** trigger removal when X+Y reaches a specified common threshold, rather than at a common clock time. Match the pre-intervention catalyst abundance and, where possible, the remaining food inventory across background-rate conditions. If exact matching cannot be achieved, report the mismatch and compare a two-dimensional response surface over pre-intervention X+Y and remaining food. Only then can the model make a cleaner claim about perturbation resistance or recovery.
