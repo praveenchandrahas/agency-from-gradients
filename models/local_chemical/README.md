@@ -119,3 +119,20 @@ References:
 - Ameta, S., Matsubara, Y. J., Chakraborty, N., Krishna, S., & Thutupalli, S. (2021). “Self-Reproduction and Darwinian Evolution in Autocatalytic Chemical Reaction Systems.” *Life*, 11(4), 308. https://doi.org/10.3390/life11040308
 - Rao, R., & Esposito, M. (2016). “Nonequilibrium Thermodynamics of Chemical Reaction Networks: Wisdom from Stochastic Thermodynamics.” *Physical Review X*, 6, 041064. https://doi.org/10.1103/PhysRevX.6.041064
 - Remlein, B., Esposito, M., & Avanzini, F. (2025). “What is a chemostat? Insights from hybrid dynamics and stochastic thermodynamics.” *The Journal of Chemical Physics*. https://doi.org/10.1063/5.0267465
+
+
+## Second model: finite-resource mutual catalysis
+
+The repository now also contains a second, separate model of a mutually catalytic RAF-like network. It is a finite batch with food set {A, B}; Y catalyses A <-> X + W_X, while X catalyses B <-> Y + W_Y. The code declares the stoichiometric matrix, four conserved bookkeeping moieties, reversible loss reactions and an uncatalysed null.
+
+This model does not replace the first chemostatted model. It asks a different question: whether mutual catalysis accelerates finite-time conversion of finite food into catalytic intermediates. Catalysis multiplies forward and reverse rates equally, so it does not change equilibrium composition. The batch relaxes toward equilibrium; it is not a sustained dissipative steady state.
+
+Run from the repository root:
+
+```bash
+raf-network
+raf-network --compare
+raf-network --json
+```
+
+See [the theory note](../../theory/05-collective-autocatalysis.md) and [experiment protocol](../../experiments/protocols/02-raf-batch-network.md). The first model remains documented above and can be run with `chemical-network`.
