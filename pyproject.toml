@@ -13,7 +13,7 @@ authors = [{ name = "Thermodynamic Emergence Research" }]
 
 [project.scripts]
 planetary-ledger = "thermodynamic_emergence.__main__:main"
-chemical-network = "thermodynamic_emergence.chemistry_cli:main"
+chemical-network = "thermodynamic_emergence.chemistry_cli:main"\nraf-network = "thermodynamic_emergence.raf_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
