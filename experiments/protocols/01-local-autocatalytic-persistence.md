@@ -54,3 +54,8 @@ These values are determined by illustrative model parameters. They are not empir
 The experiment fails its numerical checks if the solution becomes negative, entropy production is materially negative, or the integrated state does not approach the analytic fixed point. A failure of the predicted feed response would falsify this model's specific kinetic expectation, not the broader thermodynamic emergence programme.
 
 Even a successful run does not demonstrate spontaneous formation of X, self-maintenance of a bounded chemical compartment, replication with heredity, selection, or abiogenesis. The chemostats are ideal reservoirs and their maintenance costs are outside the model boundary.
+
+
+## Position in the research sequence
+
+This experiment tests a single-species autocatalytic motif only. It does not test a collectively autocatalytic set. The next model should use a small RAF-like network with an explicit food set and catalyst assignments. Graph-theoretic RAF closure, kinetic accessibility from food, persistence, and spontaneous emergence must remain separate tests. The 2021 review by Ameta et al. documents substantial open challenges between experimentally observed chemical self-reproduction and canonical Darwinian evolution.
