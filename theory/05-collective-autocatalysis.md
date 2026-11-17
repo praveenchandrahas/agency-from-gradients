@@ -1,0 +1,167 @@
+# 05 — A finite-resource mutually catalytic network
+
+**Status:** Second executable chemical model, version 0.1  
+**Purpose:** Test whether mutual catalysis can accelerate the conversion of a finite food supply into a chemically organized set of intermediates, while separating formal RAF closure from kinetic and thermodynamic claims.
+
+## 1. The question
+
+The first chemical model showed that a single autocatalytic species can be amplified in a chemostatted toy system. It did not test whether multiple reactions can form a collectively autocatalytic network, and it relied on an imposed initial catalyst plus a reverse source.
+
+This model asks a narrower, discriminating question:
+
+> Given a small RAF-like network and a finite initial chemical disequilibrium, does mutual catalysis accelerate the production of its own catalytic species relative to an otherwise identical uncatalysed kinetic null?
+
+It does not ask whether the network spontaneously assembles from realistic prebiotic chemistry. That would require chemically identified species, plausible pathways and measured thermodynamic parameters.
+
+## 2. Declared food set and reaction set
+
+The food set is:
+
+\[
+F = \{A, B\}.
+\]
+
+The RAF reaction set is:
+
+\[
+R = \{R_1, R_2\}
+\]
+
+with reactions:
+
+\[
+A \rightleftharpoons X + W_X \quad (R_1;\; catalyst\;Y)
+\]
+
+\[
+B \rightleftharpoons Y + W_Y \quad (R_2;\; catalyst\;X)
+\]
+
+The catalyst assignments are reciprocal:
+
+- R1 is catalysed by Y, which is produced by R2.
+- R2 is catalysed by X, which is produced by R1.
+
+The loss reactions are outside the RAF reaction set:
+
+\[
+X \rightleftharpoons D_X \quad (R_3), \qquad
+Y \rightleftharpoons D_Y \quad (R_4).
+\]
+
+The stoichiometric matrix uses species order (A, B, X, Y, W_X, W_Y, D_X, D_Y) and reaction order (R1, R2, R3, R4):
+
+\[
+S =
+\begin{pmatrix}
+-1&0&0&0\\
+0&-1&0&0\\
+1&0&-1&0\\
+0&1&0&-1\\
+1&0&0&0\\
+0&1&0&0\\
+0&0&1&0\\
+0&0&0&1
+\end{pmatrix}.
+\]
+
+This formal network is food-generated and reflexively autocatalytic under the declared catalyst assignments. That is a graph/stoichiometric closure statement, not proof of kinetic viability or spontaneous emergence.
+
+## 3. Finite-resource boundary and conserved moieties
+
+Unlike the previous model, A, B, wastes and degradation products are all dynamic. There are no chemostats and no replenishment. The initial food activities are finite.
+
+The stoichiometry conserves four bookkeeping moieties:
+
+\[
+A + X + D_X, \quad A + W_X, \quad
+B + Y + D_Y, \quad B + W_Y.
+\]
+
+These are formal abstract moieties, not atom-balanced molecular formulas. They make explicit that the model has finite material resources and that products cannot be sustained by an invisible infinite reservoir.
+
+The initial state contains tiny positive X and Y activities to avoid singular ideal chemical potentials. In addition, R1 and R2 have small uncatalysed background rates. Thus the network can be seeded from food in the equations, but this is not molecular self-assembly or a seed-free origin-of-life model.
+
+## 4. Kinetics and detailed balance
+
+Let the activities be a, b, x, y, w_x, w_y, d_x and d_y. The production fluxes are:
+
+\[
+v_1 = (k_{p+}a-k_{p-}xw_x)(1+\alpha y),
+\]
+
+\[
+v_2 = (k_{p+}b-k_{p-}yw_y)(1+\alpha x).
+\]
+
+The loss fluxes are:
+
+\[
+v_3=k_{l+}x-k_{l-}d_x, \qquad
+v_4=k_{l+}y-k_{l-}d_y.
+\]
+
+The catalytic multiplier is applied equally to forward and reverse production rates. This preserves the equilibrium constant and detailed balance; catalysis changes the rate of approach to equilibrium, not the equilibrium composition.
+
+The state equation is:
+
+\[
+\dot{\mathbf c}=S\mathbf v.
+\]
+
+For each reaction, ideal-activity reaction Gibbs energy is:
+
+\[
+\Delta_rG=RT\ln(Q_r/K_r).
+\]
+
+The reaction entropy-production density is calculated as:
+
+\[
+\dot s_{gen}=c^\circ\sum_r v_r(-\Delta_rG_r)/T.
+\]
+
+Each reversible reaction's flux-affinity product should be non-negative up to numerical error. The batch is closed to material replenishment, so its initial chemical disequilibrium is a finite free-energy store. Entropy production is transient and must decay as the system approaches equilibrium.
+
+## 5. Baseline and null experiment
+
+The illustrative baseline uses equal initial food activities A = B = 1, tiny positive initial activities for X, Y, wastes and degradation products, production forward rate 0.02 s⁻¹, production equilibrium constant 10, loss forward rate 0.001 s⁻¹, loss equilibrium constant 10⁻⁴, and catalytic strength α = 100. The batch runs for 10 s with a 0.001 s RK4 step.
+
+The null uses exactly the same initial state, reaction constants, material boundary and integration settings, but sets α = 0. This isolates the kinetic contribution of mutual catalysis.
+
+Primary outcomes:
+
+1. X + Y activity at a common finite time.
+2. Food conversion fraction.
+3. Reaction-wise and integrated entropy production.
+4. Conservation errors for the four declared moieties.
+5. Difference between catalytic and uncatalysed trajectories.
+
+A finite-time increase in X + Y is evidence of kinetic acceleration in this model only. Because the catalysts multiply forward and reverse rates equally, the eventual equilibrium composition is unchanged. This model does not demonstrate sustained dissipation, a non-equilibrium steady state or a universal preference for maximum entropy production.
+
+## 6. Falsification and interpretation
+
+The implementation should fail its checks if any declared moiety drifts materially, any reaction entropy-production contribution becomes materially negative, or the catalytic case does not outperform the uncatalysed null at the chosen finite time.
+
+A successful result supports only this conditional statement: in this abstract finite-batch network, reciprocal catalysis can accelerate the transient conversion of finite food into catalytic intermediates.
+
+It does not establish that:
+- the reactions correspond to chemically plausible early-Earth pathways;
+- the network spontaneously assembles from unstructured matter;
+- RAF closure guarantees kinetic accessibility;
+- the system maintains itself under sustained environmental driving;
+- X and Y copy with heritable variation;
+- Darwinian evolution or life has emerged.
+
+## 7. What should follow
+
+The next useful tests are not to add more complexity indiscriminately. They are to vary one assumption at a time:
+
+1. Sweep catalytic strength and initial food disequilibrium.
+2. Vary background uncatalysed rates to quantify dependence on spontaneous seeding.
+3. Apply catalyst-removal perturbations and measure recovery time.
+4. Compare networks with the same stoichiometry but different catalyst assignments.
+5. Replace the abstract reactions with a chemically specified network only when defensible species, reaction pathways and standard chemical potentials are available.
+6. Introduce continuous driving only with an explicit external-work and reservoir-maintenance ledger.
+
+The critical distinction remains: RAF closure, kinetic accessibility, persistence, perturbation recovery, replication and evolution are different properties and must not be collapsed into a single claim.
