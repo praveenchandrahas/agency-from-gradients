@@ -36,10 +36,18 @@ __all__ += [
     "simulate_chemical_network",
 ]
 
-from .raf import (\n    RafConfig,\n    compare_catalysis,\n    run_perturbation_sweep,\n    simulate_perturbation,\n    simulate_raf_network,\n)
+from .raf import (
+    RafConfig,
+    compare_catalysis,
+    run_perturbation_sweep,
+    simulate_perturbation,
+    simulate_raf_network,
+)
 
 __all__ += [
     "RafConfig",
     "compare_catalysis",
-    "simulate_raf_network",\n    "simulate_perturbation",\n    "run_perturbation_sweep",
+    "simulate_raf_network",
+    "simulate_perturbation",
+    "run_perturbation_sweep",
 ]
