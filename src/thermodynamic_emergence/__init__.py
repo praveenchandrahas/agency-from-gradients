@@ -35,3 +35,11 @@ __all__ += [
     "run_feed_sweep",
     "simulate_chemical_network",
 ]
+
+from .raf import RafConfig, compare_catalysis, simulate_raf_network
+
+__all__ += [
+    "RafConfig",
+    "compare_catalysis",
+    "simulate_raf_network",
+]
