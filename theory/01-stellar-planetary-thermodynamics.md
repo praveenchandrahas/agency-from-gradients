@@ -442,3 +442,30 @@ These questions bridge the global planetary budget to the local chemistry needed
 [4] Wu, W., & Liu, Y. (2010). “Radiation entropy flux and entropy production of the Earth system.” *Reviews of Geophysics*, 48, RG4006. https://doi.org/10.1029/2008RG000275
 
 [5] National Institute of Standards and Technology. “CODATA Value: Stefan–Boltzmann constant.” https://physics.nist.gov/cgi-bin/cuu/Value?sigma
+
+
+## 16. Executable baseline and refinement of the entropy calculation
+
+The first executable implementation is in [the Python model source](../src/thermodynamic_emergence/model.py), with assumptions and run instructions in [the model guide](../models/stellar_planet/README.md). It integrates the Planck-mode entropy expression over frequency and uses the finite solid angle of the stellar disk. Reflected shortwave radiation is treated as spectrally neutral Lambertian radiance, and outgoing thermal radiation as a uniform graybody.
+
+For the rounded Earth–Sun-like reference inputs (stellar effective temperature 5772 K, stellar radius 695,700 km, orbital distance 1 AU, Bond albedo 0.30, longwave emissivity 1.0), the model gives:
+
+| Quantity | Model result |
+|---|---:|
+| Direct stellar irradiance | 1361.171 W m⁻² |
+| Global-mean incoming solar flux | 340.293 W m⁻² |
+| Reflected shortwave flux | 102.088 W m⁻² |
+| Absorbed shortwave flux | 238.205 W m⁻² |
+| Effective emission temperature | 254.586 K |
+| Incoming stellar entropy flux | 0.078608 W m⁻² K⁻¹ |
+| Lambertian reflected entropy flux | 0.104251 W m⁻² K⁻¹ |
+| Outgoing thermal entropy flux | 1.247540 W m⁻² K⁻¹ |
+| Net radiative entropy export | 1.273184 W m⁻² K⁻¹ |
+
+The net radiative entropy export is consistent in scale with Wu and Liu's Planck-spectral estimates for similar idealized albedo and emissivity assumptions [4]. This is a cross-check against a published calculation using related assumptions, not independent empirical validation.
+
+**Clarification of Section 10:** the approximately 1.20 W m⁻² K⁻¹ result there is a deliberately simplified limiting calculation that effectively gives reflected photons the same entropy per unit energy as the incident beam. It is not the model's Lambertian Earth-like result and should not be used as the project's reference planetary entropy estimate. The executable model calculates the reflected component spectrally and angularly under the stated diffuse-reflection assumption. Different reflection physics can produce a materially different reflected-radiation entropy flux [4].
+
+The model reports *net radiative entropy export*. It labels this as internal entropy generation only conditionally: in addition to energy balance, one must assume no secular entropy storage and no matter or other non-radiative entropy transfer across the boundary. An energy balance by itself does not prove that the entropy of an evolving interior is stationary.
+
+The solar-exergy output is also explicitly marked as an approximate Petela source-temperature estimate. The actual stellar radiation field is diluted and occupies a finite solid angle; a more complete exergy treatment would need to include the radiation field's angular distribution and a carefully specified reference environment [3].

@@ -40,6 +40,17 @@ A companion question asks how such structures alter energy capture, transformati
 - [Initial bibliography](references/README.md) — starting literature and reading priorities.
 - [Contributing](CONTRIBUTING.md) — standards for research contributions.
 
+## First executable model
+
+The first model is a transparent zero-dimensional stellar–planetary ledger. It calculates intercepted, reflected, absorbed and emitted power; an approximate Petela solar-exergy estimate; and spectrally integrated Planck radiation-entropy fluxes under explicit Lambertian-reflection and graybody-emission assumptions. It deliberately does not model climate, chemistry, life or agency.
+
+- [Model guide and run instructions](models/stellar_planet/README.md)
+- [Source code](src/thermodynamic_emergence/model.py)
+- [Earth-like baseline output](results/earth_like_baseline.json)
+- [Albedo sensitivity data](results/albedo_sensitivity.csv)
+
+Run locally with python -m pip install -e . followed by python -m thermodynamic_emergence.
+
 ## Relationship to the earlier simulation
 
 The related repository [dissipative-agency-simulation](https://github.com/praveenchandrahas/dissipative-agency-simulation) investigates evolutionary energy-acquisition strategies in populations of already-existing entities. Its experiments on sensing, movement, competition and agency remain useful as a downstream research line.
