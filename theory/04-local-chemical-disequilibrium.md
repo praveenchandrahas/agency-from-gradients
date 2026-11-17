@@ -117,7 +117,7 @@ The baseline configuration uses:
 
 A low-feed reference uses a_A = 10⁻⁶. A feed sweep changes a_A while holding other parameters fixed. Each simulation is compared with its analytic fixed point, and reaction entropy-production contributions are checked for non-negativity.
 
-For the rounded Earth–Sun-like reference inputs, the model gives a baseline fixed point of approximately x = 9.000011, compared with a low-feed control fixed point of approximately 9.9991 × 10⁻⁵. This is a model-specific enrichment of about 9.0 × 10⁴. The result is not an empirical prediction: it follows from the illustrative rate and equilibrium parameters chosen for this toy network.
+For the baseline illustrative parameters, the model gives a baseline fixed point of approximately x = 9.000011, compared with a low-feed control fixed point of approximately 9.9991 × 10⁻⁵. This is a model-specific enrichment of about 9.0 × 10⁴. The result is not an empirical prediction: it follows from the illustrative rate and equilibrium parameters chosen for this toy network.
 
 ## 8. What this model can and cannot show
 
