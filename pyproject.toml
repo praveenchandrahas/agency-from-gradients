@@ -15,6 +15,7 @@ authors = [{ name = "Thermodynamic Emergence Research" }]
 planetary-ledger = "thermodynamic_emergence.__main__:main"
 chemical-network = "thermodynamic_emergence.chemistry_cli:main"
 raf-network = "thermodynamic_emergence.raf_cli:main"
+open-reactor = "thermodynamic_emergence.open_reactor_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
