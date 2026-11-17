@@ -1,0 +1,54 @@
+{
+  "model": "continuously_driven_mutually_catalytic_cstr",
+  "status": "CI baseline summary; values rounded to displayed precision",
+  "configuration": {
+    "temperature_K": 298.15,
+    "feed_A": 1.0,
+    "feed_B": 1.0,
+    "background_feed_activity": 1e-8,
+    "flow_rate_s": 0.05,
+    "production_forward_rate_s": 0.02,
+    "production_equilibrium_constant": 10.0,
+    "loss_forward_rate_s": 0.001,
+    "loss_equilibrium_constant": 0.0001,
+    "catalytic_strength": 10.0,
+    "background_rate_factor": 0.01,
+    "duration_s": 300.0,
+    "time_step_s": 0.002,
+    "ness_window_fraction": 0.2,
+    "ness_tolerance": 0.001
+  },
+  "catalytic_baseline": {
+    "final_X_plus_Y_activity": 1.4022044,
+    "operational_ness_detected": true,
+    "relative_endpoint_drift": 0.0,
+    "maximum_window_coefficient_of_variation": 0.0,
+    "reaction_entropy_production_J_L_K_s": 1.052176,
+    "reservoir_exchange_entropy_production_J_L_K_s": 0.0730092,
+    "total_reported_entropy_production_J_L_K_s": 1.1251852
+  },
+  "matched_flow_uncatalysed_comparison": {
+    "final_X_plus_Y_activity": 0.0079673597,
+    "catalytic_to_uncatalysed_X_plus_Y_ratio": 175.99361,
+    "catalytic_operational_ness_detected": true,
+    "uncatalysed_operational_ness_detected": true
+  },
+  "interpretation": [
+    "Both catalytic and uncatalysed reactors satisfy the finite-window operational NESS criterion in this parameterization.",
+    "Mutual catalysis increases the stationary X+Y abundance by about 176-fold under the matched feed and dilution conditions.",
+    "The result shows amplification of stationary abundance, not that catalysis is required for a NESS.",
+    "Reaction and reservoir-exchange entropy production are reported separately; reservoir-exchange entropy production is not a complete engineering cost of maintaining the apparatus or reservoirs."
+  ],
+  "validation": {
+    "github_actions_run": 44028400465,
+    "workflow": "Python model tests",
+    "unit_tests_passed": 36,
+    "all_workflow_steps_passed": true
+  },
+  "limitations": [
+    "Every species, including X and Y, receives a small positive feed activity, so the model has continuous seeding.",
+    "The NESS flag is a finite-window numerical diagnostic, not proof of unique or global stability.",
+    "Mechanical pumping and mixing, reservoir construction and regeneration, and temperature-control work are excluded.",
+    "The chemistry is abstract and is not a chemically specified prebiotic network."
+  ]
+}

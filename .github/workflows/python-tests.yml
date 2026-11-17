@@ -35,3 +35,7 @@ jobs:
           raf-network --compare
       - name: Run catalyst-removal recovery sweep
         run: raf-network --perturb-sweep --json
+      - name: Run open-reactor baseline
+        run: open-reactor
+      - name: Run open-reactor matched-flow comparison
+        run: open-reactor --compare

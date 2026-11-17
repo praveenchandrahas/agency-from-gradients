@@ -43,6 +43,7 @@ A companion question asks how such structures alter energy capture, transformati
 - [Initial bibliography](references/README.md) — starting literature and reading priorities.
 - [Local chemical disequilibrium](theory/04-local-chemical-disequilibrium.md) — first single-autocatalyst model.
 - [Collective autocatalysis](theory/05-collective-autocatalysis.md) — finite-resource mutually catalytic RAF-like model.
+- [Open reactor and NESS](theory/06-open-reactor-ness.md) — continuously driven CSTR model and thermodynamic boundary.
 - [Contributing](CONTRIBUTING.md) — standards for research contributions.
 
 ## First executable model
@@ -54,17 +55,30 @@ The first model is a transparent zero-dimensional stellar–planetary ledger. It
 - [Earth-like baseline output](results/earth_like_baseline.json)
 - [Albedo sensitivity data](results/albedo_sensitivity.csv)
 
-Run locally with python -m pip install -e . followed by python -m thermodynamic_emergence.
+Run locally with `python -m pip install -e .` followed by `python -m thermodynamic_emergence`.
 
-## Second executable model: finite-resource mutual catalysis
+## Chemical models
 
-A second chemical model represents a small RAF-like network with food set {A, B}, reciprocal catalysts X and Y, finite food resources, explicit stoichiometry and reversible loss pathways. It compares finite-time conversion against an uncatalysed null. Catalysis accelerates kinetics but does not change equilibrium composition; the closed batch relaxes toward equilibrium and does not sustain a non-equilibrium steady state.
+### Finite-resource mutual catalysis
+
+A RAF-like network has food set {A, B}, reciprocal catalysts X and Y, finite food resources, explicit stoichiometry and reversible loss pathways. It compares finite-time conversion against an uncatalysed null. Catalysis accelerates kinetics but does not change equilibrium composition; the closed batch relaxes toward equilibrium and does not sustain a non-equilibrium steady state.
 
 - [Model and assumptions](theory/05-collective-autocatalysis.md)
 - [Experiment protocol](experiments/protocols/02-raf-batch-network.md)
 - [Perturbation/recovery protocol](experiments/protocols/03-catalyst-removal-recovery.md)
 - [Matched-state recovery results](results/raf_matched_recovery_sweep.json)
 - Run: `raf-network --compare` or `raf-network --perturb-sweep --json`
+
+### Continuously driven open reactor
+
+The next model places the same abstract network in a continuously fed and diluted, well-mixed CSTR. It reports reaction entropy production separately from entropy production associated with exchange with finite-activity reservoirs. It diagnoses an operational NESS over a declared terminal window and compares catalysis with a matched-flow uncatalysed null.
+
+- [Model, thermodynamic boundary and caveats](theory/06-open-reactor-ness.md)
+- [Experiment protocol](experiments/protocols/04-open-reactor-ness.md)
+- [Baseline and matched-flow summary](results/open_reactor_baseline_summary.json)
+- Run: `open-reactor`, `open-reactor --compare`, or `open-reactor --sweep --json`
+
+The reservoir-exchange entropy term is not a complete engineering cost: mechanical pumping, mixing, temperature control and reservoir construction/maintenance remain outside the model. Every species also receives a small positive feed activity, including X and Y, so this model does not demonstrate seed-free emergence.
 
 ## Relationship to the earlier simulation
 
@@ -74,7 +88,7 @@ It does **not** model the origin of life or spontaneous emergence of replicators
 
 ## Current status
 
-**Phase: research foundations.** The immediate priority is to clarify definitions, formulate competing hypotheses, establish thermodynamic accounting and identify what the literature already supports. No claim of a validated new theory or completed origin-of-life model is being made.
+**Phase: research foundations and first open-chemistry model.** The immediate priority is to determine when sustained chemical driving supports stable catalytic organization, while keeping thermodynamic accounting and the limitations of the abstract network explicit. No claim of a validated new theory or completed origin-of-life model is being made.
 
 ## Contributing
 
