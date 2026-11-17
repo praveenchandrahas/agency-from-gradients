@@ -94,7 +94,27 @@ The first sweep crosses catalytic strength with dilution rate. This tests whethe
 
 A valid comparison must preserve feed composition and flow conditions. The model does not reward higher entropy production; entropy production is an outcome to measure. More dissipation is not automatically more organization, fitness or persistence.
 
-## 6. Interpretation boundaries
+## 6. Initial baseline result
+
+The first CI baseline used the default settings above for 300 s with a 0.002 s RK4 step. The terminal-window diagnostic classified both the catalytic reactor and the matched-flow uncatalysed null as operational NESS cases.
+
+| Measurement | Mutual catalysis | Uncatalysed null |
+|---|---:|---:|
+| Final X + Y activity | 1.4022044 | 0.00796736 |
+| Operational NESS flag | Yes | Yes |
+
+The catalytic case therefore maintained about 176 times the X+Y abundance of the matched-flow null in this parameterization. Importantly, mutual catalysis did **not** create the NESS condition: the uncatalysed reactor also reached the operational criterion, at a much lower catalytic-species abundance.
+
+For the catalytic baseline, the reported terminal entropy-production rates were:
+
+- Reaction contribution: 1.052176 J L⁻¹ K⁻¹ s⁻¹.
+- Reservoir-exchange contribution: 0.0730092 J L⁻¹ K⁻¹ s⁻¹.
+
+These are separate terms for the declared idealized boundary. They are not the total engineering cost of maintaining the reactor and reservoirs. The reproducible rounded summary is in [results/open_reactor_baseline_summary.json](../results/open_reactor_baseline_summary.json). GitHub Actions run 44028400465 passed all 36 unit tests and all workflow commands, including the baseline and matched-flow comparison.
+
+This is one illustrative parameterization, not a phase diagram. It does not establish a universal advantage for autocatalytic networks, nor a causal relation between entropy production and organization. The continuous trace feed of X and Y is also a source of seeds.
+
+## 7. Interpretation boundaries
 
 A successful result can support only a conditional statement about this abstract CSTR: under the selected rates, feed composition and dilution, a mutually catalytic reaction network can maintain some non-zero stationary abundance while consuming and exporting chemical material.
 
@@ -108,7 +128,7 @@ It cannot establish:
 
 A failed NESS test is also conditional: it may mean the selected feed, washout, rates or simulated horizon do not support stationarity. It does not rule out other networks or environmental regimes.
 
-## 7. Next discriminating experiments
+## 8. Next discriminating experiments
 
 1. Extend simulation horizons and test whether the operational NESS classification is stable to window length and tolerance.
 2. Apply perturbations to a reactor that has reached its candidate NESS and measure return times, basin of attraction and washout thresholds.
