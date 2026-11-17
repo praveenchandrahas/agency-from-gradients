@@ -75,6 +75,7 @@ The next model places the same abstract network in a continuously fed and dilute
 
 - [Model, thermodynamic boundary and caveats](theory/06-open-reactor-ness.md)
 - [Experiment protocol](experiments/protocols/04-open-reactor-ness.md)
+- [Baseline and matched-flow summary](results/open_reactor_baseline_summary.json)
 - Run: `open-reactor`, `open-reactor --compare`, or `open-reactor --sweep --json`
 
 The reservoir-exchange entropy term is not a complete engineering cost: mechanical pumping, mixing, temperature control and reservoir construction/maintenance remain outside the model. Every species also receives a small positive feed activity, including X and Y, so this model does not demonstrate seed-free emergence.
