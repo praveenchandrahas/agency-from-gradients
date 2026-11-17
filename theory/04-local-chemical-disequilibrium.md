@@ -155,7 +155,7 @@ A RAF property alone does not guarantee kinetic viability or spontaneous emergen
 
 ## 11. Thermodynamic treatment of chemostats
 
-Rao and Esposito (2016) provide a systematic nonequilibrium thermodynamic framework for open chemical reaction networks with mass-action kinetics and chemostatted species. In that framework, chemical affinities and reaction fluxes determine reaction-level dissipation, while the work and entropy balance associated with maintaining chemostats must be treated explicitly when expanding the control volume.
+Rao and Esposito (2016) provide a systematic nonequilibrium thermodynamic framework for open chemical reaction networks with mass-action kinetics and chemostatted species. In that framework, chemical affinities and reaction fluxes determine reaction-level dissipation, while the work and entropy balance associated with maintaining chemostats must be treated explicitly when expanding the control volume. Remlein, Esposito and Avanzini (2025) further distinguish reaction dissipation from the dissipation associated with the continuous processes that control chemostats.
 
 Accordingly, the present output is restricted to the reaction-network dissipation calculated from the declared ideal activities and reaction Gibbs energies. It does not include the physical work, transport, pumping or regeneration needed to maintain the external reservoirs. Any later comparison of candidate networks must use a common boundary and account for those reservoir-maintenance costs.
 
@@ -165,3 +165,5 @@ Accordingly, the present output is restricted to the reaction-network dissipatio
 - *A New Physics Theory of Life*. Supplied article discussing Jeremy England's dissipation-driven adaptation proposal.
 - Jarzynski, C. (1997). “Nonequilibrium Equality for Free Energy Differences.” *Physical Review Letters*, 78, 2690–2693. https://doi.org/10.1103/PhysRevLett.78.2690
 - Crooks, G. E. (1999). “Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences.” *Physical Review E*, 60, 2721–2726. https://doi.org/10.1103/PhysRevE.60.2721
+- Rao, R., & Esposito, M. (2016). “Nonequilibrium Thermodynamics of Chemical Reaction Networks: Wisdom from Stochastic Thermodynamics.” *Physical Review X*, 6, 041064. https://doi.org/10.1103/PhysRevX.6.041064
+- Remlein, B., Esposito, M., & Avanzini, F. (2025). “What is a chemostat? Insights from hybrid dynamics and stochastic thermodynamics.” *The Journal of Chemical Physics*. https://doi.org/10.1063/5.0267465
