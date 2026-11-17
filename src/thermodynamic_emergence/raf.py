@@ -137,9 +137,8 @@ def simulate_raf_network(config: RafConfig | None = None) -> dict[str, Any]:
         for i in range(4):
             sigma_by_reaction[i].append(sigma[i])
         state = _rk4(state, cfg.time_step_s, cfg)
-        if (step + 1) % max(1, n // 100) == 0 or step + 1 == n:
-            times.append((step + 1) * cfg.time_step_s)
-            trajectory.append(state.copy())
+        times.append((step + 1) * cfg.time_step_s)
+        trajectory.append(state.copy())
 
     rates, affinities, sigma = _rates(state, cfg)
     sigma_total.append(sum(sigma))
