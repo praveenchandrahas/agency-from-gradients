@@ -34,6 +34,9 @@ A companion question asks how such structures alter energy capture, transformati
 ## Research documents
 
 - [Research charter](RESEARCH_CHARTER.md) — governing question, propositions and scientific boundaries.
+- [Core hypothesis](theory/02-core-hypothesis.md) — concise, conditional statement of the thermodynamic emergence conjecture.
+- [Causal model](theory/03-causal-model.md) — staged mechanisms, evidence requirements and alternative explanations.
+- [Simulation architecture](ARCHITECTURE.md) — layered models, shared accounting interfaces and development sequence.
 - [Hypotheses](HYPOTHESES.md) — candidate hypotheses, predictions, nulls and proposed tests.
 - [Roadmap](ROADMAP.md) — staged research and modelling plan.
 - [Thermodynamic foundation: star–planet–space](theory/01-stellar-planetary-thermodynamics.md) — first energy, exergy and entropy accounting.
