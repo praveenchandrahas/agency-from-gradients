@@ -134,6 +134,31 @@ It cannot show that the network spontaneously assembles from unstructured matter
 5. Test whether catalytic organization appears from non-organized initial conditions rather than being inserted as an initial catalyst.
 6. Only after a physical mechanism exists should the model investigate compartments, self-maintenance, copying, heredity and evolution.
 
+
+## 10. Position relative to autocatalytic-set research
+
+The single-species reaction in this model is a minimal autocatalytic motif. It is not a collectively autocatalytic set and should not be treated as a minimal model of life.
+
+Hordijk and Steel (2018) describe RAF sets (reflexively autocatalytic and food-generated) in which each reaction is catalyzed by a molecule supplied by the food set or produced within the reaction set, while all reactants can be generated from the food set. They argue that autocatalytic sets are necessary but not sufficient for life-like behaviour. This distinction matters: one autocatalyst can amplify its own abundance without establishing a chemically closed, self-producing network.
+
+Ameta et al. (2021) review experimental autocatalytic chemical systems and distinguish chemical self-reproduction from canonical Darwinian evolution. They identify unresolved challenges including spontaneous emergence from prebiotic mixtures, stable chemical identity, heritable reproduction, variation and differential fitness. Our present model addresses none of these transitions beyond a deliberately abstract self-catalytic reaction.
+
+The next chemical model should therefore move from a single autocatalyst to a small, explicitly specified collectively autocatalytic network. A useful first formal target is a minimal RAF-like network with a declared food set, reaction set, catalyst assignments, stoichiometric matrix and finite-resource constraints. Its analysis should distinguish:
+- RAF closure as a graph/stoichiometric property;
+- kinetic accessibility from the food set;
+- persistence under continuous or pulsed driving;
+- resistance to perturbation and catalyst loss;
+- material and chemical free-energy costs;
+- entropy production under an explicit boundary.
+
+A RAF property alone does not guarantee kinetic viability or spontaneous emergence. Those must be tested separately.
+
+## 11. Thermodynamic treatment of chemostats
+
+Rao and Esposito (2016) provide a systematic nonequilibrium thermodynamic framework for open chemical reaction networks with mass-action kinetics and chemostatted species. In that framework, chemical affinities and reaction fluxes determine reaction-level dissipation, while the work and entropy balance associated with maintaining chemostats must be treated explicitly when expanding the control volume.
+
+Accordingly, the present output is restricted to the reaction-network dissipation calculated from the declared ideal activities and reaction Gibbs energies. It does not include the physical work, transport, pumping or regeneration needed to maintain the external reservoirs. Any later comparison of candidate networks must use a common boundary and account for those reservoir-maintenance costs.
+
 ## References
 
 - Schrödinger, E. (1944). *What Is Life? The Physical Aspect of the Living Cell*. Chapter 6.
