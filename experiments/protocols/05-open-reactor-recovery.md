@@ -51,3 +51,14 @@ A successful result demonstrates only recovery in this abstract continuously dri
 - `open-reactor --perturb-sweep --json`
 
 For a short smoke test, use a short duration and set the perturbation time strictly inside that duration.
+
+
+## Follow-on sensitivity programme
+
+Three additional sweeps separate distinct questions:
+
+1. **Positive-seed limit:** `open-reactor --seed-sweep --perturbation-time 150 --removal 0.99 --json` tests post-event catalyst feed activities from 1e-8 to 1e-14. All values remain positive because the ideal-reservoir chemical-potential expression is singular at zero activity. This is a limit study, not a seed-free test.
+2. **Washout/resilience map:** `open-reactor --washout-sweep --perturbation-time 150 --json` crosses five dilution rates (0.01–0.2 s⁻¹) with four removal fractions (90–99.99%). Interpret the results only for cases whose pre-intervention reactor satisfies the NESS diagnostic.
+3. **Horizon sensitivity:** `open-reactor --horizon-sweep --perturbation-time 150 --removal 0.99 --json` compares total horizons of 300, 600 and 900 s. The NESS criterion is evaluated on the terminal window of each post-event segment. A longer horizon is not automatically proof of asymptotic stability, but it tests whether the initial failure was merely slow relaxation.
+
+The three sweeps are deliberately separate: seed sensitivity changes the post-event reservoir chemical potential; washout sensitivity changes the dilution rate and therefore the pre-event state as well as the post-event dynamics; horizon sensitivity changes only observation duration.
