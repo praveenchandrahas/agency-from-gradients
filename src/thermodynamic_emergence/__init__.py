@@ -57,6 +57,9 @@ from .open_reactor import (
     compare_open_reactor,
     run_open_reactor_sweep,
     run_open_reactor_recovery_sweep,
+    run_open_reactor_seed_sweep,
+    run_open_reactor_washout_sweep,
+    run_open_reactor_horizon_sweep,
     simulate_open_reactor,
     simulate_open_reactor_perturbation,
 )
@@ -66,6 +69,9 @@ __all__ += [
     "compare_open_reactor",
     "run_open_reactor_sweep",
     "run_open_reactor_recovery_sweep",
+    "run_open_reactor_seed_sweep",
+    "run_open_reactor_washout_sweep",
+    "run_open_reactor_horizon_sweep",
     "simulate_open_reactor",
     "simulate_open_reactor_perturbation",
 ]
