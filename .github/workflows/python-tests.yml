@@ -39,3 +39,5 @@ jobs:
         run: open-reactor
       - name: Run open-reactor matched-flow comparison
         run: open-reactor --compare
+      - name: Run open-reactor catalyst-removal recovery sweep
+        run: open-reactor --perturb-sweep --duration 4 --dt 0.001 --perturbation-time 2 --json
