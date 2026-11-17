@@ -105,3 +105,15 @@ The supplied article *A New Physics Theory of Life* summarizes England's proposa
 - *A New Physics Theory of Life*. Supplied article discussing Jeremy England's dissipation-driven adaptation proposal, fluctuation relations, self-replication and suggested experimental tests.
 - Jarzynski, C. (1997). “Nonequilibrium Equality for Free Energy Differences.” *Physical Review Letters*, 78, 2690–2693. https://doi.org/10.1103/PhysRevLett.78.2690
 - Crooks, G. E. (1999). “Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences.” *Physical Review E*, 60, 2721–2726. https://doi.org/10.1103/PhysRevE.60.2721
+
+
+## Where this sits in the origin-of-life literature
+
+This first model is a single autocatalytic motif, not a collectively autocatalytic set. RAF theory formalizes networks in which reactions are catalyzed by species in the food set or produced by the network, and whose reactants can be generated from the food set. Such closure is a stronger organizational property than one species catalyzing its own production, but it still does not by itself establish kinetic viability, spontaneous emergence or Darwinian evolution.
+
+Ameta et al. (2021) review experimental autocatalytic systems and emphasize the remaining gaps between chemical self-reproduction and heritable Darwinian evolution. The next model should therefore investigate a small RAF-like network, with graph closure, kinetic accessibility, finite resources and perturbation tests treated separately.
+
+References:
+- Hordijk, W., & Steel, M. (2018). “Autocatalytic Networks at the Basis of Life’s Origin and Organization.” *Life*, 8(4), 62. https://doi.org/10.3390/life8040062
+- Ameta, S., Matsubara, Y. J., Chakraborty, N., Krishna, S., & Thutupalli, S. (2021). “Self-Reproduction and Darwinian Evolution in Autocatalytic Chemical Reaction Systems.” *Life*, 11(4), 308. https://doi.org/10.3390/life11040308
+- Rao, R., & Esposito, M. (2016). “Nonequilibrium Thermodynamics of Chemical Reaction Networks: Wisdom from Stochastic Thermodynamics.” *Physical Review X*, 6, 041064. https://doi.org/10.1103/PhysRevX.6.041064
