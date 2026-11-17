@@ -19,10 +19,10 @@ The removal operation is material outflow. The post-intervention conservation le
 ## Factorial sweep
 
 - Removal fractions: 0.9, 0.99, 0.999.
-- Uncatalysed background rate factors: 1, 0.1, 0.01, 0.001.
+- Pre-perturbation background factor is held at 1.0 for every condition. After removal, the background factor is set to 1, 0.1, 0.01 or 0.001.
 - Catalytic strength, equilibrium constants, food, and duration otherwise remain fixed.
 
-The production flux multiplier is epsilon + alpha times the reciprocal catalyst activity. It is applied equally to forward and reverse fluxes, preserving each reaction's equilibrium constant. The uncatalysed null sets alpha = 0 while retaining epsilon.
+The production flux multiplier is epsilon + alpha times the reciprocal catalyst activity. It is applied equally to forward and reverse fluxes, preserving each reaction's equilibrium constant. The sweep changes epsilon only after the intervention, so all conditions share the same pre-perturbation history, catalyst abundance and remaining food. The unperturbed reference retains epsilon = 1 throughout.
 
 ## Primary outcomes
 
