@@ -41,3 +41,9 @@ jobs:
         run: open-reactor --compare
       - name: Run open-reactor catalyst-removal recovery sweep
         run: open-reactor --perturb-sweep --duration 300 --dt 0.005 --perturbation-time 150 --json
+      - name: Run open-reactor positive-seed limit sweep
+        run: open-reactor --seed-sweep --duration 300 --dt 0.005 --perturbation-time 150 --removal 0.99 --json
+      - name: Run open-reactor washout and removal map
+        run: open-reactor --washout-sweep --duration 300 --dt 0.005 --perturbation-time 150 --json
+      - name: Run open-reactor horizon sensitivity
+        run: open-reactor --horizon-sweep --duration 300 --dt 0.005 --perturbation-time 150 --removal 0.99 --json
