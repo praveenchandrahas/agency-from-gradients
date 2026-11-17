@@ -205,3 +205,14 @@ At \(\epsilon=0.001\), about 1.639 total food activity remains at the same 5 s i
 This is not evidence that a less-developed network is more robust. The fixed-time comparison changes at least two relevant state variables together: pre-intervention catalyst abundance and remaining food. It therefore does not isolate resilience at matched organizational maturity. The current result is best read as evidence that recovery depends strongly on resource availability and background kinetics in this particular model.
 
 **Required next control:** trigger removal when X+Y reaches a specified common threshold, rather than at a common clock time. Match the pre-intervention catalyst abundance and, where possible, the remaining food inventory across background-rate conditions. If exact matching cannot be achieved, report the mismatch and compare a two-dimensional response surface over pre-intervention X+Y and remaining food. Only then can the model make a cleaner claim about perturbation resistance or recovery.
+
+
+## 10. Matched-state recovery control
+
+The fixed-time pilot in Section 9 changed background kinetics throughout the entire trajectory. This changed both the catalyst abundance and the amount of food remaining at the intervention time, so it did not isolate post-perturbation recovery. That pilot is retained as a diagnostic of the confound, not as a clean resilience comparison.
+
+The refined factorial experiment now holds the entire pre-perturbation history fixed at \(\epsilon=1\). At 5 s, the same pre-intervention state is used for each condition; the selected fraction of X and Y is removed; only then is \(\epsilon\) changed to 1, 0.1, 0.01 or 0.001 for the remaining five seconds. Thus initial catalyst abundance and remaining food at the moment of intervention are matched across the background-rate conditions.
+
+This isolates the effect of the post-intervention background rate more cleanly. It still does not isolate catalyst-driven recovery from all possible nonlinear kinetic effects, and it remains a short, finite-batch, seeded model. The updated run is recorded separately in [results/raf_matched_recovery_sweep.json](../results/raf_matched_recovery_sweep.json). The primary comparison is the final X+Y abundance relative to the same unperturbed reference, alongside the fraction of pre-intervention X+Y restored and the remaining food inventory.
+
+The more general lesson is methodological: robustness comparisons should match the state at which the perturbation is applied. A common clock time is not sufficient when changing parameters also changes the trajectory leading up to the intervention.
