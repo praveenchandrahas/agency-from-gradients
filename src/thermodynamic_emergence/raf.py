@@ -237,6 +237,7 @@ def simulate_perturbation(
     *,
     perturbation_time_s: float = 5.0,
     removal_fraction: float = 0.99,
+    post_perturbation_background_factor: float | None = None,
 ) -> dict[str, Any]:
     """Remove a fraction of X and Y at a defined time and measure recovery."""
     cfg = config or RafConfig()
@@ -245,6 +246,8 @@ def simulate_perturbation(
         raise ValueError("perturbation_time_s must lie strictly between zero and duration_s")
     if not math.isfinite(removal_fraction) or not 0 <= removal_fraction < 1:
         raise ValueError("removal_fraction must be finite and in [0, 1)")
+    if post_perturbation_background_factor is not None and (not math.isfinite(post_perturbation_background_factor) or post_perturbation_background_factor < 0):
+        raise ValueError("post_perturbation_background_factor must be finite and non-negative")
     steps = perturbation_time_s / cfg.time_step_s
     if abs(steps - round(steps)) > 1e-9:
         raise ValueError("perturbation_time_s must be an integer multiple of time_step_s")
@@ -266,6 +269,7 @@ def simulate_perturbation(
         "initial_W_Y": post_initial["W_Y"],
         "initial_D_X": post_initial["D_X"],
         "initial_D_Y": post_initial["D_Y"],
+        "background_rate_factor": cfg.background_rate_factor if post_perturbation_background_factor is None else post_perturbation_background_factor,
     })
     after = simulate_raf_network(remaining_cfg)
     pre_xy = pre["X"] + pre["Y"]
@@ -280,6 +284,8 @@ def simulate_perturbation(
         "configuration": asdict(cfg),
         "perturbation_time_s": perturbation_time_s,
         "removal_fraction": removal_fraction,
+        "pre_perturbation_background_rate_factor": cfg.background_rate_factor,
+        "post_perturbation_background_rate_factor": remaining_cfg.background_rate_factor,
         "pre_perturbation": pre,
         "immediately_post_perturbation": post_initial,
         "final_after_perturbation": after["final"],
@@ -323,10 +329,12 @@ def run_perturbation_sweep(
                 RafConfig(**{**asdict(cfg), "background_rate_factor": background}),
                 perturbation_time_s=perturbation_time_s,
                 removal_fraction=removal,
+                post_perturbation_background_factor=background,
             )
             d = run["diagnostics"]
             rows.append({
-                "background_rate_factor": background,
+                "pre_perturbation_background_rate_factor": cfg.background_rate_factor,
+                "post_perturbation_background_rate_factor": background,
                 "removal_fraction": removal,
                 "fraction_of_removed_XY_recovered": d["fraction_of_removed_XY_recovered"],
                 "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
