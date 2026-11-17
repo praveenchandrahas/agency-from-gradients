@@ -326,7 +326,7 @@ def run_perturbation_sweep(
     for background in background_factors:
         for removal in removal_fractions:
             run = simulate_perturbation(
-                RafConfig(**{**asdict(cfg), "background_rate_factor": background}),
+                cfg,
                 perturbation_time_s=perturbation_time_s,
                 removal_fraction=removal,
                 post_perturbation_background_factor=background,
