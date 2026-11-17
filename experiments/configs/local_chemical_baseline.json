@@ -1,0 +1,15 @@
+{
+  "temperature_K": 298.15,
+  "feed_activity": 1.0,
+  "waste_activity": 1.0,
+  "degraded_activity": 1e-8,
+  "growth_equilibrium_constant": 10.0,
+  "growth_forward_rate_s": 0.1,
+  "decay_equilibrium_constant": 0.0001,
+  "decay_forward_rate_s": 0.01,
+  "initial_catalyst_activity": 0.0001,
+  "duration_s": 5000.0,
+  "time_step_s": 0.1,
+  "standard_concentration_mol_L": 1.0,
+  "background_control_feed_activity": 1e-6
+}
