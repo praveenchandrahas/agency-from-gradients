@@ -165,3 +165,32 @@ The next useful tests are not to add more complexity indiscriminately. They are 
 6. Introduce continuous driving only with an explicit external-work and reservoir-maintenance ledger.
 
 The critical distinction remains: RAF closure, kinetic accessibility, persistence, perturbation recovery, replication and evolution are different properties and must not be collapsed into a single claim.
+
+
+## 8. Perturbation and recovery experiment
+
+The next experiment extends the same finite-batch model with an explicit intervention. The network first evolves for 5 s. A specified fraction of both X and Y is then physically removed from the reactor, and the remaining material evolves until the original 10 s endpoint.
+
+The intervention is tested at removal fractions 0.9, 0.99 and 0.999. The uncatalysed background production factor is independently varied over 1, 0.1, 0.01 and 0.001. This separates the contribution of residual spontaneous background kinetics from the contribution of the surviving mutually catalytic species.
+
+The rate law is now:
+
+\[
+v_1=(k_{p+}a-k_{p-}xw_x)(\epsilon+\alpha y),
+\qquad
+v_2=(k_{p+}b-k_{p-}yw_y)(\epsilon+\alpha x),
+\]
+
+where \(\epsilon\) is the background rate factor and \(\alpha\) is catalytic strength. The same multiplier acts on forward and reverse fluxes, preserving the equilibrium constant. The uncatalysed null is \(\alpha=0\); it retains the chosen background factor.
+
+Recovery metrics are kept distinct:
+
+- **Fraction of removed X+Y recovered:** net increase after the intervention divided by the amount removed.
+- **Fraction of pre-perturbation X+Y restored:** final X+Y divided by the pre-perturbation value.
+- **Final X+Y relative to unperturbed:** final perturbed X+Y divided by the matched unperturbed run's final X+Y.
+
+These metrics can exceed one or fall below zero in unusual parameter regimes; they are not clipped. Food remaining at intervention and at the endpoint is reported so that apparent recovery is not interpreted without resource context.
+
+The removal operation is a physical outflow of catalyst material. Consequently, the post-intervention conservation ledger is reset to the remaining reactor inventory. The energetic cost of separation/removal is not modelled. This is a material intervention, not a catalyst-inactivation experiment.
+
+A successful recovery result would show only that this seeded abstract network can regenerate some of its catalyst abundance under the remaining finite-resource conditions. It would not establish self-repair in the biological sense, spontaneous emergence, or persistence under continuous environmental forcing.
