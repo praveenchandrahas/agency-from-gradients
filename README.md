@@ -59,7 +59,8 @@ A second chemical model represents a small RAF-like network with food set {A, B}
 
 - [Model and assumptions](theory/05-collective-autocatalysis.md)
 - [Experiment protocol](experiments/protocols/02-raf-batch-network.md)
-- Run: `raf-network --compare`
+- [Perturbation/recovery protocol](experiments/protocols/03-catalyst-removal-recovery.md)
+- Run: `raf-network --compare` or `raf-network --perturb-sweep --json`
 
 ## Relationship to the earlier simulation
 
