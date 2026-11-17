@@ -86,6 +86,7 @@ python -m unittest discover -s tests -v
 ## Interpretation limits
 
 - A, W and D are abstract species; no specific prebiotic chemistry is represented.
+- The baseline starts with nonzero X, and reverse R2 converts chemostatted D into X. The model therefore tests amplification and maintenance above a low-feed reference, not spontaneous seed-free emergence.
 - The model is well-mixed and has no spatial gradients, diffusion, compartments or mineral surfaces.
 - Chemostats hold reservoir activities fixed; their pumps and external apparatus are outside the model boundary.
 - The model has autocatalysis but no heredity, mutation, lineage or Darwinian evolution.
