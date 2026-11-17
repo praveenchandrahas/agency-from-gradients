@@ -380,6 +380,9 @@ def simulate_open_reactor_perturbation(
             "recovery_threshold_fraction": recovery_threshold_fraction,
             "recovery_threshold_X_plus_Y": threshold,
             "recovery_time_after_perturbation_s": recovery_time,
+            "pre_perturbation_operational_ness_detected": before["diagnostics"]["ness_detected"],
+            "pre_perturbation_ness_relative_endpoint_drift": before["diagnostics"]["ness_relative_endpoint_drift"],
+            "pre_perturbation_ness_max_species_cv": before["diagnostics"]["ness_max_species_coefficient_of_variation"],
             "post_perturbation_operational_ness_detected": after["diagnostics"]["ness_detected"],
             "post_perturbation_ness_relative_endpoint_drift": after["diagnostics"]["ness_relative_endpoint_drift"],
             "post_perturbation_ness_max_species_cv": after["diagnostics"]["ness_max_species_coefficient_of_variation"],
@@ -422,6 +425,11 @@ def run_open_reactor_recovery_sweep(
                 "fraction_of_preperturbation_XY_restored": d["fraction_of_preperturbation_XY_restored"],
                 "final_XY_relative_to_unperturbed": d["final_XY_relative_to_unperturbed"],
                 "recovery_time_after_perturbation_s": d["recovery_time_after_perturbation_s"],
+                "pre_perturbation_operational_ness_detected": d["pre_perturbation_operational_ness_detected"],
+                "pre_perturbation_ness_relative_endpoint_drift": d["pre_perturbation_ness_relative_endpoint_drift"],
+                "pre_perturbation_ness_max_species_cv": d["pre_perturbation_ness_max_species_cv"],
                 "post_perturbation_operational_ness_detected": d["post_perturbation_operational_ness_detected"],
+                "post_perturbation_ness_relative_endpoint_drift": d["post_perturbation_ness_relative_endpoint_drift"],
+                "post_perturbation_ness_max_species_cv": d["post_perturbation_ness_max_species_cv"],
             })
     return rows
