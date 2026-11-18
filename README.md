@@ -44,6 +44,7 @@ A companion question asks how such structures alter energy capture, transformati
 - [Local chemical disequilibrium](theory/04-local-chemical-disequilibrium.md) — first single-autocatalyst model.
 - [Collective autocatalysis](theory/05-collective-autocatalysis.md) — finite-resource mutually catalytic RAF-like model.
 - [Open reactor and NESS](theory/06-open-reactor-ness.md) — continuously driven CSTR model and thermodynamic boundary.
+- [Results index](results/README.md) — cross-model numerical findings, interpretation boundaries and links to raw outputs.
 - [Contributing](CONTRIBUTING.md) — standards for research contributions.
 
 ## First executable model
@@ -77,6 +78,8 @@ The next model places the same abstract network in a continuously fed and dilute
 - [Experiment protocol](experiments/protocols/04-open-reactor-ness.md)
 - [Catalyst-removal recovery protocol](experiments/protocols/05-open-reactor-recovery.md) — includes positive-seed limit, washout and horizon sensitivity sweeps.
 - [Baseline and matched-flow summary](results/open_reactor_baseline_summary.json)
+- [Resilience and recovery sensitivity results](results/open_reactor_resilience_sensitivity.md)
+- [All results index](results/README.md)
 - Run: `open-reactor`, `open-reactor --compare`, `open-reactor --sweep --json`, or `open-reactor --perturb-sweep --json`. Sensitivity studies: `--seed-sweep`, `--washout-sweep`, and `--horizon-sweep`.
 
 The reservoir-exchange entropy term is not a complete engineering cost: mechanical pumping, mixing, temperature control and reservoir construction/maintenance remain outside the model. Every species also receives a small positive feed activity, including X and Y, so this model does not demonstrate seed-free emergence.
@@ -89,7 +92,7 @@ It does **not** model the origin of life or spontaneous emergence of replicators
 
 ## Current status
 
-**Phase: research foundations and first open-chemistry model.** The immediate priority is to determine when sustained chemical driving supports stable catalytic organization, while keeping thermodynamic accounting and the limitations of the abstract network explicit. No claim of a validated new theory or completed origin-of-life model is being made.
+**Phase: thermodynamic foundations and model-conditional open-chemistry experiments.** The repository now contains a zero-dimensional star–planet radiation ledger, a seeded chemostatted autocatalyst, a finite-resource mutually catalytic batch model, and a continuously driven CSTR with recovery, seed-feed, washout and horizon sensitivity studies. These results do not demonstrate seed-free emergence, life, replication, heredity or intelligence. See the [results index](results/README.md). The next priority is to refine the washout boundary, test extinction as absolute initial catalyst abundance approaches zero, and strengthen stability and numerical-convergence analysis.
 
 ## Contributing
 
