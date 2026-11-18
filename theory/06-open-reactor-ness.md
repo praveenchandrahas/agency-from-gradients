@@ -140,3 +140,43 @@ A failed NESS test is also conditional: it may mean the selected feed, washout, 
 8. Perform a positive-seed-feed limit study and longer post-perturbation horizons. The current ideal-reservoir expression requires strictly positive feed activities, so this cannot be interpreted as a true zero-seed experiment.
 
 The next conceptual transition is not from NESS directly to life. It is from stationary dissipative chemistry to chemical structures that reproduce with heritable variation under sustained driving.
+
+
+## 9. Recovery and resilience sensitivity results
+
+The expanded recovery programme is documented in [results/open_reactor_resilience_sensitivity.md](../results/open_reactor_resilience_sensitivity.md), with a cross-model index in [results/README.md](../results/README.md). GitHub Actions run [#44031401732](https://github.com/praveenchandrahas/thermodynamic-emergence/actions/runs/44031401732) completed all 14 steps successfully.
+
+### 9.1 Positive catalyst-feed limit
+
+At 99% removal, post-event X/Y feed was reduced from 1e-8 to 1e-14. Across all four positive feed activities, approximately 99.9245% of removed X+Y was recovered and the 90%-of-pre-event abundance threshold was crossed in 65.25 s. Differences across this feed range are negligible at reported precision.
+
+This is not a seed-free test. One per cent of the original catalyst population remains, and all feed activities are strictly positive. The result shows that recovery in this parameterization is not materially sensitive to the tested trace-feed range; it does not show that catalysts arise from zero.
+
+### 9.2 Washout and removal map
+
+The sweep crossed dilution rates 0.01, 0.025, 0.05, 0.1 and 0.2 s⁻¹ with removal fractions 90%, 99%, 99.9% and 99.99%. The pre-event state passed the operational NESS diagnostic at 0.01–0.1 s⁻¹ and failed at 0.2 s⁻¹.
+
+At 0.01 s⁻¹, abundance recovery remained incomplete and the 90% threshold was not crossed during the 150 s post-event window. At 0.025 s⁻¹, recovery was approximately 97.5% but incomplete. At 0.05 s⁻¹, recovery was approximately 99.925%. At 0.1 s⁻¹, recovery was approximately 99.996–100.004%; the post-event NESS diagnostic passed for 90% and 99% removal but not for the two more severe removals.
+
+The 0.2 s⁻¹ cases cannot be treated as resilience from a stationary reference because the pre-event state itself failed the NESS diagnostic. The grid suggests a possible loss-of-operational-steadiness region between 0.1 and 0.2 s⁻¹ for this parameterization and 150 s preconditioning window. It does not establish a critical washout threshold; the grid is sparse and slow transients may affect classification.
+
+### 9.3 Observation-horizon sensitivity
+
+At dilution 0.05 s⁻¹ and 99% removal, the 300 s total run (150 s post-event) restored approximately 99.925% of pre-event X+Y but failed the endpoint-drift NESS criterion (relative drift approximately 0.00265). At 600 s total (450 s post-event), relative endpoint drift fell to approximately 2.07e-8 and the operational NESS criterion passed. The 900 s run (750 s post-event) also passed.
+
+The initial failure was therefore a finite-observation-window issue for this baseline parameterization. This supports relaxation back to the same measured catalytic abundance and operational stationary regime under the tested perturbation. It is not a proof of global asymptotic stability, uniqueness of the attractor or recovery of every possible structural property.
+
+### 9.4 Updated interpretation
+
+Taken together, the open-reactor experiments show that mutual catalysis amplifies stationary X+Y abundance relative to a matched-flow uncatalysed null, but the uncatalysed reactor also satisfies the operational NESS diagnostic. Baseline catalytic abundance can recover after 99% removal while residual catalysts remain. The tested positive trace-feed range has negligible influence on this recovery. Dilution and observation duration materially affect recovery and operational NESS classification.
+
+These findings are conditional on the abstract deterministic well-mixed CSTR, selected kinetic parameters, positive catalyst feed and imposed removal operation. Removal work, pumping, mixing, reservoir regeneration and other engineering costs are not included. The model contains no finite-molecule stochastic extinction, spatial gradients, compartments, chemically validated prebiotic pathways, replication with heredity or evolution.
+
+### 9.5 Next discriminating tests
+
+1. Refine the dilution-rate grid between 0.1 and 0.2 s⁻¹ and lengthen preconditioning to distinguish a true loss of stationarity from slow drift.
+2. Vary absolute initial X and Y concentrations, not only removal fractions, to locate extinction and recovery boundaries.
+3. Develop a zero-external-seed formulation using finite-state stochastic kinetics or a thermodynamically consistent boundary that avoids the ideal-reservoir zero-activity logarithmic singularity.
+4. Perform step-size convergence and broader kinetic-parameter sweeps; test alternative initial conditions and possible multiple stationary states.
+
+No result in this section establishes seed-free emergence, biological self-repair, life, a universal maximum-entropy-production principle or a causal thermodynamic law of intelligence.
