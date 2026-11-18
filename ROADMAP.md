@@ -1,6 +1,8 @@
 # Research roadmap
 
-**Current phase:** Foundations and problem formulation.
+**Current phase:** Thermodynamic foundations and model-conditional open-chemistry experiments.
+
+Completed executable stages include the zero-dimensional star–planet–space radiation ledger, a seeded chemostatted autocatalyst, a finite-resource mutually catalytic batch model, and a continuously driven CSTR with recovery/seed-feed/washout/horizon sensitivity tests. See the [results index](results/README.md) for findings and limitations.
 
 **Guiding rule:** Do not build the next simulation until the question, system boundary, state variables, mechanisms and measurable outcomes are specified.
 
@@ -99,10 +101,11 @@ Measure energy capture and transformation; stored energy and material reservoirs
 
 ## Immediate tasks
 
-1. Complete the thermodynamics glossary and define system boundaries.
-2. Build a literature map with competing positions and open problems.
-3. Write the minimal star–planet–space energy and entropy balance.
-4. Select a tractable physical model family for Phase II only after the balance and assumptions are clear.
+1. Refine the open-reactor washout map between 0.1 and 0.2 s⁻¹, with longer preconditioning and tighter flow-rate increments.
+2. Sweep absolute initial catalyst abundance toward zero to distinguish recovery from extinction and quantify the minimum surviving population, if one exists.
+3. Develop a finite-molecule stochastic or otherwise thermodynamically consistent zero-external-seed formulation; the current ideal-reservoir logarithmic expression requires strictly positive feed activities.
+4. Run integration-step convergence, broader kinetic-parameter sweeps and alternative-initial-condition tests; assess whether the apparent stationary state is unique.
+5. Continue the chemical and thermodynamic literature map, and identify physically plausible reaction systems and reservoir boundaries before introducing real chemical identities.
 
 ## What should not happen yet
 
