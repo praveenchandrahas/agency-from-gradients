@@ -1,9 +1,8 @@
 # S15, Locks: does life open gradients that nothing else opens?
 
-> **Status: SPEC. Not a preregistration.**
-> This file fixes the question, the definitions, the hypotheses and the falsifiers. It contains no results.
-> The engine and its gates exist (`locks/world.py`, `tests/test_gates.py`, 31 tests passing). Only the controls have been piloted.
-> Numbers marked **TBD** are set in `locks/PREREGISTRATION.md`, after pilots on the **controls only**, and frozen before any confirmatory run.
+> **Status: SPEC.** This file fixes the question, the definitions, the hypotheses and the falsifiers.
+> The numbers marked **TBD** here are fixed in [`PREREGISTRATION.md`](PREREGISTRATION.md), frozen on 2026-11-23 before the confirmatory run. Where the two differ, the preregistration governs.
+> The engine and its gates are in `locks/world.py` and `tests/test_gates.py`.
 
 ## The core hypothesis
 
@@ -231,7 +230,7 @@ Decided by the author:
 4. **Arm D is in the first run.** Without it, H2a could only beat a mineral, not a fire.
 5. **Numbering.** S15, open to correction later.
 
-Settled while building, and open to the author's veto:
+Settled while building, then approved by the author:
 
 6. **The headline σ counts reactions and mixing.** Reactions alone are reported too. The reason is under Definitions.
 

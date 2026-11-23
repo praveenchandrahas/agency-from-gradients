@@ -4,12 +4,13 @@ Does life open free-energy gradients that nothing else opens?
 
 A flow reactor with locked gradients. A barrier dial sets how locked they are. Five arms: passive, a natural mineral, a self-sustaining fire with fixed keys, life with heritable keys, and a designer bound. Entropy production is measured from the free-energy books, never rewarded.
 
-**Status:** spec, engine and gates. No preregistration and no results yet.
+**Status:** preregistered ([`PREREGISTRATION.md`](PREREGISTRATION.md), frozen 2026-11-23). Confirmatory run on GitHub Actions (`.github/workflows/s15.yml`).
 
 - [`SPEC.md`](SPEC.md): the question, definitions, hypotheses, falsifiers and decisions. Read this first.
 - `locks/world.py`: the engine.
 - `tests/test_gates.py`: gates G1 to G6. If any fails, nothing this engine says counts.
 - `experiments/pilot_controls.py`: pilot of the controls only.
+- `experiments/s15.py`: the confirmatory runner. `analysis/report.py`: the frozen analysis. `analysis/expectations.py`: pre-run arithmetic.
 
 ```bash
 cd locks

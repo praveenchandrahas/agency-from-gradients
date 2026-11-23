@@ -1,0 +1,87 @@
+name: s15
+# Confirmatory S15, Locks (locks/PREREGISTRATION.md). Trigger: Actions -> s15 -> Run workflow.
+# Stage 1 runs N, D, L per (key length, barrier) cell. Stage 2 runs M and U matched to L's
+# catalyst count in the same cell. The report job writes RESULTS.md and publishes everything
+# to the ci-results branch under s15/<run id>/.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  stage1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        n_bits: [24, 32]
+        B: [0, 2, 4, 6, 8, 10, 12, 16]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "numpy>=2.0"
+      - name: Stage 1 (N, D, L)
+        working-directory: locks
+        run: PYTHONPATH=. python experiments/s15.py --stage 1 --n-bits ${{ matrix.n_bits }} --B ${{ matrix.B }} --seeds 0-19 --workers 4 --out ../out
+      - uses: actions/upload-artifact@v4
+        with: { name: "s15-s1-n${{ matrix.n_bits }}-B${{ matrix.B }}", path: out/ }
+  stage2:
+    needs: stage1
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        n_bits: [24, 32]
+        B: [0, 2, 4, 6, 8, 10, 12, 16]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "numpy>=2.0"
+      - uses: actions/download-artifact@v4
+        with: { name: "s15-s1-n${{ matrix.n_bits }}-B${{ matrix.B }}", path: s1 }
+      - name: Stage 2 (M, U matched to L)
+        working-directory: locks
+        run: PYTHONPATH=. python experiments/s15.py --stage 2 --n-bits ${{ matrix.n_bits }} --B ${{ matrix.B }} --seeds 0-19 --workers 4 --match-from ../s1 --out ../out
+      - uses: actions/upload-artifact@v4
+        with: { name: "s15-s2-n${{ matrix.n_bits }}-B${{ matrix.B }}", path: out/ }
+  report:
+    needs: stage2
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install "numpy>=2.0"
+      - uses: actions/download-artifact@v4
+        with: { pattern: "s15-*", path: res, merge-multiple: true }
+      - name: Gates and report
+        working-directory: locks
+        run: |
+          pip install pytest
+          python -m pytest -q
+          mkdir -p ../pub
+          PYTHONPATH=. python analysis/report.py ../res ../pub/RESULTS.md
+          { echo "commit: $GITHUB_SHA"; echo "run: $GITHUB_RUN_ID";
+            echo "preregistration sha256: $(sha256sum PREREGISTRATION.md | cut -d' ' -f1)";
+            echo "run files: $(ls ../res/*.json | wc -l)";
+            python --version; python -c 'import numpy; print("numpy", numpy.__version__)'; } > ../pub/RUN_INFO.txt
+          tar -czf ../pub/runs.tar.gz -C ../res .
+      - uses: actions/upload-artifact@v4
+        with: { name: s15-report, path: pub/ }
+      - name: Publish to the ci-results branch
+        run: |
+          set -e
+          D="s15/${GITHUB_RUN_ID}"
+          git config --global user.name "github-actions"; git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6 7 8; do
+            rm -rf /tmp/pub && git clone --quiet "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" /tmp/pub
+            cd /tmp/pub
+            if git ls-remote --exit-code --heads origin ci-results >/dev/null; then git checkout -q ci-results; else git checkout -q --orphan ci-results; git rm -rfq . || true; fi
+            mkdir -p "$D" && cp -r $GITHUB_WORKSPACE/pub/. "$D/" && git add -A && git commit -qm "CI results $D" && git push -q origin ci-results && break
+            cd /; sleep $((RANDOM % 8 + 2))
+          done
+          git -C /tmp/pub log -1 --format=%s | grep -q "CI results $D" || { echo "::error::results were not pushed"; exit 1; }

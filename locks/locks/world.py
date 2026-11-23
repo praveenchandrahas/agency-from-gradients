@@ -162,6 +162,7 @@ class World:
             self.e = np.zeros(0)
         self.mu = cfg.mu if cfg.arm == "L" else 0.0
         self.grows = cfg.arm in ("D", "L")
+        self._fixed_k = None          # cached total catalytic rate of fixed catalysts (M, U)
 
     # ------------------------------------------------------------------ helpers
     @property
@@ -213,9 +214,16 @@ class World:
         self.F, self.W = F1, W1
 
         # 2. Reaction, closed, solved exactly with rates held over the step.
-        rc = self.cat_rates() if self.n else np.zeros((0, K))
+        # Fixed catalysts gain nothing, so only their total rate matters; it changes only on drift.
         k_unc = c.k0 * np.exp(-self.Bv)
-        k = k_unc + rc.sum(axis=0)
+        if self.grows:
+            rc = self.cat_rates() if self.n else np.zeros((0, K))
+            k = k_unc + rc.sum(axis=0)
+        else:
+            if self._fixed_k is None:
+                self._fixed_k = self.cat_rates().sum(axis=0) if self.n else np.zeros(K)
+            rc = None
+            k = k_unc + self._fixed_k
         em = np.exp(-self.dmu0)
         T = self.F + self.W
         feq = T * em / (1.0 + em)
@@ -230,10 +238,8 @@ class World:
         self.F, self.W = F2, W2
 
         # Each route carries the same affinity at every instant, so free energy is shared by rate.
-        share = rc / k[None, :] if self.n else rc
-        cat_release = share @ released if self.n else np.zeros(0)   # per catalyst
-        if self.grows:
-            gain = c.eta * cat_release
+        if self.grows and self.n:
+            gain = c.eta * ((rc / k[None, :]) @ released)          # per catalyst
         else:
             gain = np.zeros(self.n)
         heat_direct = float(released.sum() - gain.sum())
@@ -269,6 +275,7 @@ class World:
                     self.lock[i] ^= np.int64(1) << np.int64(self.rng.integers(c.n_bits))
             if c.arm == "U":
                 self.key = np.full(self.n, self.lock[0])
+            self._fixed_k = None
 
         self.t += dt
         return dict(
@@ -289,42 +296,67 @@ def fuel_error(led: dict) -> np.ndarray:
     return (led["fuel_in"] - led["fuel_out"]) - (led["fw_after"] - led["fw_before"])
 
 
-def run(cfg: Config, seed: int, t_end: float, t_late: float, rec_every: float = 10.0) -> dict:
-    """Run one world. Returns late-window means and a coarse time series."""
+def run(cfg: Config, seed: int, t_end: float, t_late: float | None = None, rec_every: float = 10.0,
+        windows: list | None = None) -> dict:
+    """Run one world.
+
+    windows: list of (t0, t1) measurement windows. Default: one window [t_late, t_end].
+    The top-level *_late values are from the last window. Every window is also reported.
+    """
+    if windows is None:
+        windows = [(t_late, t_end)]
     w = World(cfg, seed)
     steps = int(round(t_end / cfg.dt))
     rec = max(1, int(round(rec_every / cfg.dt)))
-    late0 = int(round(t_late / cfg.dt))
-    acc = dict(heat=0.0, mix=0.0, released=0.0, reacted=np.zeros(w.K), fed=np.zeros(w.K), n=0.0, k=0)
+    wins = [(int(round(a / cfg.dt)), int(round(b / cfg.dt))) for a, b in windows]
+    blank = lambda: dict(heat=0.0, mix=0.0, released=0.0, reacted=np.zeros(w.K), fed=np.zeros(w.K), n=0.0, k=0)
+    accs = [blank() for _ in wins]
+    snaps = [None] * len(wins)
     cum_heat = cum_mix = 0.0
+    n_min = w.n
+    t_extinct = None
     series = []
-    win = dict(heat=0.0, mix=0.0, released=0.0, n=0.0, k=0)
+    win = blank()
+
+    def snapshot():
+        dist = w.distances()[:, 0] if w.n else np.array([])
+        mdist = popcount(w.mark ^ np.int64(w.marker_target)) if w.n and w.grows else np.array([])
+        return dict(key_dist=float(dist.mean()) if len(dist) else None,
+                    key_dist_min=int(dist.min()) if len(dist) else None,
+                    marker_dist=float(mdist.mean()) if len(mdist) else None)
+
     for s in range(steps):
         led = w.step()
         cum_heat += led["heat"]; cum_mix += led["sigma_mix"]
-        for d in (win,) + ((acc,) if s >= late0 else ()):
-            d["heat"] += led["heat"]; d["mix"] += led["sigma_mix"]
-            d["released"] += led["released"]; d["n"] += led["n"]; d["k"] += 1
-        if s >= late0:
-            acc["reacted"] += led["reacted"]; acc["fed"] += led["fed"]
+        n_min = min(n_min, led["n"])
+        if w.extinct and t_extinct is None:
+            t_extinct = round(w.t, 6)
+        live = [win] + [a for a, (s0, s1) in zip(accs, wins) if s0 <= s < s1]
+        for d in live:
+            d["heat"] += led["heat"]; d["mix"] += led["sigma_mix"]; d["released"] += led["released"]
+            d["reacted"] += led["reacted"]; d["fed"] += led["fed"]; d["n"] += led["n"]; d["k"] += 1
+        for j, (s0, s1) in enumerate(wins):
+            if s + 1 == s1:
+                snaps[j] = snapshot()
         if (s + 1) % rec == 0:
-            dist = w.distances()[:, 0] if w.n else np.array([])
-            mdist = popcount(w.mark ^ np.int64(w.marker_target)) if w.n and w.grows else np.array([])
             span = win["k"] * cfg.dt
-            series.append(dict(
-                t=round(w.t, 6), sigma=(win["heat"] + win["mix"]) / span,
-                sigma_rxn=win["heat"] / span, released=win["released"] / span,
-                n=win["n"] / win["k"], stored=w.stored(),
-                key_dist=float(dist.mean()) if len(dist) else None,
-                key_dist_min=int(dist.min()) if len(dist) else None,
-                marker_dist=float(mdist.mean()) if len(mdist) else None,
-            ))
-            win = dict(heat=0.0, mix=0.0, released=0.0, n=0.0, k=0)
-    span = acc["k"] * cfg.dt
+            series.append(dict(t=round(w.t, 6), sigma=(win["heat"] + win["mix"]) / span,
+                               sigma_rxn=win["heat"] / span, released=win["released"] / span,
+                               n=win["n"] / win["k"], stored=w.stored(), **snapshot()))
+            win = blank()
+
+    def summary(a, snap, ab):
+        span = a["k"] * cfg.dt
+        return dict(t0=ab[0], t1=ab[1], sigma=(a["heat"] + a["mix"]) / span, sigma_rxn=a["heat"] / span,
+                    sigma_mix=a["mix"] / span, released=a["released"] / span,
+                    spent=(a["reacted"] / a["fed"]).tolist(), n=a["n"] / a["k"], **(snap or {}))
+
+    out_w = [summary(a, sn, ab) for a, sn, ab in zip(accs, snaps, windows)]
+    last = out_w[-1]
     return dict(
-        config=asdict(cfg), seed=seed,
-        sigma_late=(acc["heat"] + acc["mix"]) / span, sigma_rxn_late=acc["heat"] / span,
-        sigma_mix_late=acc["mix"] / span, released_late=acc["released"] / span,
-        spent_late=(acc["reacted"] / acc["fed"]).tolist(), n_late=acc["n"] / acc["k"],
-        cum_sigma=cum_heat + cum_mix, cum_heat=cum_heat, stored_end=w.stored(), extinct=w.extinct, series=series,
+        config=asdict(cfg), seed=seed, windows=out_w,
+        sigma_late=last["sigma"], sigma_rxn_late=last["sigma_rxn"], sigma_mix_late=last["sigma_mix"],
+        released_late=last["released"], spent_late=last["spent"], n_late=last["n"],
+        cum_sigma=cum_heat + cum_mix, cum_heat=cum_heat, stored_end=w.stored(),
+        extinct=w.extinct, t_extinct=t_extinct, n_min=n_min, series=series,
     )
