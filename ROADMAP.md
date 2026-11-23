@@ -11,7 +11,11 @@
 - Construction, reproduction, maintenance, mutation and adaptive-search cost records.
 - Automated tests, paired bootstrap summaries, compressed trajectories and plots.
 
-## Next: scientific validation
+## Next: scientific validation (blocking; v0.1 findings are provisional)
+
+The v0.1 audit found omitted reproduction expenditure, an uncoupled reproductive energy proxy, incomplete binary-mixture exchange entropy and a control-matching ambiguity. The prior energetic-cost comparison is invalid until these are corrected. See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md) and the proposed [MODEL_V02_DESIGN.md](MODEL_V02_DESIGN.md).
+
+
 
 1. Derive a full multicomponent fuel/waste/reservoir ledger from explicit stoichiometry and chemical potentials.
 2. Eliminate clipping in production runs and demonstrate conservation residuals across the complete parameter grid.

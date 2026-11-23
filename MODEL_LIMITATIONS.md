@@ -35,3 +35,10 @@ Consequently, `sigma_total` in v0.1 means the sum of the two implemented terms, 
 - Freeze the parameter ranges, primary outcomes and falsifiers before confirmatory runs.
 
 The long-horizon implementation integrates 100 residence-time units. Environmental drift uses an independent random-number stream so paired arms experience the same target history. The integration scheme remains explicit Euler and the horizon is not evidence of asymptotic stationarity. A passing unit-test suite is not a substitute for these scientific validation gates.
+
+
+## Audit update — 2026-11-23
+
+A follow-up implementation audit identified three blocking defects in v0.1: reproduction expenditure is omitted from the reported investment total; the reproductive energy proxy uses the constant standard-affinity parameter rather than the state-dependent reaction affinity and is not linked to an explicit work-coupling reaction; and the ideal-mixture exchange entropy omits the complementary waste species. In addition, Dmatched is matched only at initialization and can subsequently grow. These findings supersede any interpretation of v0.1 as an equal-total-investment or complete-entropy test. See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md).
+
+A further audit of the published trajectories found that 80% of D and 80% of L runs reach at least 400 of the 500 allowed catalysts after the first step; all are at or above 400 after the second. All D/L runs eventually touch the cap, with median first-hit steps of 27 for D and 24 for L. This indicates that the configured costs do not impose a sustained resource-limited growth regime over most of the grid. See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md).

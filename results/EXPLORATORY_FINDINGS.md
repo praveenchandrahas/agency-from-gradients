@@ -1,3 +1,8 @@
+> **Additional trajectory qualification:** A further trajectory audit found that D/L populations reach the 500-catalyst cap within one or two integration steps in nearly all runs. There are 200 trajectories per arm (400 D/L trajectories total). Across all barriers and designs, 80% of D and 80% of L trajectories are already at or above 400 catalysts after the first step; all D and L trajectories are at or above 400 after the second step. At the highest barrier (12 kT), 100% of D and 80% of L runs are at or above 400 after the second step. This means the configured reproductive costs do not produce a meaningful resource-limited growth regime over most of the tested grid. The late-window results therefore describe near-capacity populations, not persistence under a tight energy budget. This is an additional reason not to interpret v0.1 as a test of energy-limited evolutionary access.
+
+
+> **Validation status (2026-11-23):** A subsequent code audit found that reproduction expenditure is not accumulated in the investment ledger, the reproductive energy proxy is not the actual reaction free-energy release and is not coupled through an explicit work-producing reaction, and the fuel-exchange entropy omits the complementary waste species. Dmatched is also only initial-abundance-matched, not population-trajectory-matched. Therefore the throughput outputs remain exploratory model results, but the energetic-cost and complete-entropy interpretations are not validated. See [VALIDATION_AUDIT.md](../VALIDATION_AUDIT.md). Do not cite this report as evidence of an advantage at comparable total energetic investment until a corrected model passes the validation gates.
+
 # Exploratory findings — long-horizon 16-bit run
 
 **Run:** GitHub Actions run 45132922728  

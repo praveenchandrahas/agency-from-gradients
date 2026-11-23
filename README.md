@@ -44,7 +44,7 @@ The current runner executes E01 (static locks), E03 (slow, medium and fast drift
 1. A positive result supports only a conditional mechanism in this model.
 2. The bit-string key/lock landscape is a modelling choice; sensitivity to geometry is required.
 3. The population algorithm assumes replicators already exist. It does not model abiogenesis.
-4. The energy and entropy accounting is provisional and requires analytic and numerical validation before confirmatory claims.
+4. A code audit identified blocking issues in the energy ledger, work coupling and reservoir-exchange entropy. The v0.1 energetic-cost comparisons are invalid pending redesign; see [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md).
 5. Initial runs are exploratory; no confirmatory preregistration has yet been frozen.
 6. The model does not include complete reactor engineering costs, spatial transport or finite-molecule stochastic extinction.
 
