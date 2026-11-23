@@ -44,6 +44,7 @@ def run_suite(out: Path, seeds: int = 20, steps: int = 1200) -> list[dict]:
                             "late_throughput": result["mean_throughput_late"],
                             "cumulative_sigma": result["cumulative_sigma"],
                             "cumulative_fuel_spent": result["cumulative_fuel_spent"],
+                            "fuel_balance_residual": result["fuel_balance_residual"],
                             "final_population": result["final_population"],
                             "mean_population_late": result["mean_population_late"],
                             "late_key_distance": result["late_key_distance"],
