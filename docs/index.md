@@ -27,6 +27,9 @@ Remove scarcity, heredity or mortality, and big-deposit access went *up*. Not do
 
 Most of the later experiments, built to find out why, came back negative too. I report them all. A negative result you can trust is worth more than a positive one you can't.
 
+!!! tip "Where the hypothesis stands now"
+    One page reads every result so far against the hypothesis, link by link: [where the hypothesis stands](standing.md). In short: the claim that life drains energy nothing else can failed when tested directly (S15). What survives is narrower: only life *improves* how it drains a gradient.
+
 ## What each experiment found
 
 | | Question | Verdict |

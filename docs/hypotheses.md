@@ -66,7 +66,9 @@ These came after the main run. That changes their status.
 | **S9** | Does a learned private reward produce agency? | H9a to H9d | None supported |
 | **S10** | Does dissipative adaptation, with no selection, climb the ladder? | H10a to H10e | H10a to c supported by construction, H10d and H10e not |
 | **S11** | What best raises the entropy of a lifeless universe? | H11a to H11h | Mostly supported. H11b and H11d not |
-| **S14** | With no agents, genomes or fitness, does a driven soup start copying itself? | H14a to H14d | H14a and H14b not supported. H14c and H14d not run |
+| **S14** | With no agents, genomes or fitness, does a driven soup start copying itself? | H14a to H14d | H14a and H14b not supported. H14c and H14d not run. A later re-check corrected one descriptive number: with mixing counted, the copier out-dissipates the mineral by about 3% |
+| **Starlight** | In a minimal world, does persistence selection raise capture, and does behaviour evolve only when needed? | P1a to P1d, P2a to P2e, P3a and P3b, in `starlight/PREREGISTRATION.md` | 11 of 11 supported. Its lifeless world was a mirror, so it could not test the claim underneath |
+| **S15** | In cold, locked gradients, does life open the lock when nothing else does? | H1, H2a to H2e, in `locks/PREREGISTRATION.md` | H1 and H2a to H2d supported. H2e not: a fire and a large mineral bed opened the lock too |
 
 ## Things I chose not to claim
 

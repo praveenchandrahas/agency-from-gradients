@@ -96,6 +96,8 @@ Before building anything, what has been done?
 
 That last finding cuts against my thesis. I have been saying life is a better entropy engine. Their result says a driven system can just as well settle where it dissipates less.
 
+*Later:* [S15](results/s15.md) tested the stronger form directly. Life was the best engine at the cold end, but not the only one. A fire and a large mineral bed opened the same lock. See [where the hypothesis stands](standing.md).
+
 Three pieces, then. I have not found work that joins them: copying that arises unaided, in a soup where every step pays an energy bill. I have not searched hard enough to say it does not exist.
 
 ## The decision

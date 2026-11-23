@@ -28,6 +28,9 @@ Things that move, choose, repair themselves and make copies.
 
 Step four is the hypothesis. The first three are the story that motivates it. None of them is proven here.
 
+!!! note "Since this was written"
+    Later experiments tested pieces of steps one to three. Some held and some did not. Step one holds only in a weaker form, and the stronger claim underneath step three, that life drains energy nothing else can, failed when tested directly. See [where the hypothesis stands](standing.md).
+
 ## The five conditions
 
 If the argument is right, five ingredients should be load-bearing:

@@ -11,6 +11,8 @@ A from-scratch test of one chain of reasoning.
 Links 1 and 2 are assumed. Links 3 and 4 are tested. Link 5 is tested against its rival:
 that entropy production is a side effect of selection for persistence, and not the thing selected.
 
+> **Since then.** Later experiments changed several of these links. Link 1 is wrong as written: most free energy comes from gravity and fusion, and starlight is an unlocked gradient. Link 5 was rejected as a cause. And the claim underneath link 2, that life drains energy nothing else can, failed when tested directly in S15. See [`docs/standing.md`](../docs/standing.md) for every link.
+
 ## The world in six lines
 
 - A ring of 256 sites. Four patches of light fall on it.
