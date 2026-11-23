@@ -52,6 +52,7 @@ def run_suite(out: Path, seeds: int = 20, steps: int = 1200) -> list[dict]:
                             "reproduction_energy": result["cumulative_reproduction_energy"],
                             "maintenance_energy": result["cumulative_maintenance_energy"],
                             "adaptive_search_cost": result["cumulative_adaptive_cost"],
+                            "mutation_energy": result["cumulative_mutation_energy"],
                             "target_changes": result["target_changes"],
                         })
     with (out / "replicates.csv").open("w", newline="") as f:
