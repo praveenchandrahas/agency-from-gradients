@@ -177,7 +177,9 @@ What it adds, to be tested:
 
 ## Still open
 
-- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. A revised version 1.1, with the new chain and the Planet follow-ups, is up for review as [pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9) there.
+- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. Version 1.1, with the new chain and the Planet follow-ups, is merged ([pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9)). Version 1.2 credits the prior work below and is up for review as [pull request 10](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/10).
+- **Prior work.** None of the revised hypothesis is original. Smith and Morowitz, Branscomb and colleagues, Pross and Pascal, Lotka, Ulanowicz and Hannon, Kussell and Leibler, and Dyson's "hang-ups" (1971) cover its parts. What this repo adds is matched-control tests with checked accounting. A researcher map, kept outside the repo, tracks who works on what.
+- **Civilizations and the Kardashev link.** Split into *catching* (settled thermodynamics; any cold absorber does it) and *unlocking* (speculative). Four tests are proposed, none run: see [Catching against unlocking](unlocking.md).
 - **Planet** (draft PR #7) is still open. Its results are cited here, and in the paper, from the draft branch.
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
 - **The blog post** "Did starlight make us smart?" now covers the lock world and the revised hypothesis.
@@ -187,3 +189,4 @@ What it adds, to be tested:
 - **H3a.** If life's key does not track a drifting lock better than the fixed arms, the "improvement" reading weakens badly.
 - **An aggregate test.** If a population-level experiment shows heredity raising *total* capture, link 4 recovers.
 - **A fixed-flux test.** If structure raises entropy production under a fixed energy flow too, link 7 is broader than stated.
+- **The lock ladder.** If life opens a lock with no foothold as readily as an investor arm does, the case that civilizations add something distinct, beyond improvement, fails.
