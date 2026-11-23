@@ -34,7 +34,7 @@ class Config:
     mutation_energy_cost: float = 2.0e-9
     reproduction_cost: float = 1.0e-8
     maintenance_cost: float = 1.0e-10
-    energy_storage_efficiency: float = 0.25
+    energy_storage_efficiency: float = 0.0
     steps: int = 1200
     seed: int = 1
     landscape: str = "smooth"  # smooth | rugged
@@ -54,6 +54,8 @@ class Config:
             raise ValueError("catalytic_gain and mismatch_scale must be positive")
         if self.reproduction_cost <= 0 or self.maintenance_cost < 0:
             raise ValueError("reproduction cost must be positive and maintenance non-negative")
+        if self.energy_storage_efficiency != 0:
+            raise ValueError("energy storage coupling is not implemented in v0.1; set it to zero")
         if self.landscape not in ("smooth", "rugged"):
             raise ValueError("landscape must be 'smooth' or 'rugged'")
 
@@ -144,6 +146,8 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
     fuel = float(cfg.fuel_feed)
     cumulative_sigma = cumulative_reaction = cumulative_exchange = 0.0
     cumulative_spent = 0.0
+    initial_fuel = fuel
+    cumulative_feed_exchange = 0.0
     stored_energy = 0.0
     cumulative_reproduction_energy = 0.0
     cumulative_maintenance_energy = 0.0
@@ -160,11 +164,13 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             targets[lock, bit] = 1 - targets[lock, bit]
             target_changes += 1
 
+        fuel_before = fuel
         fuel, fluxes, sigma_rxn, sigma_mix = _reaction_step(
             fuel, population, targets, barriers, cfg
         )
         sigma = sigma_rxn + sigma_mix
         dt = 1.0 / cfg.steps
+        cumulative_feed_exchange += cfg.fuel_outflow * (cfg.fuel_feed - fuel_before) * dt
         cumulative_reaction += sigma_rxn * dt
         cumulative_exchange += sigma_mix * dt
         cumulative_sigma += sigma * dt
@@ -211,7 +217,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
         elif arm == "A" and len(population):
             # Non-replicating adaptive search: replace a small fraction with random
             # candidates; charge the declared search budget from usable energy.
-            trials = max(1, int(cfg.adaptive_budget * len(population)))
+            trials = max(1, int(0.05 * len(population)))
             candidate = rng.integers(0, 2, size=(trials, cfg.key_bits), dtype=np.int8)
             current_score = _fitness(population, targets, cfg).sum(axis=1)
             cand_score = _fitness(candidate, targets, cfg).sum(axis=1)
@@ -250,6 +256,8 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
         "cumulative_sigma_reaction": cumulative_reaction,
         "cumulative_sigma_exchange": cumulative_exchange,
         "cumulative_fuel_spent": cumulative_spent,
+        "cumulative_feed_exchange": cumulative_feed_exchange,
+        "fuel_balance_residual": fuel - initial_fuel - cumulative_feed_exchange + cumulative_spent,
         "stored_energy_final": stored_energy,
         "cumulative_reproduction_energy": cumulative_reproduction_energy,
         "cumulative_maintenance_energy": cumulative_maintenance_energy,
