@@ -65,7 +65,7 @@ This is the claim underneath everything. It was tested directly in [S15](results
 
 Life did best. But a fire and a big enough rock surface opened the lock too.
 
-[S16](results/s16.md) v0.2 points the same way, in a separate engine. Under drift, a fixed library with the same catalyst material converted about 6.6% more fuel than the evolving arm, with about 20% less work. It is exploratory, and its equal-investment version is not built yet.
+[S16](results/s16.md) v0.2 points the same way, in a separate engine. Under drift, a fixed library with the same catalyst material converted about 6.6% more fuel than the evolving arm, with about 20% less work. It is exploratory, and its equal-investment version has not run yet.
 
 The [S14 re-check](results/s14.md#addendum-2026-11-23-mixing-entropy) points the same way too. With mixing counted, the copier out-dissipates the mineral by about 3%. Better, but not in a different class.
 
@@ -187,7 +187,7 @@ What it adds, to be tested:
 - **Prior work.** None of the revised hypothesis is original. Smith and Morowitz, Branscomb and colleagues, Pross and Pascal, Lotka, Ulanowicz and Hannon, Kussell and Leibler, and Dyson's "hang-ups" (1971) cover its parts. What this repo adds is matched-control tests with checked accounting. A researcher map, kept outside the repo, tracks who works on what.
 - **Civilizations and the Kardashev link.** Split into *catching* (settled thermodynamics; any cold absorber does it) and *unlocking* (speculative). Four tests are proposed, none run: see [Catching against unlocking](unlocking.md).
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
-- **S16 v0.3,** the equal-investment test, is designed and not built. S15's H3a, the drifting lock, runs there.
+- **S16 v0.3.** Its lineage-energy model is merged and tested; the equal-investment experiment is designed but not run. S15's H3a, the drifting lock, runs there.
 - **Repositories folded in.** `evolutionary-gradient-access` is now `gradient-access/` (S16), and `thermodynamic-emergence` is now `chemistry/` (the S14 line). Their old registers are frozen; [Hypotheses and falsifiers](hypotheses.md) is the only one.
 - **The blog post** "Did starlight make us smart?" now covers the lock world and the revised hypothesis.
 
