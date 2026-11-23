@@ -18,6 +18,8 @@ jobs:
       - run: pytest -q
       - name: Run paired-seed exploratory simulations
         run: ega-run --out results/initial-exploratory --seeds 10 --steps 400
+      - name: Plot paired contrasts
+        run: python analysis/plot_results.py results/initial-exploratory
       - uses: actions/upload-artifact@v4
         with:
           name: ega-initial-exploratory-results
