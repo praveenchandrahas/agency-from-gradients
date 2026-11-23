@@ -1,4 +1,4 @@
-name: EGA tests and exploratory simulations
+name: EGA tests and matched-control simulations
 on:
   push:
     branches: [main]
@@ -16,12 +16,12 @@ jobs:
           cache: pip
       - run: python -m pip install -e ".[dev]"
       - run: pytest -q
-      - name: Run paired-seed exploratory simulations
-        run: ega-run --out results/initial-exploratory --seeds 10 --steps 400
+      - name: Run 16-bit paired-seed simulations with matched controls
+        run: ega-run --out results/matched-key16 --seeds 10 --steps 300
       - name: Plot paired contrasts
-        run: python analysis/plot_results.py results/initial-exploratory
+        run: python analysis/plot_results.py results/matched-key16
       - uses: actions/upload-artifact@v4
         with:
-          name: ega-initial-exploratory-results
-          path: results/initial-exploratory/
+          name: ega-matched-key16-results
+          path: results/matched-key16/
           if-no-files-found: error

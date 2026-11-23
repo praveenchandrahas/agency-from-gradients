@@ -4,7 +4,7 @@
 Does cumulative heritable evolution confer an advantage beyond generic adaptive search?
 
 ## Comparison
-L versus A, with matched initial catalyst libraries, environmental information, candidate-generation opportunities and explicit energy/material budgets. A changes a bounded number of catalyst configurations by external replacement; it does not reproduce.
+L versus A and Amatched. Amatched uses the paired L run's late-window catalyst abundance. Both adaptive controls have explicit candidate-evaluation costs; A is not abundance-matched. A changes a bounded number of catalyst configurations by external replacement; it does not reproduce.
 
 ## Essential fairness conditions
 Match cumulative search/variation costs, catalyst abundance, information about the target, evaluation frequency and observation horizon. If these cannot be matched, report the comparison as descriptive only.

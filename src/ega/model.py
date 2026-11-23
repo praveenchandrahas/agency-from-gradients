@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-ARMS = ("N", "M", "D", "L", "U", "A")
+ARMS = ("N", "M", "D", "L", "U", "A", "Mmatched", "Amatched", "Umatched")
 
 
 @dataclass(frozen=True)
@@ -21,7 +21,7 @@ class Config:
     barriers: tuple[float, ...] = (0.0, 4.0, 8.0, 12.0)
     drift_rate: float = 0.0
     locks: int = 1
-    key_bits: int = 8
+    key_bits: int = 16
     initial_catalysts: int = 80
     max_catalysts: int = 500
     fuel_feed: float = 1.0
@@ -129,23 +129,31 @@ def _mutate(keys: np.ndarray, rate: float, rng: np.random.Generator) -> np.ndarr
     return out
 
 
-def simulate(arm: str, cfg: Config) -> dict[str, Any]:
+def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) -> dict[str, Any]:
     """Simulate one arm. L/D share the same seeded starting key library by seed."""
     cfg.validate()
     if arm not in ARMS:
         raise ValueError(f"arm must be one of {ARMS}")
+    matched_arms = ("Mmatched", "Amatched", "Umatched")
+    if arm in matched_arms and (fixed_population_size is None or fixed_population_size < 1
+                                or fixed_population_size > cfg.max_catalysts):
+        raise ValueError(f"{arm} requires fixed_population_size in [1, max_catalysts]")
+    if arm not in matched_arms and fixed_population_size is not None:
+        raise ValueError("fixed_population_size is only valid for matched control arms")
+    initial_count = fixed_population_size if arm in matched_arms else cfg.initial_catalysts
     rng = np.random.default_rng(cfg.seed)
     target_rng = np.random.default_rng(cfg.seed + 900_001)
     targets = _targets(target_rng, cfg.locks, cfg.key_bits)
-    keys = rng.integers(0, 2, size=(cfg.initial_catalysts, cfg.key_bits), dtype=np.int8)
-    if arm == "U":
-        repeats = int(math.ceil(cfg.initial_catalysts / cfg.locks))
-        keys = np.tile(targets, (repeats, 1))[:cfg.initial_catalysts].copy()
-    if arm in ("N", "M"):
-        population = np.empty((0, cfg.key_bits), dtype=np.int8) if arm == "N" else keys.copy()
+    keys = rng.integers(0, 2, size=(initial_count, cfg.key_bits), dtype=np.int8)
+    if arm in ("U", "Umatched"):
+        repeats = int(math.ceil(initial_count / cfg.locks))
+        keys = np.tile(targets, (repeats, 1))[:initial_count].copy()
+    if arm == "N":
+        population = np.empty((0, cfg.key_bits), dtype=np.int8)
     else:
         population = keys.copy()
 
+    initial_population_actual = len(population)
     barriers = np.resize(np.asarray(cfg.barriers, dtype=float), cfg.locks)
     fuel = float(cfg.fuel_feed)
     cumulative_sigma = cumulative_reaction = cumulative_exchange = 0.0
@@ -218,7 +226,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             if deaths:
                 keep = rng.choice(len(population), len(population) - deaths, replace=False)
                 population = population[keep]
-        elif arm == "A" and len(population):
+        elif arm in ("A", "Amatched") and len(population):
             # Non-replicating adaptive search: replace a small fraction with random
             # candidates; charge the declared search budget from usable energy.
             trials = max(1, int(0.05 * len(population)))
@@ -255,7 +263,8 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
     mean_access = float(np.mean([r["throughput"] for r in tail]))
     return {
         "arm": arm, "seed": cfg.seed, "config": asdict(cfg),
-        "targets": targets.tolist(), "final_population": int(len(population)),
+        "targets": targets.tolist(), "initial_population": int(initial_population_actual),
+        "final_population": int(len(population)),
         "mean_population_late": mean_pop, "mean_sigma_late": mean_sigma,
         "mean_throughput_late": mean_access,
         "cumulative_sigma": cumulative_sigma,

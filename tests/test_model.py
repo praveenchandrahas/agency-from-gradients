@@ -9,7 +9,22 @@ def test_zero_barrier_removes_catalytic_advantage():
     cfg = Config(barriers=(0.0,), steps=100, seed=7)
     values = [simulate(arm, cfg)["mean_throughput_late"]
               for arm in ("N", "M", "D", "L", "U", "A")]
+    values.extend(simulate(arm, cfg, fixed_population_size=100)["mean_throughput_late"]
+                  for arm in ("Mmatched", "Amatched", "Umatched"))
     assert max(values) - min(values) < 1e-10
+
+
+def test_matched_controls_use_requested_fixed_population():
+    cfg = Config(steps=10, seed=5)
+    result = simulate("Mmatched", cfg, fixed_population_size=137)
+    assert result["initial_population"] == 137
+    assert result["final_population"] == 137
+    with pytest.raises(ValueError):
+        simulate("Mmatched", cfg)
+
+
+def test_default_key_length_is_large_enough_for_nontrivial_search():
+    assert Config().key_bits == 16
 
 
 def test_catalysts_do_not_change_equilibrium_composition():
@@ -44,7 +59,7 @@ def test_d_and_l_share_initial_targets_and_seed():
 
 def test_entropy_is_not_used_in_reproductive_rule():
     source = inspect.getsource(simulate)
-    reproductive_section = source.split('if arm in ("D", "L")')[1].split('elif arm == "A"')[0]
+    reproductive_section = source.split('if arm in ("D", "L")')[1].split('elif arm in ("A", "Amatched")')[0]
     assert "sigma" not in reproductive_section.lower()
 
 

@@ -16,7 +16,7 @@ def main():
         for metric, label in (("late_throughput", "Late-window net throughput"),
                               ("cumulative_sigma", "Cumulative implemented entropy")):
             fig, ax = plt.subplots(figsize=(8, 5))
-            for comparator in ("M", "D", "A"):
+            for comparator in ("Mmatched", "D", "Amatched"):
                 means, lows, highs = [], [], []
                 for barrier in ("0.0", "4.0", "8.0", "12.0"):
                     item = data[design][barrier][f"L_minus_{comparator}"][metric]
