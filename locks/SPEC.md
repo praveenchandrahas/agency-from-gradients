@@ -1,7 +1,8 @@
 # S15, Locks: does life open gradients that nothing else opens?
 
 > **Status: SPEC. Not a preregistration.**
-> This file fixes the question, the definitions, the hypotheses and the falsifiers. It contains no code and no results.
+> This file fixes the question, the definitions, the hypotheses and the falsifiers. It contains no results.
+> The engine and its gates exist (`locks/world.py`, `tests/test_gates.py`, 31 tests passing). Only the controls have been piloted.
 > Numbers marked **TBD** are set in `locks/PREREGISTRATION.md`, after pilots on the **controls only**, and frozen before any confirmatory run.
 
 ## The core hypothesis
@@ -72,7 +73,12 @@ The other terms:
 - **Locked gradient.** Free energy is available, but no fast passive route releases it. Wood sits in oxygen for centuries. Hydrogen and CO₂ coexist.
 - **Barrier, B.** How locked a gradient is: the activation barrier in units of kT.
 - **Cold.** B is many times kT. Thermal motion alone almost never opens the lock.
-- **Entropy production, σ.** From reaction fluxes: the sum over reactions of (J₊ − J₋) ln(J₊/J₋), in k_B per unit time. Checked against the free-energy books, as in S14.
+- **Entropy production, σ.** In k_B per residence time. Two parts, and the headline is their sum:
+  - *Reactions:* the sum over reactions of (J₊ − J₋) ln(J₊/J₋). Checked against the free-energy books, as in S14.
+  - *Mixing:* fuel arriving at feed strength and mixing into a reactor where it has been spent. Rate: dilution × Σ [c_in ln(c_in/c) − c_in + c]. Never negative.
+  - In steady state the sum equals free energy carried in minus free energy carried out. That is gate G4b.
+
+Why both parts? The control pilot showed it. Counted alone, reactions *penalise* a good catalyst. It drives the fuel toward equilibrium, so each reaction releases less. The designer key with 500 catalysts spent 98% of the fuel and scored lower on reactions alone than with 100 catalysts at 91%. The missing entropy is in the mixing. S14 counted reactions only. Its copier-against-mineral comparison may carry the same bias.
 - **The counterfactual.** Same world, same inflow, same barrier, with the structure absent. Every claim is a difference against it.
 
 Why the counterfactual matters: the second law already says any ordered structure exports at least as much entropy as it holds off. That part is guaranteed. The claim worth testing is about the **rate**, against the same world without the structure.
@@ -102,16 +108,22 @@ Each arm adds one thing to the one before.
 | Arm | What it is | What it adds |
 |---|---|---|
 | **N** | No catalysts. Only the uncatalysed route | The passive counterfactual |
-| **M** | Fixed catalysts, random keys, fixed abundance. Abundance does not depend on the flux | A natural mineral |
-| **D** | Catalysts that grow on the free energy their own reaction releases, and decay. Keys fixed, copied without error | Self-sustaining dissipation. A fire |
+| **M** | Fixed catalysts, each with its own random key, fixed number. They store nothing and do not grow | A natural mineral |
+| **D** | Catalysts that grow on the free energy their own reaction releases, and decay. Keys copied without error | Self-sustaining dissipation. A fire |
 | **L** | As D, but keys are inherited with mutation | Heritable variation. Life |
-| **U** | The perfect key at the highest allowed abundance | A designer bound. Not a competitor |
+| **U** | Fixed catalysts carrying the lock's own key, re-keyed if the lock drifts | A designer bound. Not a competitor |
+
+D and L of the same seed start from **the same library** of random keys, and see the same lock. Selection can sort that library in both. Only L makes new keys.
 
 D and L differ in one thing only: variation. M and D differ in one thing only: whether the catalyst feeds on the flow.
 
-**Matching.** M's abundance is matched to L's late-window mean catalyst mass, at the same B. Then the M against L contrast is about keys, not quantity. (The S14 mineral was not matched. That is why its contrast meant nothing.)
+**Matching.** M's and U's numbers are matched to L's late-window mean catalyst count, at the same B and drift. Then M against L is about keys, not quantity. And U is the best that number of catalysts could ever do. (The S14 mineral was not matched. That is why its contrast meant nothing.)
 
-**Energy books for D and L.** Growth is paid from the free energy released, with efficiency below 1 (TBD). Upkeep costs free energy. A dead catalyst's stored free energy is dissipated and counted. Stored free energy is tracked separately from what is dissipated.
+**A secondary measure: the equivalent library.** How many random mineral keys would it take to match life? Sweep M's number upward until it equals L. A small number says life adds little a varied rock surface could not. A huge one says life is doing what no plausible mineral bed does.
+
+**Energy books for D and L.** Each route through a lock carries the same affinity at every instant, so the free energy released is shared among routes in proportion to their rate. A growing catalyst stores a fraction η < 1 of its share (TBD). The rest becomes heat at once. Upkeep costs free energy. A dead catalyst's stored free energy becomes heat. Stored free energy is tracked separately from what is dissipated.
+
+This coupling is coarse. Storing energy does not change the reaction's kinetics, as it would in real metabolism. The second law still holds: a catalyst can never store more than its share of the free energy released.
 
 **Extinct worlds** keep running. They revert to arm N, with the leak still producing entropy. So an extinct world scores the passive baseline, not zero. That fixes Starlight's mirror problem.
 
@@ -126,7 +138,7 @@ D and L differ in one thing only: variation. M and D differ in one thing only: w
 
 I have to say this before any result.
 
-- **More catalysis means more flux, and more flux means more entropy.** That is bookkeeping. So H1 and H2d are checks, not findings.
+- **More catalysis means more fuel spent, and with mixing counted, more fuel spent means more entropy.** Total σ rises with fuel spent until the fuel reaches equilibrium. So in this model, "produces more entropy" and "spends more fuel" are close to the same thing. That is bookkeeping, like capture in Starlight. H1 and H2d are checks, not findings.
 - **In a static world, evolution can at most match the best fixed key.** It also pays for its mutations. So "L matches U" is the ceiling, not a failure.
 - **The key–lock geometry is my choice.** How hard the search is follows from *n* and from how fast speed-up falls with distance. Those set the results. Sensitivity to both is reported.
 - **Copying is given.** Where the first copier comes from is not asked. S14 asked, and got a structural null.
@@ -207,13 +219,35 @@ It is **weakened**, not failed, if H2 holds in static worlds but H3a fails. Then
 - 20 seeds per cell (0 to 19). 95% bootstrap intervals on seed means, 10,000 resamples.
 - Pilots on seeds 1000 and above, **controls only** (N, U, and the G6 controls). L, M and D are not run at confirmatory settings until the preregistration is frozen. This is S14's blind-tuning rule.
 
-## Decisions for the author before preregistration
+## Decisions settled (2026-11-23)
 
-1. **Engine.** A new coarse engine in `locks/` (recommended), or an extension of the S14 soup.
-2. **Matching rule for M.** Match to L's late catalyst mass (recommended), or to a fixed budget shared by all arms.
-3. **Key geometry.** Bit strings with Hamming distance (recommended), or a random catalysis table as in S14.
-4. **Arm D in the first run**, or deferred to a follow-up. Without D, H2a can only beat a mineral, not a fire.
-5. **Numbering.** S15 is used here. There is no S13 (see `docs/before-life.md`).
+Decided by the author:
+
+1. **Engine.** A new coarse engine in `locks/`.
+2. **Matching rule for M.** Match to L's late catalyst count. U is matched the same way.
+3. **Key geometry.** Bit strings with Hamming distance.
+4. **Arm D is in the first run.** Without it, H2a could only beat a mineral, not a fire.
+5. **Numbering.** S15, open to correction later.
+
+Settled while building, and open to the author's veto:
+
+6. **The headline σ counts reactions and mixing.** Reactions alone are reported too. The reason is under Definitions.
+
+## Engine status and pilot notes
+
+- **Gates G1 to G6 pass**, plus G4b, the steady-state free-energy balance. 31 tests. Test seeds are 1000 and up.
+- **Time-step bias.** Flow and reaction are split into substeps. At dt = 0.01, total σ is within 0.05% of its value at a quarter of that step. The balance error shrinks in proportion to dt, as splitting error should.
+- **Speed.** About 0.5 s per 100 residence times for a living world of about 500 catalysts.
+- **Control pilot** (`experiments/pilot_controls.py`, seeds 1000 to 1002, 100 residence times, default parameters). Total σ, in k_B per residence time:
+
+| B (kT) | 0 | 2 | 4 | 6 | 8 | 10 | 12 | 16 |
+|---|---|---|---|---|---|---|---|---|
+| N, passive | 1192 | 1160 | 899 | 333 | 65 | 10 | 1.4 | 0.0 |
+| U, 100 perfect keys | 1192 | 1178 | 1153 | 1146 | 1144 | 1144 | 1144 | 1144 |
+| U, 500 perfect keys | 1193 | 1190 | 1189 | 1188 | 1188 | 1188 | 1188 | 1188 |
+
+  The dial has room. Passive dissipation falls from full to nothing between B = 2 and B = 12. A designer key stays near full throughout. At B = 0 every arm is the same, as H2c needs.
+- **A leak in my blinding, recorded.** While timing the engine, I ran one living world (arm L, seed 1000, B = 12, 100 residence times) and looked at its population size: about 540. Nothing else. It changed no parameter.
 
 ## Reading list, to sharpen the falsifiers
 
