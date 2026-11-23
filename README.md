@@ -37,7 +37,7 @@ pytest -q
 ega-run --out results/long-horizon-key16 --seeds 10 --steps 300 --duration 100
 ```
 
-The current runner executes E01 (static locks), E03 (slow, medium and fast drifting locks) and E04 (multiple locks), using 16-bit keys over 100 residence-time units. It includes matched-size Mmatched, Dmatched, Amatched and Umatched controls, with each fixed control matched to the paired L run's late-window population. A is an oracle-assisted adaptive-search control. Initial construction, reproduction, maintenance, mutation and search costs are recorded separately; cumulative dissipation is reported from the same trajectories.
+The current runner executes E01 (static locks), E03 (slow, medium and fast drifting locks) and E04 (multiple locks), using 16-bit keys over 100 residence-time units. It includes matched-size Mmatched, Dmatched, Amatched and Umatched controls, with matched controls initialized at the paired L run's late-window population. Dmatched can reproduce faithfully without new mutation. A is an oracle-assisted adaptive-search control. Initial construction, reproduction, maintenance, mutation and search costs are recorded separately; cumulative dissipation is reported from the same trajectories.
 
 ## Interpretation limits
 
@@ -56,4 +56,4 @@ The current runner executes E01 (static locks), E03 (slow, medium and fast drift
 - Report extinction and negative outcomes.
 - Treat controls as causal comparisons, not decorative baselines.
 
-See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md) and [MODEL_LIMITATIONS.md](MODEL_LIMITATIONS.md).
+See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md), [MODEL_LIMITATIONS.md](MODEL_LIMITATIONS.md) and [exploratory findings](results/EXPLORATORY_FINDINGS.md).
