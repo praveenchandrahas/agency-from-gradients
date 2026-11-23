@@ -132,7 +132,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
         population = keys.copy()
 
     barriers = np.resize(np.asarray(cfg.barriers, dtype=float), cfg.locks)
-    fuel = 1.0
+    fuel = float(cfg.fuel_feed)
     cumulative_sigma = cumulative_reaction = cumulative_exchange = 0.0
     cumulative_spent = 0.0
     stored_energy = 0.0
