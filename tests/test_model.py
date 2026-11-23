@@ -48,6 +48,18 @@ def test_entropy_is_not_used_in_reproductive_rule():
     assert "sigma" not in reproductive_section.lower()
 
 
+def test_fuel_ledger_closes_without_boundary_clipping():
+    result = simulate("N", Config(barriers=(4.0,), steps=200, seed=3))
+    assert abs(result["fuel_balance_residual"]) < 1e-9
+
+
+def test_time_step_refinement_is_stable_for_passive_control():
+    coarse = simulate("N", Config(barriers=(8.0,), steps=200, seed=3))
+    fine = simulate("N", Config(barriers=(8.0,), steps=400, seed=3))
+    scale = max(abs(fine["cumulative_sigma"]), 1e-12)
+    assert abs(coarse["cumulative_sigma"] - fine["cumulative_sigma"]) / scale < 0.02
+
+
 def test_reproducible_seed():
     cfg = Config(steps=20, seed=42)
     assert simulate("L", cfg)["cumulative_sigma"] == simulate("L", cfg)["cumulative_sigma"]
