@@ -20,6 +20,8 @@ The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md).
 
 What came next is in [Why the next experiment starts before life](before-life.md). S14 is preregistered in [`PREREGISTRATION_S14.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). It was frozen on `main` before its confirmatory run. [The result](results/s14.md) is a null.
 
+S15 goes underneath all of these. It tests the core claim directly: in cold, locked gradients, does life open the lock when nothing else does? It is preregistered in [`locks/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/locks/PREREGISTRATION.md), frozen on `main` before its run. The plain-language version is [Locks (S15)](locks.md). [The result](results/s15.md).
+
 ## The protocol
 
 - **Confirmatory seeds:** 0 to 29, 20,000 steps, default configuration.

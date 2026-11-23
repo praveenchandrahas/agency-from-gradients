@@ -34,7 +34,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Confirmatory run done** (200 chemistries): **H14a and H14b not supported; H14c and H14d not run.** A closed catalytic set was structurally possible in 0 of 200 chemistries, so the dynamics were never tested. All gates passed. See below. There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
 | Starlight: a from-scratch minimal model of the hypothesis chain (capture, behaviour, furnace control). Separate engine in `starlight/` | **Confirmatory run done** (20 seeds per cell): 11 of 11 preregistered predictions supported. Entropy itself was not selected: a heritable furnace only drifted when free and was purged when costly. See `starlight/RESULTS.md` |
-| S15, Locks: does life open cold, locked gradients that passive and non-living dissipative structures cannot? The core hypothesis, tested against a passive counterfactual. Spec in [`locks/SPEC.md`](locks/SPEC.md); engine in `locks/` | **Preregistered** in [`locks/PREREGISTRATION.md`](locks/PREREGISTRATION.md) (frozen 2026-11-23). Confirmatory run on GitHub Actions |
+| S15, Locks: does life open cold, locked gradients that passive and non-living dissipative structures cannot? The core hypothesis, tested against a passive counterfactual. Spec in [`locks/SPEC.md`](locks/SPEC.md); engine in `locks/` | **Confirmatory run done** (20 seeds per cell, two key lengths, eight barriers). Life beat the mineral and the fire at every cold barrier, and its lead grew with the barrier. But **"nothing else does" failed**: a fire held the lock at 78% of the designer level (key length 24), and a mineral bed 100x larger matched life. Only life improved its key. See `locks/RESULTS.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
 
@@ -292,6 +292,16 @@ PREREGISTRATION.md   H1-H5
 PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRATION_S9.md, PREREGISTRATION_S10.md, PREREGISTRATION_S11.md
 PREREGISTRATION_S14.md   S14, frozen before its confirmatory run
 ```
+
+## S15: Locks. Does life open the lock when nothing else does?
+
+Preregistered in [`locks/PREREGISTRATION.md`](locks/PREREGISTRATION.md), frozen on `main` before the run; design in [`locks/SPEC.md`](locks/SPEC.md); generated report in [`locks/RESULTS.md`](locks/RESULTS.md); plain-language reading in [`docs/results/s15.md`](docs/results/s15.md); raw runs in `s15/45129057522/` on the `ci-results` branch. A flow reactor where fuel can only be spent through a lock with barrier B. Five arms: passive (N), matched random mineral (M), fire with heritable but fixed keys (D), life with mutating keys (L), designer (U). Entropy production counts reactions plus mixing, and is never used by the dynamics.
+
+- **Gates pass**, including a steady-state free-energy balance. Expectations were written down in advance from arithmetic, and the run matched them closely.
+- **H1, H2a, H2b, H2c, H2d supported** at both key lengths. At B = 16: L − D = +262 [214, 311] (key length 24) and +603 [384, 817] (32).
+- **H2e not supported.** At key length 24 the fire reached 0.78 [0.74, 0.82] of the designer, the mineral 0.24. At 32 the fire was 0.14 [0.06, 0.24], inconclusive, and the mineral stalled at 0.04.
+- **Not preregistered:** the fire only sorts its starting library; life always climbs to the perfect key once it survives; life never survived where the fire died (0 of 20 at key length 32); a mineral bed 100x larger matched life.
+- **Reading:** "nothing else does" fails in this model. What survives: among structures of the same size, only life improves its key. It needs a foothold non-living matter already provides. The drifting lock (H3a) is next.
 
 ## S14: before the replicator (no agents, no genomes, no fitness)
 

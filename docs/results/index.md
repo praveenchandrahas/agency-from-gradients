@@ -2,7 +2,7 @@
 
 ## Read these as a set
 
-Ten experiments. Mostly negative. That is the finding.
+Eleven experiments. Mostly negative. That is the finding.
 
 If you only read one result, read H2 on the [main run page](main.md). It failed, and everything after it is an attempt to understand why, or to ask a related question.
 
@@ -18,6 +18,7 @@ If you only read one result, read H2 on the [main run page](main.md). It failed,
 | [S10](s10.md) | Dissipative adaptation, no selection | 20 per arm | Not supported |
 | [S11](s11.md) | The best entropy raiser in a lifeless universe | 20 parameter draws | A black-hole engineer |
 | [S14](s14.md) | Before the replicator: does a driven soup start copying itself? | 200 chemistries | Not supported. No closed set was even possible |
+| [S15](s15.md) | Locks: in cold, locked gradients, does life open the lock when nothing else does? | 20 per cell | "Nothing else does" fails. Life improves its key; a fire and a 100x mineral bed also open the lock |
 
 S5, Barrow's counter-test, is **not implemented**. S0, the re-analysis of earlier genome trajectories, is implemented against an *assumed* data format and has never run on the real files.
 
@@ -25,6 +26,7 @@ S5, Barrow's counter-test, is **not implemented**. S0, the re-analysis of earlie
 
 Honesty about provenance matters, so here it is.
 
+- **S15:** per-run JSON files, the report and its provenance are on the `ci-results` branch under `s15/`.
 - **S7-v3, S8, S9, S10, S11, S14:** per-run CSVs are on the [`ci-results` branch](https://github.com/praveenchandrahas/agency-from-gradients/tree/ci-results).
 - **S1 to S4 and S6:** those CSVs are **not** in the repo. Reproduce them with the [commands here](../running.md). Seeds 0 to 29 take roughly 30 to 60 minutes per experiment on two cores.
 

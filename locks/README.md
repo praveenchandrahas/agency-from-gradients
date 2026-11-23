@@ -4,7 +4,7 @@ Does life open free-energy gradients that nothing else opens?
 
 A flow reactor with locked gradients. A barrier dial sets how locked they are. Five arms: passive, a natural mineral, a self-sustaining fire with fixed keys, life with heritable keys, and a designer bound. Entropy production is measured from the free-energy books, never rewarded.
 
-**Status:** preregistered ([`PREREGISTRATION.md`](PREREGISTRATION.md), frozen 2026-11-23). Confirmatory run on GitHub Actions (`.github/workflows/s15.yml`).
+**Status:** run. Preregistered in [`PREREGISTRATION.md`](PREREGISTRATION.md), frozen 2026-11-23; results in [`RESULTS.md`](RESULTS.md). In short: life beat everything at the cold end, but a fire and a large mineral bed opened the lock too. "Nothing else does" fails here. Only life improved its key.
 
 - [`SPEC.md`](SPEC.md): the question, definitions, hypotheses, falsifiers and decisions. Read this first.
 - `locks/world.py`: the engine.

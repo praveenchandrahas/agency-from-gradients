@@ -2,7 +2,7 @@
 
 > **Status: SPEC.** This file fixes the question, the definitions, the hypotheses and the falsifiers.
 > The numbers marked **TBD** here are fixed in [`PREREGISTRATION.md`](PREREGISTRATION.md), frozen on 2026-11-23 before the confirmatory run. Where the two differ, the preregistration governs.
-> The engine and its gates are in `locks/world.py` and `tests/test_gates.py`.
+> The engine and its gates are in `locks/world.py` and `tests/test_gates.py`. H1 and H2 have been run: see [`RESULTS.md`](RESULTS.md). "Nothing else does" failed in this model.
 
 ## The core hypothesis
 

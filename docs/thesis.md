@@ -5,6 +5,9 @@
 
     The [earlier draft](https://github.com/praveenchandrahas/agency-from-gradients/blob/thesis-v2-s12/docs/thesis-v2.md) starts from cosmic inevitability and works back to a proposed experiment. This page starts from the claim the suite was built to test.
 
+!!! note "Underneath this thesis"
+    This thesis assumes something it never tests: that life drains free energy where passive and non-living structures cannot. [S15](locks.md) tests that claim directly, in its narrow form. Read [its result](results/s15.md) alongside this page.
+
 ## 1. The hypothesis
 
 The design hypothesis, as written before the confirmatory run:
