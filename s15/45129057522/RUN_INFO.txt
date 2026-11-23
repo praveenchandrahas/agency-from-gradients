@@ -1,0 +1,6 @@
+commit: 1fb3aa48c39bf5e34f1eb38e03c506f6d41d26e0
+run: 45129057522
+preregistration sha256: 277201cd7e59f5ba55386b1cc2f5e442cbac2543962140b5ce4025015d7e5df7
+run files: 1696
+Python 3.12.16
+numpy 2.5.5
