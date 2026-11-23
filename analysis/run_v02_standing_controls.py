@@ -223,7 +223,7 @@ def main():
         "max_integrated_free_energy_balance_residual": max_integrated,
         "max_work_pool_balance_residual": max_work,
         "minimum_observed_total_entropy_production_rate": min_sigma,
-        "inference": "Deterministic parameter grid; no stochastic confidence intervals. Moracle is an oracle upper bound, not an uninformed physical baseline.",
+        "inference": "Deterministic parameter grid; no stochastic confidence intervals. Moracle is a post-hoc composition-matched fixed library, not a strict oracle bound; it experiences the same target schedule and its own work-pool trajectory.",
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))

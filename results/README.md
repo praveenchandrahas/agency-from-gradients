@@ -21,3 +21,8 @@ The final paired-drift run's interpretation is in [EXPLORATORY_FINDINGS.md](EXPL
 ## v0.2 coupled-reaction pilot
 
 See [V02_PILOT_FINDINGS.md](V02_PILOT_FINDINGS.md) for the deterministic 240-run sensitivity pilot, thermodynamic closure diagnostics, mutation-versus-faithful-copying contrasts, and next validation gates. Raw CSVs and figures are attached to [the GitHub Actions run](https://github.com/praveenchandrahas/evolutionary-gradient-access/actions/runs/45165208194).
+
+
+## v0.2 matched standing-variation controls
+
+See [V02_STANDING_CONTROLS.md](V02_STANDING_CONTROLS.md) for the 160-run follow-up comparing mutation against fixed and faithful-copying libraries at matched total catalyst material. Raw CSVs and figures are in [the GitHub Actions artifact](https://github.com/praveenchandrahas/evolutionary-gradient-access/actions/runs/45166815441).
