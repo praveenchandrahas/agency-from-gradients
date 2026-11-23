@@ -124,3 +124,5 @@ def test_drifting_target_can_be_simulated_without_clipping():
     assert min(row["atp"] for row in result["trajectory"]) > 0
     assert min(row["monomer"] for row in result["trajectory"]) > 0
     assert result["max_free_energy_balance_residual"] < 1e-8
+    assert abs(result["work_balance_residual"]) < 1e-5
+    assert abs(result["cumulative_free_energy_balance_residual"]) < 1e-5

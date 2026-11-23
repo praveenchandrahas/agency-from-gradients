@@ -89,3 +89,17 @@ for the complete declared boundary. This is a stronger internal consistency chec
 5. The initial library includes a small positive amount of every genotype; larger and sparse standing libraries need separate comparisons.
 6. The next experiments must sweep barrier, mutation rate, replication coupling, key length, target drift timing, initial standing variation and feed/maintenance parameters.
 7. Only after those sweeps should the model be used for an equal-investment comparison. The v0.1 results remain exploratory and are not rescued by this new prototype.
+
+## Deterministic pilot grid
+
+`analysis/run_v02_pilot.py` runs a paired D/L sensitivity grid over:
+
+- barriers: 4, 8 and 12 kT;
+- mutation rates: 0.01, 0.05 and 0.10 per bit;
+- replication coupling: 0, 0.5 and 1;
+- rare standing genotype concentration: (10^{-6}) and (10^{-3});
+- environment: static target 00, or a switch from target 00 to target 11 at time 50.
+
+Each D/L pair begins from exactly the same genotype concentrations. N and M controls are run once per barrier, environment and initial-library condition. The grid is deterministic and produces no stochastic confidence intervals. Its purpose is to expose parameter dependence and identify whether apparent mutation advantages disappear when replication coupling is weakened or standing variation is increased.
+
+The runner records fuel conversion, replication extents, work generation/consumption, total entropy production, free-energy-balance residuals and final catalyst abundance. The dedicated workflow is `.github/workflows/v02-validation.yml`; its artifact is named `ega-v02-thermodynamic-pilot`.

@@ -20,7 +20,7 @@
 - Added BDF integration without clipping and analytic validation tests.
 - Prototype assumptions and limits are documented in [MODEL_V02_IMPLEMENTATION.md](MODEL_V02_IMPLEMENTATION.md).
 
-This prototype remains abstract and deterministic. The pleiotropic assumption that genotype-dependent catalytic efficiency also affects self-replication must be stress-tested. It is not a confirmatory result.
+This prototype remains abstract and deterministic. The pleiotropic assumption that genotype-dependent catalytic efficiency also affects self-replication must be stress-tested. The deterministic parameter grid is implemented in `analysis/run_v02_pilot.py`; its dedicated workflow uploads an artifact for analysis. It is not a confirmatory result.
 
 ## Next: scientific validation (blocking; v0.1 findings are provisional)
 

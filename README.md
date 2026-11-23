@@ -56,6 +56,6 @@ The current runner executes E01 (static locks), E03 (slow, medium and fast drift
 - Report extinction and negative outcomes.
 - Treat controls as causal comparisons, not decorative baselines.
 
-A separate v0.2 coupled-reaction prototype is now implemented in [src/ega/model_v02.py](src/ega/model_v02.py), with its assumptions in [MODEL_V02_IMPLEMENTATION.md](MODEL_V02_IMPLEMENTATION.md). It is a new validation model; it does not retroactively validate v0.1. See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md) for the v0.1 audit.
+A separate v0.2 coupled-reaction prototype is now implemented in [src/ega/model_v02.py](src/ega/model_v02.py), with its assumptions in [MODEL_V02_IMPLEMENTATION.md](MODEL_V02_IMPLEMENTATION.md). It is a new validation model; it does not retroactively validate v0.1. The deterministic sensitivity pilot is in [analysis/run_v02_pilot.py](analysis/run_v02_pilot.py), with a dedicated [GitHub Actions workflow](.github/workflows/v02-validation.yml). See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md) for the v0.1 audit.
 
 See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md), [MODEL_LIMITATIONS.md](MODEL_LIMITATIONS.md) and [exploratory findings](results/EXPLORATORY_FINDINGS.md).

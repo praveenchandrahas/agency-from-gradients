@@ -19,7 +19,7 @@ import math
 from typing import Any, Sequence
 
 import numpy as np
-from scipy.integrate import solve_ivp
+from scipy.integrate import simpson, solve_ivp
 
 
 @dataclass(frozen=True)
@@ -222,6 +222,18 @@ def evaluate_state(
     fuel_potential_drop = (
         cfg.mu_fuel_std - cfg.mu_waste_std + math.log(f / waste)
     )
+    f0, w0 = cfg.fuel_feed, 1.0 - cfg.fuel_feed
+    m0, p0 = cfg.monomer_feed, 1.0 - cfg.monomer_feed
+    reservoir_free_energy_input_rate = (
+        cfg.q_fuel * (
+            (f0 - f) * (cfg.mu_fuel_std + math.log(f0))
+            + (w0 - waste) * (cfg.mu_waste_std + math.log(w0))
+        )
+        + cfg.q_monomer * (
+            (m0 - monomer) * (cfg.mu_monomer_std + math.log(m0))
+            + (p0 - polymer) * (cfg.mu_polymer_std + math.log(p0))
+        )
+    )
     diagnostics = {
         "target": int(target),
         "distances": distances,
@@ -246,6 +258,7 @@ def evaluate_state(
         "sigma_total": sigma_total,
         "work_potential": work_potential,
         "fuel_potential_drop": fuel_potential_drop,
+        "reservoir_free_energy_input_rate": reservoir_free_energy_input_rate,
         "fuel_free_energy_rate": j1 * fuel_potential_drop,
         "work_generation_rate": j1 * work_potential,
         "work_replication_rate": cfg.atp_per_birth * j2 * work_potential,
@@ -272,6 +285,17 @@ def free_energy_density(state: Sequence[float], cfg: ConfigV02) -> float:
         if x > 0:
             total += x * (cfg.mu_catalyst_std + math.log(x) - 1.0)
     return float(total)
+
+
+
+def work_pool_free_energy(state: Sequence[float], cfg: ConfigV02) -> float:
+    """Free energy stored in the internal T/D work-currency pool."""
+    atp = float(np.asarray(state, dtype=float)[1])
+    adp = 1.0 - atp
+    return float(
+        atp * (cfg.mu_atp_std + math.log(atp) - 1.0)
+        + adp * (cfg.mu_adp_std + math.log(adp) - 1.0)
+    )
 
 
 def free_energy_balance(state: Sequence[float], cfg: ConfigV02, target: int,
@@ -352,6 +376,7 @@ def simulate_v02(
     time_parts: list[np.ndarray] = []
     state_parts: list[np.ndarray] = []
     target_parts: list[np.ndarray] = []
+    segment_solutions: list[tuple[np.ndarray, np.ndarray, int]] = []
     for idx, (start, target) in enumerate(schedule):
         stop = schedule[idx + 1][0] if idx + 1 < len(schedule) else cfg.duration
         points = max(2, int(round(cfg.steps * (stop - start) / cfg.duration)) + 1)
@@ -364,6 +389,7 @@ def simulate_v02(
         )
         if not sol.success:
             raise RuntimeError(f"v0.2 integration failed: {sol.message}")
+        segment_solutions.append((sol.t.copy(), sol.y.copy(), int(target)))
         if np.any(sol.y[:3] <= 0) or np.any(sol.y[:3] >= 1):
             raise RuntimeError("integration left the positive activity domain; reduce the timestep")
         if np.any(sol.y[3:] < -1e-10):
@@ -382,7 +408,6 @@ def simulate_v02(
     states = np.concatenate(state_parts, axis=1)
     targets = np.concatenate(target_parts)
     trajectory: list[dict[str, Any]] = []
-    diagnostics_rows: list[dict[str, float]] = []
     max_balance_residual = 0.0
     for k, t in enumerate(times):
         state = states[:, k]
@@ -406,15 +431,32 @@ def simulate_v02(
         for i, value in enumerate(state[3:]):
             row[f"catalyst_{i}"] = float(value)
         trajectory.append(row)
-        diagnostics_rows.append(diag)
 
     def integral(key: str) -> float:
-        values = np.asarray([d[key] for d in diagnostics_rows], dtype=float)
-        return float(np.sum(0.5 * (values[:-1] + values[1:]) * np.diff(times)))
+        # Integrate each constant-target segment separately. Rates can jump at
+        # a target switch even though the chemical state remains continuous.
+        total = 0.0
+        for segment_times, segment_states, segment_target in segment_solutions:
+            values = []
+            for k in range(len(segment_times)):
+                _, segment_diag = evaluate_state(
+                    segment_states[:, k], cfg, segment_target, kernel, replication
+                )
+                values.append(segment_diag[key])
+            total += float(simpson(np.asarray(values, dtype=float), x=segment_times))
+        return total
 
     late_start = int(0.8 * len(trajectory))
     late = trajectory[late_start:]
     cumulative_sigma = integral("sigma_total")
+    cumulative_work_generation = integral("work_generation_rate")
+    cumulative_work_replication = integral("work_replication_rate")
+    cumulative_work_maintenance = integral("work_maintenance_rate")
+    cumulative_reservoir_input = integral("reservoir_free_energy_input_rate")
+    initial_free_energy = free_energy_density(states[:, 0], cfg)
+    final_free_energy = free_energy_density(states[:, -1], cfg)
+    initial_work_free_energy = work_pool_free_energy(states[:, 0], cfg)
+    final_work_free_energy = work_pool_free_energy(states[:, -1], cfg)
     return {
         "arm": arm,
         "config": asdict(cfg),
@@ -432,11 +474,22 @@ def simulate_v02(
         "cumulative_maintenance_extent": integral("j3_maintenance"),
         "cumulative_entropy_production": cumulative_sigma,
         "cumulative_fuel_free_energy": integral("fuel_free_energy_rate"),
-        "cumulative_work_generation": integral("work_generation_rate"),
-        "cumulative_work_replication": integral("work_replication_rate"),
-        "cumulative_work_maintenance": integral("work_maintenance_rate"),
+        "cumulative_work_generation": cumulative_work_generation,
+        "cumulative_work_replication": cumulative_work_replication,
+        "cumulative_work_maintenance": cumulative_work_maintenance,
+        "cumulative_reservoir_free_energy_input": cumulative_reservoir_input,
+        "work_pool_free_energy_change": final_work_free_energy - initial_work_free_energy,
+        "work_balance_residual": (
+            cumulative_work_generation - cumulative_work_replication
+            - cumulative_work_maintenance
+            - (final_work_free_energy - initial_work_free_energy)
+        ),
+        "cumulative_free_energy_balance_residual": (
+            cumulative_reservoir_input - (final_free_energy - initial_free_energy)
+            - cumulative_sigma
+        ),
         "max_free_energy_balance_residual": max_balance_residual,
-        "initial_free_energy": free_energy_density(states[:, 0], cfg),
-        "final_free_energy": free_energy_density(states[:, -1], cfg),
+        "initial_free_energy": initial_free_energy,
+        "final_free_energy": final_free_energy,
         "trajectory": trajectory,
     }
