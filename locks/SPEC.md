@@ -78,8 +78,9 @@ The other terms:
   - *Mixing:* fuel arriving at feed strength and mixing into a reactor where it has been spent. Rate: dilution × Σ [c_in ln(c_in/c) − c_in + c]. Never negative.
   - In steady state the sum equals free energy carried in minus free energy carried out. That is gate G4b.
 
-Why both parts? The control pilot showed it. Counted alone, reactions *penalise* a good catalyst. It drives the fuel toward equilibrium, so each reaction releases less. The designer key with 500 catalysts spent 98% of the fuel and scored lower on reactions alone than with 100 catalysts at 91%. The missing entropy is in the mixing. S14 counted reactions only. Its copier-against-mineral comparison may carry the same bias.
 - **The counterfactual.** Same world, same inflow, same barrier, with the structure absent. Every claim is a difference against it.
+
+Why both parts? The control pilot showed it. Counted alone, reactions *penalise* a good catalyst. It drives the fuel toward equilibrium, so each reaction releases less. The designer key with 500 catalysts spent 98% of the fuel and scored lower on reactions alone than with 100 catalysts at 91%. The missing entropy is in the mixing. S14 counted reactions only. Its copier-against-mineral comparison may carry the same bias.
 
 Why the counterfactual matters: the second law already says any ordered structure exports at least as much entropy as it holds off. That part is guaranteed. The claim worth testing is about the **rate**, against the same world without the structure.
 
@@ -158,7 +159,8 @@ What is **not** by construction:
 - **G1.** A closed box relaxes to its equilibrium composition, and σ falls to zero within noise.
 - **G2.** With catalysts present, the closed-box equilibrium is unchanged. Catalysis changes speed, never destination.
 - **G3.** Fuel, mass and free-energy ledgers close every step.
-- **G4.** σ from the fluxes agrees with the free-energy books (within TBD).
+- **G4.** Reaction σ from the fluxes agrees with the free-energy books, within 0.01% per step.
+- **G4b.** In steady state, total σ equals free energy carried in minus carried out. Total σ is converged at the production step to within 0.05%, and the balance error shrinks in proportion to the step.
 - **G5.** No run shows significantly negative σ.
 - **G6.** Positive control: L seeded with the perfect key holds it. Negative control: L with mutation set to zero is indistinguishable from D.
 
