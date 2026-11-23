@@ -7,7 +7,7 @@ name = "evolutionary-gradient-access"
 version = "0.1.0"
 description = "Controlled simulations of evolution and access to kinetically locked free-energy gradients"
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.24"]
+dependencies = ["numpy>=1.24", "scipy>=1.11"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "matplotlib>=3.8"]

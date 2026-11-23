@@ -11,6 +11,17 @@
 - Construction, reproduction, maintenance, mutation and adaptive-search cost records.
 - Automated tests, paired bootstrap summaries, compressed trajectories and plots.
 
+## In progress: v0.2 thermodynamically coupled prototype
+
+- Added a reversible fuel-to-work reaction, explicit ATP/ADP-like currency, autocatalytic replication, mutation kernel and maintenance hydrolysis.
+- Added fuel/waste and monomer/polymer exchange entropy terms.
+- Derived all reaction affinities from one standard-potential ledger.
+- Added a differential free-energy identity check for the declared reactor boundary.
+- Added BDF integration without clipping and analytic validation tests.
+- Prototype assumptions and limits are documented in [MODEL_V02_IMPLEMENTATION.md](MODEL_V02_IMPLEMENTATION.md).
+
+This prototype remains abstract and deterministic. The pleiotropic assumption that genotype-dependent catalytic efficiency also affects self-replication must be stress-tested. It is not a confirmatory result.
+
 ## Next: scientific validation (blocking; v0.1 findings are provisional)
 
 The v0.1 audit found omitted reproduction expenditure, an uncoupled reproductive energy proxy, incomplete binary-mixture exchange entropy and a control-matching ambiguity. The prior energetic-cost comparison is invalid until these are corrected. See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md) and the proposed [MODEL_V02_DESIGN.md](MODEL_V02_DESIGN.md).
