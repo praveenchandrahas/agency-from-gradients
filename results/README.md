@@ -16,3 +16,8 @@ Mmatched, Dmatched, Amatched and Umatched are initialized at the paired L run's 
 The initial 8-bit pilot and short-horizon matched 16-bit pilot are retained separately as `ega-initial-exploratory-results` and `ega-matched-key16-results`. The long-horizon run uses 100 residence-time units and three environmental drift rates to allow substantially more turnover and mutational exploration.
 
 The final paired-drift run's interpretation is in [EXPLORATORY_FINDINGS.md](EXPLORATORY_FINDINGS.md). All runs are exploratory, not confirmatory. See [MODEL_LIMITATIONS.md](../MODEL_LIMITATIONS.md).
+
+
+## v0.2 coupled-reaction pilot
+
+See [V02_PILOT_FINDINGS.md](V02_PILOT_FINDINGS.md) for the deterministic 240-run sensitivity pilot, thermodynamic closure diagnostics, mutation-versus-faithful-copying contrasts, and next validation gates. Raw CSVs and figures are attached to [the GitHub Actions run](https://github.com/praveenchandrahas/evolutionary-gradient-access/actions/runs/45165208194).
