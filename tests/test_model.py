@@ -44,7 +44,7 @@ def test_d_and_l_share_initial_targets_and_seed():
 
 def test_entropy_is_not_used_in_reproductive_rule():
     source = inspect.getsource(simulate)
-    reproductive_section = source.split("expected_births")[0]
+    reproductive_section = source.split('if arm in ("D", "L")')[1].split('elif arm == "A"')[0]
     assert "sigma" not in reproductive_section.lower()
 
 
