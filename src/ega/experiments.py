@@ -133,7 +133,7 @@ def run_suite(out: Path, seeds: int = 10, steps: int = 300,
         "seeds": seeds, "steps": steps, "duration_residence_times": duration,
         "key_bits": 16, "arms": list(ARMS), "designs": designs,
         "barriers_kT": [0, 4, 8, 12],
-        "matched_controls": "Mmatched, Amatched and Umatched use the rounded late-window L population for each paired seed",
+        "matched_controls": "Mmatched, Dmatched, Amatched and Umatched are initialized at the rounded late-window L population for each paired seed; Dmatched reproduces without new mutation",
         "primary_exploratory_contrasts": ["L_minus_Mmatched", "L_minus_D", "L_minus_Dmatched", "L_minus_Amatched"],
         "uncertainty": "paired-seed bootstrap percentile intervals; exploratory only",
         "warning": "Exploratory model output; not preregistered or empirical evidence."
