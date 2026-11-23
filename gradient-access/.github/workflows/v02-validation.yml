@@ -1,0 +1,36 @@
+name: v0.2 thermodynamic validation pilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/ega/model_v02.py"
+      - "analysis/run_v02_pilot.py"
+      - ".github/workflows/v02-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  v02-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install project and dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run v0.2 analytic validation tests
+        run: pytest -q tests/test_model_v02.py
+      - name: Run deterministic parameter-grid pilot
+        run: python analysis/run_v02_pilot.py --out results/v02-pilot
+      - name: Upload v0.2 pilot results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ega-v02-thermodynamic-pilot
+          path: results/v02-pilot/
+          if-no-files-found: error
