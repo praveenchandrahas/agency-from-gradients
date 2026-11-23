@@ -17,7 +17,7 @@ The subject is **evolutionary advantage**, not a unique property of life.
 - **D:** self-maintaining catalytic population with faithful inheritance and no mutation.
 - **L:** heritable variation and selection.
 - **U:** ideal designer benchmark with target-matched catalysts.
-- **A:** bounded non-replicating adaptive search control.
+- **A:** bounded, oracle-assisted non-replicating adaptive search control.
 
 D and L begin from the same random key library under paired seeds. Catalysts multiply forward and reverse reaction rates equally; they do not change the equilibrium constant. Selection uses usable chemical free energy after declared costs. Entropy production is recorded independently and is never included in fitness.
 
@@ -52,4 +52,4 @@ The runner executes E01 (static locks), E03 (drifting locks) and E04 (multiple l
 - Report extinction and negative outcomes.
 - Treat controls as causal comparisons, not decorative baselines.
 
-See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md) and [ROADMAP.md](ROADMAP.md).
+See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md) and [MODEL_LIMITATIONS.md](MODEL_LIMITATIONS.md).
