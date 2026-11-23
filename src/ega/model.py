@@ -54,6 +54,10 @@ class Config:
             raise ValueError("catalytic_gain and mismatch_scale must be positive")
         if self.reproduction_cost <= 0 or self.maintenance_cost < 0:
             raise ValueError("reproduction cost must be positive and maintenance non-negative")
+        if self.fuel_feed <= 0 or self.fuel_outflow < 0 or self.delta_mu <= 0 or self.k0 <= 0:
+            raise ValueError("feed, affinity and kinetic rate must be positive; outflow non-negative")
+        if not 0 <= self.energy_storage_efficiency < 1:
+            raise ValueError("energy_storage_efficiency must lie in [0, 1)")
         if self.energy_storage_efficiency != 0:
             raise ValueError("energy storage coupling is not implemented in v0.1; set it to zero")
         if self.landscape not in ("smooth", "rugged"):
