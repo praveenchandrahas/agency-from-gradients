@@ -1,0 +1,9 @@
+[project]
+name = "locks"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["numpy>=2.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
