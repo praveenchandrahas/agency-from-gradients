@@ -32,8 +32,8 @@ class Config:
     catalytic_gain: float = 35.0
     mismatch_scale: float = 1.5
     mutation_rate: float = 0.025
-    reproduction_cost: float = 0.025
-    maintenance_cost: float = 0.0015
+    reproduction_cost: float = 0.00002
+    maintenance_cost: float = 0.0000015
     energy_storage_efficiency: float = 0.25
     steps: int = 1200
     seed: int = 1
@@ -125,7 +125,8 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
     targets = _targets(target_rng, cfg.locks, cfg.key_bits)
     keys = rng.integers(0, 2, size=(cfg.initial_catalysts, cfg.key_bits), dtype=np.int8)
     if arm == "U":
-        keys[:] = targets[0]
+        repeats = int(math.ceil(cfg.initial_catalysts / cfg.locks))
+        keys = np.tile(targets, (repeats, 1))[:cfg.initial_catalysts].copy()
     if arm in ("N", "M"):
         population = np.empty((0, cfg.key_bits), dtype=np.int8) if arm == "N" else keys.copy()
     else:
@@ -136,6 +137,9 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
     cumulative_sigma = cumulative_reaction = cumulative_exchange = 0.0
     cumulative_spent = 0.0
     stored_energy = 0.0
+    cumulative_reproduction_energy = 0.0
+    cumulative_maintenance_energy = 0.0
+    cumulative_adaptive_cost = 0.0
     extinct_at: int | None = None
     rows: list[dict[str, float]] = []
     target_changes = 0
@@ -151,16 +155,21 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             fuel, population, targets, barriers, cfg
         )
         sigma = sigma_rxn + sigma_mix
-        cumulative_reaction += sigma_rxn
-        cumulative_exchange += sigma_mix
-        cumulative_sigma += sigma
+        dt = 1.0 / cfg.steps
+        cumulative_reaction += sigma_rxn * dt
+        cumulative_exchange += sigma_mix * dt
+        cumulative_sigma += sigma * dt
         throughput = float(np.sum(fluxes))
-        cumulative_spent += throughput
+        cumulative_spent += throughput * dt
 
-        # Stored energy is tracked separately and is not counted as dissipated.
-        stored_energy += cfg.energy_storage_efficiency * throughput
-        available = max(throughput * (1.0 - cfg.energy_storage_efficiency)
-                        - cfg.maintenance_cost * len(population), 0.0)
+        # Reaction extent times affinity is the model's free-energy release.
+        # Storage, maintenance and reproduction are separate ledger entries.
+        released_energy = throughput * cfg.delta_mu
+        stored_energy += cfg.energy_storage_efficiency * released_energy * dt
+        maintenance_this_step = cfg.maintenance_cost * len(population) * dt
+        cumulative_maintenance_energy += maintenance_this_step
+        available = max((released_energy * (1.0 - cfg.energy_storage_efficiency)
+                         - cfg.maintenance_cost * len(population)) * dt, 0.0)
 
         if arm in ("D", "L") and len(population):
             # Reproduction is driven by usable chemical free energy, not entropy.
@@ -196,6 +205,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
                     population[worst] = candidate[j]
                     current_score[worst] = cand_score[j]
                     available -= cfg.adaptive_budget
+                    cumulative_adaptive_cost += cfg.adaptive_budget
         # M and U are fixed; D inherits without mutation; L inherits with mutation.
         if arm in ("N", "D", "L") and len(population) == 0 and extinct_at is None:
             extinct_at = step
@@ -224,6 +234,9 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
         "cumulative_sigma_exchange": cumulative_exchange,
         "cumulative_fuel_spent": cumulative_spent,
         "stored_energy_final": stored_energy,
+        "cumulative_reproduction_energy": cumulative_reproduction_energy,
+        "cumulative_maintenance_energy": cumulative_maintenance_energy,
+        "cumulative_adaptive_cost": cumulative_adaptive_cost,
         "extinct_at": extinct_at, "target_changes": target_changes,
         "late_key_distance": float(np.mean([r["mean_key_distance"] for r in tail])),
         "trajectory": rows,
