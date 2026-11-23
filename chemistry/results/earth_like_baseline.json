@@ -1,0 +1,64 @@
+{
+  "configuration": {
+    "stellar_temperature_K": 5772.0,
+    "stellar_radius_m": 695700000.0,
+    "orbital_distance_m": 149597870700.0,
+    "planet_radius_m": 6371000.0,
+    "bond_albedo": 0.3,
+    "thermal_emissivity": 1.0,
+    "reference_environment_temperature_K": 288.15,
+    "emission_temperature_K": null,
+    "frequency_grid_points": 4001,
+    "angular_grid_points": 401,
+    "spectral_x_max": 40.0,
+    "steady_state_tolerance_W_m2": 1e-07
+  },
+  "geometry": {
+    "stellar_solid_angle_sr": 6.7943107064622e-05,
+    "direct_stellar_irradiance_normal_W_m2": 1361.170590236529,
+    "planetary_surface_area_m2": 510064471909788.25,
+    "intercepted_stellar_power_W": 1.7357118957203248e+17
+  },
+  "energy": {
+    "incoming_stellar_global_mean_W_m2": 340.29264755913226,
+    "reflected_shortwave_global_mean_W_m2": 102.08779426773968,
+    "absorbed_shortwave_global_mean_W_m2": 238.20485329139257,
+    "outgoing_thermal_global_mean_W_m2": 238.20485329139262,
+    "radiative_energy_storage_rate_global_mean_W_m2": 0.0,
+    "radiative_energy_storage_rate_total_W": 0.0,
+    "radiative_equilibrium": true,
+    "effective_emission_temperature_K": 254.5861170644054,
+    "energy_balance_residual_W_m2": -5.684341886080802e-14
+  },
+  "exergy_approximation": {
+    "reference_environment_temperature_K": 288.15,
+    "petela_source_temperature_factor": 0.9334393538072131,
+    "incoming_solar_exergy_global_mean_approx_W_m2": 317.6425490429421,
+    "absorbed_solar_exergy_global_mean_approx_W_m2": 222.34978433005946,
+    "warning": "Source-temperature Petela estimate only. It does not fully resolve the finite angular dilution and actual spectral/angular radiation field."
+  },
+  "radiative_entropy": {
+    "incoming_stellar_entropy_global_mean_W_m2K": 0.07860768056496414,
+    "reflected_shortwave_entropy_global_mean_W_m2K": 0.10425135111687316,
+    "outgoing_thermal_entropy_global_mean_W_m2K": 1.2475404245013595,
+    "net_radiative_entropy_export_global_mean_W_m2K": 1.2731840950532685,
+    "conditional_internal_entropy_generation_if_entropy_steady_global_mean_W_m2K": 1.2731840950532685,
+    "entropy_generation_interpretation": "Conditional interpretation only: in addition to energy balance, assume no secular entropy storage and no matter or other non-radiative entropy transfers across the model boundary. This model cannot test the entropy-storage assumption."
+  },
+  "assumptions": [
+    "Star is a uniform blackbody with the configured effective temperature and radius.",
+    "Planet is spherical; stellar radiation is geometrically diluted in vacuum.",
+    "Bond albedo is spectrally neutral and constant over the planet.",
+    "Reflected shortwave radiation is Lambertian (diffuse) at each surface element.",
+    "Planetary outgoing thermal radiation is a uniform graybody with constant emissivity.",
+    "Atmospheric radiative transfer, clouds, spectral windows and spatial temperature structure are not resolved.",
+    "Matter exchange, internal heat, tidal heating and non-radiative boundary fluxes are omitted.",
+    "The exergy result is an explicitly approximate Petela source-temperature estimate."
+  ],
+  "limitations": [
+    "This is not a climate model and does not calculate surface temperature or habitability.",
+    "The model does not represent chemistry, self-maintenance, replication, life, agency or evolution.",
+    "Entropy results depend on the Lambertian-reflection and graybody-emission assumptions.",
+    "A zero-dimensional global mean cannot resolve local gradients, transport or intermittency."
+  ]
+}

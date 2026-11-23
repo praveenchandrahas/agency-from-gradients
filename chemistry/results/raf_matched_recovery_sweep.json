@@ -1,0 +1,133 @@
+{
+  "model": "finite_resource_mutual_catalysis_matched_state_perturbation",
+  "configuration": {
+    "duration_s": 10,
+    "perturbation_time_s": 5,
+    "time_step_s": 0.001,
+    "catalytic_strength": 100,
+    "pre_perturbation_background_rate_factor": 1,
+    "post_perturbation_background_rate_factors": [
+      1,
+      0.1,
+      0.01,
+      0.001
+    ],
+    "removal_fractions": [
+      0.9,
+      0.99,
+      0.999
+    ]
+  },
+  "source": "GitHub Actions run 44027447559, matched-state catalyst-removal recovery sweep",
+  "rows": [
+    {
+      "post_perturbation_background_rate_factor": 1,
+      "removal_fraction": 0.9,
+      "fraction_of_removed_XY_recovered": 0.06595137281345584,
+      "fraction_of_preperturbation_XY_restored": 0.15935623553211023,
+      "final_XY_relative_to_unperturbed": 0.15898164927584332,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.06380238147704381
+    },
+    {
+      "post_perturbation_background_rate_factor": 1,
+      "removal_fraction": 0.99,
+      "fraction_of_removed_XY_recovered": 0.02357578795746668,
+      "fraction_of_preperturbation_XY_restored": 0.033340030077892026,
+      "final_XY_relative_to_unperturbed": 0.03326166027322763,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.12965164830520248
+    },
+    {
+      "post_perturbation_background_rate_factor": 1,
+      "removal_fraction": 0.999,
+      "fraction_of_removed_XY_recovered": 0.014712450029388698,
+      "fraction_of_preperturbation_XY_restored": 0.01569773757935931,
+      "final_XY_relative_to_unperturbed": 0.01566083813371115,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.1454502231125164
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.1,
+      "removal_fraction": 0.9,
+      "fraction_of_removed_XY_recovered": 0.0634805687740941,
+      "fraction_of_preperturbation_XY_restored": 0.15713251189668467,
+      "final_XY_relative_to_unperturbed": 0.1567631527738825,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.06786705745333278
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.1,
+      "removal_fraction": 0.99,
+      "fraction_of_removed_XY_recovered": 0.013741827600793734,
+      "fraction_of_preperturbation_XY_restored": 0.023604409324785806,
+      "final_XY_relative_to_unperturbed": 0.02354892428342022,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.14744703203854392
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.1,
+      "removal_fraction": 0.999,
+      "fraction_of_removed_XY_recovered": 0.0030231605421615747,
+      "fraction_of_preperturbation_XY_restored": 0.004020137381619414,
+      "final_XY_relative_to_unperturbed": 0.004010687558671281,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.16679526911170645
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.01,
+      "removal_fraction": 0.9,
+      "fraction_of_removed_XY_recovered": 0.06321506366753898,
+      "fraction_of_preperturbation_XY_restored": 0.15689355730078505,
+      "final_XY_relative_to_unperturbed": 0.15652475986988781,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.06830383513690048
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.01,
+      "removal_fraction": 0.99,
+      "fraction_of_removed_XY_recovered": 0.012655890235645,
+      "fraction_of_preperturbation_XY_restored": 0.02252933133328856,
+      "final_XY_relative_to_unperturbed": 0.022476373393788083,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.14941212707713714
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.01,
+      "removal_fraction": 0.999,
+      "fraction_of_removed_XY_recovered": 0.0017251814296294983,
+      "fraction_of_preperturbation_XY_restored": 0.0027234562481998695,
+      "final_XY_relative_to_unperturbed": 0.0027170544323141376,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.16916542302243862
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.001,
+      "removal_fraction": 0.9,
+      "fraction_of_removed_XY_recovered": 0.06318831839787176,
+      "fraction_of_preperturbation_XY_restored": 0.15686948655808455,
+      "final_XY_relative_to_unperturbed": 0.1565007457084021,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.06834783329912461
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.001,
+      "removal_fraction": 0.99,
+      "fraction_of_removed_XY_recovered": 0.012546179260767891,
+      "fraction_of_preperturbation_XY_restored": 0.022420717468160222,
+      "final_XY_relative_to_unperturbed": 0.02236801483878916,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.14961065831189005
+    },
+    {
+      "post_perturbation_background_rate_factor": 0.001,
+      "removal_fraction": 0.999,
+      "fraction_of_removed_XY_recovered": 0.0015939689656149908,
+      "fraction_of_preperturbation_XY_restored": 0.0025923749966493765,
+      "final_XY_relative_to_unperturbed": 0.0025862813032234977,
+      "food_remaining_at_perturbation": 0.17213319782234748,
+      "food_remaining_at_end": 0.16940502142681788
+    }
+  ],
+  "interpretation": "All conditions share the same pre-perturbation trajectory, catalyst abundance and remaining food. Only the uncatalysed background rate factor is changed after catalyst removal. Recovery falls sharply with removal severity; reducing the post-intervention background factor has only a small effect. This supports strong dependence on residual catalysts in this parameterization, not robust regeneration after severe removal."
+}
