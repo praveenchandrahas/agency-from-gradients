@@ -130,7 +130,9 @@ Three results from three different worlds point at one variable.
 
 The common thread: **what heredity with variation adds pays off when the world changes.**
 
-I saw this after the fact, across experiments not designed to test it. So it is a lead. Two preregistered tests can check it:
+One result cuts the other way. In Planet, the action trait fell to about 0.04 by generation 660, even in the volatile environment, where the weather changes a lot from one generation to the next. So variability alone did not keep behaviour around. Perhaps change has to move the *source*, not just shake it. Perhaps the idea is wrong.
+
+I saw all of this after the fact, across experiments not designed to test it. So it is a lead. Two preregistered tests can check it:
 
 - **S15 H3a, the drifting lock.** A fixed key goes stale. Life's key should follow.
 - **H13, static against variable selection,** in the ladder world.
@@ -175,7 +177,7 @@ What it adds, to be tested:
 
 ## Not yet updated
 
-- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. A revised version 1.1, with the new chain and the Planet follow-ups, is up for review as a pull request there.
+- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. A revised version 1.1, with the new chain and the Planet follow-ups, is up for review as [pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9) there.
 - **Planet** (draft PR #7) is still open. Its results are cited here from the draft.
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
 - **The blog post** "Did starlight make us smart?" predates S15. It is being revised to match.
