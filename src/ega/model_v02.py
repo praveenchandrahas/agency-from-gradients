@@ -348,14 +348,14 @@ def simulate_v02(
 ) -> dict[str, Any]:
     """Run N, M, D or L over a piecewise-constant target schedule."""
     cfg.validate()
-    if arm not in ("N", "M", "D", "L"):
-        raise ValueError("v0.2 currently supports arms N, M, D and L")
+    if arm not in ("N", "M", "Mmatched", "Moracle", "D", "Dmatched", "L"):
+        raise ValueError("v0.2 supports arms N, M, Mmatched, Moracle, D, Dmatched and L")
     n = cfg.genotype_count
     c0 = np.asarray(cfg.initial_concentrations, dtype=float)
     if arm == "N":
         c0 = np.zeros(n, dtype=float)
     initial = np.concatenate(([cfg.fuel_feed, 0.5, cfg.monomer_feed], c0))
-    replication = arm in ("D", "L")
+    replication = arm in ("D", "Dmatched", "L")
     if arm == "L":
         kernel = mutation_kernel(cfg.key_bits, cfg.mutation_rate)
     else:

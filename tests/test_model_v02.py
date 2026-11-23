@@ -126,3 +126,15 @@ def test_drifting_target_can_be_simulated_without_clipping():
     assert result["max_free_energy_balance_residual"] < 1e-8
     assert abs(result["work_balance_residual"]) < 1e-5
     assert abs(result["cumulative_free_energy_balance_residual"]) < 1e-5
+
+
+def test_matched_control_arm_aliases_preserve_the_declared_dynamics():
+    cfg = small_config()
+    m = simulate_v02("M", cfg)
+    mm = simulate_v02("Mmatched", cfg)
+    mo = simulate_v02("Moracle", cfg)
+    d = simulate_v02("D", cfg)
+    dm = simulate_v02("Dmatched", cfg)
+    assert np.allclose(m["final_state"], mm["final_state"], atol=1e-12)
+    assert np.allclose(m["final_state"], mo["final_state"], atol=1e-12)
+    assert np.allclose(d["final_state"], dm["final_state"], atol=1e-12)

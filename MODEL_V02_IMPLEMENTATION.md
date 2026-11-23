@@ -103,3 +103,16 @@ for the complete declared boundary. This is a stronger internal consistency chec
 Each D/L pair begins from exactly the same genotype concentrations. N and M controls are run once per barrier, environment and initial-library condition. The grid is deterministic and produces no stochastic confidence intervals. Its purpose is to expose parameter dependence and identify whether apparent mutation advantages disappear when replication coupling is weakened or standing variation is increased.
 
 The runner records fuel conversion, replication extents, work generation/consumption, total entropy production, free-energy-balance residuals and final catalyst abundance. The dedicated workflow is `.github/workflows/v02-validation.yml`; its artifact is named `ega-v02-thermodynamic-pilot`.
+
+
+## Matched standing-variation controls (follow-up experiment)
+
+The follow-up runner `analysis/run_v02_standing_controls.py` compares L against three stronger controls:
+
+- **Mmatched:** a fixed, uniform library whose initial total catalyst concentration equals L's final total concentration.
+- **Dmatched:** the same uniform, large initial library, but with faithful copying and selection and no mutation.
+- **Moracle:** a fixed library initialized with L's final genotype composition and total concentration. This is an explicit oracle upper bound, not an uninformed or physically available baseline.
+
+The focused grid uses barrier 8 kT, mutation rates 0.05 and 0.10, replication coupling 0.5 and 1, rare target-genotype concentrations (10^{-6},10^{-3},10^{-2},0.05), and static/drifting environments. It contains 32 conditions and 160 runs.
+
+This is designed to test whether the small late-throughput advantage from the first pilot survives when faithful-copying systems have substantial standing variation and fixed libraries receive the same total catalyst material. Work and material investment are reported separately. The dedicated workflow is `.github/workflows/v02-standing-controls.yml`; its artifact is `ega-v02-standing-controls`.
