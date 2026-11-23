@@ -1,13 +1,13 @@
-name: EGA CI
+name: EGA tests and exploratory simulations
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
 jobs:
-  tests-and-pilot:
+  tests-and-simulations:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -16,10 +16,10 @@ jobs:
           cache: pip
       - run: python -m pip install -e ".[dev]"
       - run: pytest -q
-      - name: Run reproducible exploratory pilot
-        run: ega-run --out results/ci-pilot --seeds 3 --steps 250
+      - name: Run paired-seed exploratory simulations
+        run: ega-run --out results/initial-exploratory --seeds 10 --steps 400
       - uses: actions/upload-artifact@v4
         with:
-          name: ega-ci-pilot
-          path: results/ci-pilot/
+          name: ega-initial-exploratory-results
+          path: results/initial-exploratory/
           if-no-files-found: error
