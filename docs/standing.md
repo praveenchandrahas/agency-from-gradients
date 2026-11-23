@@ -177,7 +177,7 @@ What it adds, to be tested:
 
 ## Still open
 
-- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. Version 1.1, with the new chain and the Planet follow-ups, is merged ([pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9)). Version 1.2 credits the prior work below and is up for review as [pull request 10](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/10).
+- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. Version 1.1, with the new chain and the Planet follow-ups, is merged ([pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9)). Version 1.2, which credits the prior work below, is merged too ([pull request 10](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/10)).
 - **Prior work.** None of the revised hypothesis is original. Smith and Morowitz, Branscomb and colleagues, Pross and Pascal, Lotka, Ulanowicz and Hannon, Kussell and Leibler, and Dyson's "hang-ups" (1971) cover its parts. What this repo adds is matched-control tests with checked accounting. A researcher map, kept outside the repo, tracks who works on what.
 - **Civilizations and the Kardashev link.** Split into *catching* (settled thermodynamics; any cold absorber does it) and *unlocking* (speculative). Four tests are proposed, none run: see [Catching against unlocking](unlocking.md).
 - **Planet** (draft PR #7) is still open. Its results are cited here, and in the paper, from the draft branch.
