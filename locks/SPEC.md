@@ -79,7 +79,7 @@ The other terms:
 
 - **The counterfactual.** Same world, same inflow, same barrier, with the structure absent. Every claim is a difference against it.
 
-Why both parts? The control pilot showed it. Counted alone, reactions *penalise* a good catalyst. It drives the fuel toward equilibrium, so each reaction releases less. The designer key with 500 catalysts spent 98% of the fuel and scored lower on reactions alone than with 100 catalysts at 91%. The missing entropy is in the mixing. S14 counted reactions only. Its copier-against-mineral comparison may carry the same bias.
+Why both parts? The control pilot showed it. Counted alone, reactions *penalise* a good catalyst. It drives the fuel toward equilibrium, so each reaction releases less. The designer key with 500 catalysts spent 98% of the fuel and scored lower on reactions alone than with 100 catalysts at 91%. The missing entropy is in the mixing. S14 counted reactions only. Its copier-against-mineral comparison did carry the same bias: re-checked with mixing, the copier is ahead by about 3%, not level (see the S14 addendum in `docs/results/s14.md`).
 
 Why the counterfactual matters: the second law already says any ordered structure exports at least as much entropy as it holds off. That part is guaranteed. The claim worth testing is about the **rate**, against the same world without the structure.
 

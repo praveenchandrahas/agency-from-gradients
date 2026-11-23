@@ -88,7 +88,7 @@ Why?
 
 Spend the fuel fast, and the tank fills with waste. Each reaction then releases less. The entropy did not vanish. It moved. Fresh fuel pouring into a spent tank mixes, and mixing makes entropy too.
 
-I had been counting reactions only. So had S14.
+I had been counting reactions only. So had S14. Re-checked, S14's copier comes out about 3% ahead of its mineral, not level with it. [The S14 addendum](results/s14.md#addendum-2026-11-23-mixing-entropy) has the details.
 
 Count both, and everything lines up: more fuel spent, more entropy. Physics says the total is the right number. That is what S15 reports. Reactions alone are reported next to it.
 
