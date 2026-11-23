@@ -91,16 +91,20 @@ def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
     flux = np.maximum(net, 0.0)
     spent = float(np.sum(flux))
     # Fuel reservoir replenishment and washout.
-    fuel_next = float(np.clip(fuel + cfg.fuel_feed / cfg.steps
-                              - cfg.fuel_outflow * fuel / cfg.steps
-                              - spent / cfg.steps, 0.0, 1.0))
+    # A single ideal feed/outflow stream at concentration fuel_feed. The
+    # exchange entropy is J_ex * (mu_feed - mu_reactor)/T, with
+    # J_ex = q(c_feed-c); this is non-negative for ideal activities.
+    fuel_next = float(np.clip(fuel + cfg.fuel_outflow * (cfg.fuel_feed - fuel) / cfg.steps
+                              - spent / cfg.steps, 0.0, cfg.fuel_feed))
     # Reaction entropy production J * affinity; reservoir exchange is a distinct
     # non-negative idealized feed/outflow term in this coarse model.
     eps = 1e-12
     reaction_sigma = float(np.sum(net * np.log(np.maximum(forward, eps) /
                                                 np.maximum(reverse, eps))))
-    exchange_sigma = float(max(cfg.fuel_feed * (1.0 - fuel), 0.0)
-                           + max(cfg.fuel_outflow * fuel, 0.0))
+    exchange_flux = cfg.fuel_outflow * (cfg.fuel_feed - fuel)
+    exchange_sigma = float(exchange_flux * math.log(
+        max(cfg.fuel_feed, eps) / max(fuel, eps)
+    ))
     return fuel_next, flux, max(reaction_sigma, 0.0), exchange_sigma
 
 
