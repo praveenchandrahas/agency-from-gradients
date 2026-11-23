@@ -39,6 +39,7 @@ class Config:
     seed: int = 1
     landscape: str = "smooth"  # smooth | rugged
     adaptive_budget: float = 0.02
+    turnover_rate: float = 0.02
 
     def validate(self) -> None:
         if not self.barriers or any(b < 0 for b in self.barriers):
@@ -75,7 +76,10 @@ def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
     """One flow-reactor step; forward/reverse catalysis share the same multiplier."""
     nlocks = len(barriers)
     if catalysts.size:
-        multipliers = _fitness(catalysts, targets, cfg).mean(axis=0)
+        individual = _fitness(catalysts, targets, cfg)
+        match_strength = np.mean(individual - 1.0, axis=0) / cfg.catalytic_gain
+        abundance = min(len(catalysts) / cfg.initial_catalysts, 5.0)
+        multipliers = 1.0 + cfg.catalytic_gain * match_strength * abundance
     else:
         multipliers = np.ones(nlocks)
     # At B=0 the uncatalysed route is intentionally fast; high B suppresses it.
@@ -88,8 +92,8 @@ def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
     forward = rate * max(fuel, 0.0)
     reverse = rate * math.exp(-cfg.delta_mu) * max(1.0 - fuel, 0.0)
     net = forward - reverse
-    flux = np.maximum(net, 0.0)
-    spent = float(np.sum(flux))
+    flux = net
+    spent = float(np.sum(net))
     # Fuel reservoir replenishment and washout.
     # A single ideal feed/outflow stream at concentration fuel_feed. The
     # exchange entropy is J_ex * (mu_feed - mu_reactor)/T, with
@@ -185,13 +189,13 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
                 if arm == "L":
                     offspring = _mutate(offspring, cfg.mutation_rate, rng)
                 population = np.concatenate((population, offspring), axis=0)
-            # Density-dependent washout limits unchecked exponential growth.
-            if len(population) > cfg.initial_catalysts:
-                excess = len(population) - cfg.initial_catalysts
-                deaths = min(excess, max(0, int(0.015 * excess)))
-                if deaths:
-                    keep = rng.choice(len(population), len(population) - deaths, replace=False)
-                    population = population[keep]
+            # Turnover is a declared per-residence-time loss process. If usable
+            # free energy cannot replace losses, the lineage can decline/extinguish.
+            death_probability = 1.0 - math.exp(-cfg.turnover_rate / cfg.steps)
+            deaths = int(rng.binomial(len(population), death_probability))
+            if deaths:
+                keep = rng.choice(len(population), len(population) - deaths, replace=False)
+                population = population[keep]
         elif arm == "A" and len(population):
             # Non-replicating adaptive search: replace a small fraction with random
             # candidates; charge the declared search budget from usable energy.
