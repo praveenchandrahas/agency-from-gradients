@@ -1,0 +1,37 @@
+# Model limitations and validation boundary (v0.1)
+
+This file is deliberately explicit about what the first executable model does not establish.
+
+## Mechanistic abstractions
+
+1. **Catalytic key landscape:** catalysts are bit strings; target matching is a chosen mathematical landscape, not a molecular structure–activity relation.
+2. **Reaction chemistry:** each lock is represented by a reversible scalar reaction with a prescribed affinity. There are no atom-resolved stoichiometric networks or identified prebiotic compounds.
+3. **Waste and reservoirs:** the model tracks one fuel activity and treats waste activity as its complement. The reservoir-exchange entropy term covers the declared fuel exchange only; it is not a complete multicomponent mixing or reactor entropy budget.
+4. **Population dynamics:** catalyst birth, mutation and turnover are coarse-grained algorithmic operations. Replication chemistry, compartment formation, finite-molecule stochasticity and physical inheritance are absent.
+5. **Selection:** parent sampling is weighted by modelled catalytic contribution. This is a stipulated genotype-to-performance mechanism, not a derived origin of Darwinian evolution.
+6. **Adaptive arm A:** A is an oracle-assisted search control: candidate scores are evaluated directly against the model's target landscape. It is a deliberately strong algorithmic comparator, not a physical non-living chemistry.
+7. **Material matching:** M is fixed at the initial library size; L and D may grow. The first run is therefore not an equal-abundance comparison. A later matched-abundance and matched-investment design is mandatory.
+8. **Designer arm U:** U begins with target-matched catalysts. It is an idealized benchmark, not a naturally attainable competitor.
+9. **Storage:** nonzero energy-storage coupling is rejected in v0.1. Catalyst construction and maintenance are represented as separate bookkeeping costs, but no explicit chemical storage reaction is modelled.
+10. **Spatial and ecological effects:** no spatial transport, compartments, multiple species ecology or environmental feedback is represented.
+
+## Thermodynamic boundary
+
+Reaction entropy production is calculated from net reversible reaction flux times the logarithmic forward/reverse rate ratio. The declared fuel-reservoir exchange term is calculated from the ideal-activity chemical-potential difference. These are useful internal diagnostics for this abstract reactor, but the system boundary omits waste-reservoir exchange, pumping, mixing apparatus, heat transfer, catalyst synthesis chemistry and reservoir regeneration.
+
+Consequently, `sigma_total` in v0.1 means the sum of the two implemented terms, not a complete entropy-production budget for a physical reactor or organism. Cumulative fuel extent and free-energy release are also model proxies. Do not report them as empirical physical quantities.
+
+## Required gates before confirmatory use
+
+- Derive all species and reservoir fluxes from one explicit stoichiometric and chemical-potential ledger.
+- Close fuel and waste mass balances without clipping.
+- Verify closed-box relaxation to equilibrium and zero entropy production at equilibrium.
+- Verify catalyst multipliers preserve equilibrium for every lock.
+- Demonstrate non-negative total entropy production over the full declared boundary.
+- Perform integration-step convergence and alternative integration-scheme comparisons.
+- Match M and D/L on catalyst abundance and cumulative material/energy investment.
+- Match A and L on search/evaluation costs and information access.
+- Sweep smooth, rugged and epistatic landscapes, and multiple population caps.
+- Freeze the parameter ranges, primary outcomes and falsifiers before confirmatory runs.
+
+A passing unit-test suite is not a substitute for these scientific validation gates.
