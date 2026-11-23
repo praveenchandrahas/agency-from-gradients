@@ -79,9 +79,11 @@ def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
     else:
         multipliers = np.ones(nlocks)
     # At B=0 the uncatalysed route is intentionally fast; high B suppresses it.
-    catalytic_rate = cfg.k0 * np.exp(-barriers) * multipliers
     uncatalysed_rate = cfg.k0 * np.exp(-barriers)
-    rate = np.maximum(uncatalysed_rate, catalytic_rate)
+    # At B=0 there is no kinetic lock to unlock: all catalysts collapse to
+    # the same baseline rate. Catalytic leverage grows with barrier height.
+    leverage = 1.0 - np.exp(-barriers)
+    rate = uncatalysed_rate * (1.0 + (multipliers - 1.0) * leverage)
     # Dimensionless affinity A = Δμ/kT. Reverse/forward ratio at equilibrium is exp(-A).
     forward = rate * max(fuel, 0.0)
     reverse = rate * math.exp(-cfg.delta_mu) * max(1.0 - fuel, 0.0)
@@ -161,7 +163,11 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             expected_births = available / max(cfg.reproduction_cost, 1e-12)
             births = min(int(expected_births), max(0, cfg.max_catalysts - len(population)))
             if births > 0:
-                parent_idx = rng.integers(0, len(population), size=births)
+                # Differential reproduction is based on catalytic contribution
+                # to usable chemical throughput, never on entropy production.
+                reproductive_weights = np.mean(_fitness(population, targets, cfg), axis=1)
+                reproductive_weights = reproductive_weights / reproductive_weights.sum()
+                parent_idx = rng.choice(len(population), size=births, p=reproductive_weights)
                 offspring = population[parent_idx].copy()
                 if arm == "L":
                     offspring = _mutate(offspring, cfg.mutation_rate, rng)
