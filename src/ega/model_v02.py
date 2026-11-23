@@ -183,9 +183,9 @@ def evaluate_state(
     j2 = float(j2_matrix.sum())
 
     # R3: T <-> D, a generic maintenance/hydrolysis sink present in every arm.
-    j3 = cfg.kmaint * (
-        atp - math.exp(-cfg.mu3) * adp
-    )
+    j3_forward = cfg.kmaint * atp
+    j3_reverse = cfg.kmaint * math.exp(-cfg.mu3) * adp
+    j3 = j3_forward - j3_reverse
 
     dy = np.zeros_like(y)
     dy[0] = cfg.q_fuel * (cfg.fuel_feed - f) - j1
@@ -262,7 +262,11 @@ def evaluate_state(
         "fuel_free_energy_rate": j1 * fuel_potential_drop,
         "work_generation_rate": j1 * work_potential,
         "work_replication_rate": cfg.atp_per_birth * j2 * work_potential,
+        "work_replication_forward_rate": cfg.atp_per_birth * float(forward.sum()) * work_potential,
+        "work_replication_reverse_rate": cfg.atp_per_birth * float(reverse.sum()) * work_potential,
         "work_maintenance_rate": j3 * work_potential,
+        "work_maintenance_forward_rate": j3_forward * work_potential,
+        "work_maintenance_reverse_rate": j3_reverse * work_potential,
     }
     return dy, diagnostics
 
@@ -296,6 +300,22 @@ def work_pool_free_energy(state: Sequence[float], cfg: ConfigV02) -> float:
         atp * (cfg.mu_atp_std + math.log(atp) - 1.0)
         + adp * (cfg.mu_adp_std + math.log(adp) - 1.0)
     )
+
+
+def work_pool_exergy(atp: float, cfg: ConfigV02) -> float:
+    """Available T/D chemical exergy above the pool's equilibrium state."""
+    if not 0.0 < atp < 1.0:
+        raise ValueError("ATP activity must lie strictly inside (0, 1)")
+
+    def g(t: float) -> float:
+        d = 1.0 - t
+        return (
+            t * (cfg.mu_atp_std + math.log(t) - 1.0)
+            + d * (cfg.mu_adp_std + math.log(d) - 1.0)
+        )
+
+    equilibrium_atp = 1.0 / (1.0 + math.exp(cfg.mu3))
+    return float(g(atp) - g(equilibrium_atp))
 
 
 def free_energy_balance(state: Sequence[float], cfg: ConfigV02, target: int,
@@ -451,7 +471,11 @@ def simulate_v02(
     cumulative_sigma = integral("sigma_total")
     cumulative_work_generation = integral("work_generation_rate")
     cumulative_work_replication = integral("work_replication_rate")
+    cumulative_work_replication_forward = integral("work_replication_forward_rate")
+    cumulative_work_replication_reverse = integral("work_replication_reverse_rate")
     cumulative_work_maintenance = integral("work_maintenance_rate")
+    cumulative_work_maintenance_forward = integral("work_maintenance_forward_rate")
+    cumulative_work_maintenance_reverse = integral("work_maintenance_reverse_rate")
     cumulative_reservoir_input = integral("reservoir_free_energy_input_rate")
     initial_free_energy = free_energy_density(states[:, 0], cfg)
     final_free_energy = free_energy_density(states[:, -1], cfg)
@@ -476,7 +500,11 @@ def simulate_v02(
         "cumulative_fuel_free_energy": integral("fuel_free_energy_rate"),
         "cumulative_work_generation": cumulative_work_generation,
         "cumulative_work_replication": cumulative_work_replication,
+        "cumulative_work_replication_forward": cumulative_work_replication_forward,
+        "cumulative_work_replication_reverse": cumulative_work_replication_reverse,
         "cumulative_work_maintenance": cumulative_work_maintenance,
+        "cumulative_work_maintenance_forward": cumulative_work_maintenance_forward,
+        "cumulative_work_maintenance_reverse": cumulative_work_maintenance_reverse,
         "cumulative_reservoir_free_energy_input": cumulative_reservoir_input,
         "work_pool_free_energy_change": final_work_free_energy - initial_work_free_energy,
         "work_balance_residual": (

@@ -39,3 +39,12 @@ The v0.1 audit found omitted reproduction expenditure, an uncoupled reproductive
 ## Interpretation rule
 
 Do not infer a universal thermodynamic law from a toy-model result. Distinguish the advantage of selection on standing variation, ongoing mutation, generic adaptive search and ideal design. A null or negative result is a valid outcome.
+
+
+## New validation work: v0.3 equal-investment accounting
+
+A follow-up branch adds an explicit initial T/D work-pool exergy charge and exposes gross forward and reverse work-currency transfers separately from net transfers. This closes an omitted initial-endowment term in the previous declared-work metric and makes reversible work recovery auditable.
+
+The branch also adds [MODEL_V03_EQUAL_BUDGET_DESIGN.md](MODEL_V03_EQUAL_BUDGET_DESIGN.md), which defines a two-dimensional common-budget comparison (work/exergy and material), requires initial catalyst construction to be charged, and specifies independent thermodynamic and numerical validation gates.
+
+**Not yet established:** the new equal-budget frontier experiment has not yet run. The existing v0.2 standing-controls results remain exploratory and must not be described as total-investment matched.

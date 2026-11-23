@@ -8,6 +8,7 @@ from ega.model_v02 import (
     free_energy_balance,
     mutation_kernel,
     simulate_v02,
+    work_pool_exergy,
 )
 
 
@@ -138,3 +139,29 @@ def test_matched_control_arm_aliases_preserve_the_declared_dynamics():
     assert np.allclose(m["final_state"], mm["final_state"], atol=1e-12)
     assert np.allclose(m["final_state"], mo["final_state"], atol=1e-12)
     assert np.allclose(d["final_state"], dm["final_state"], atol=1e-12)
+
+
+
+def test_initial_work_pool_exergy_is_charged_and_zero_at_equilibrium():
+    cfg = small_config()
+    equilibrium_atp = 1.0 / (1.0 + math.exp(cfg.mu3))
+    assert abs(work_pool_exergy(equilibrium_atp, cfg)) < 1e-12
+    assert work_pool_exergy(0.5, cfg) > 0.0
+
+
+def test_gross_work_transfers_reconcile_to_net_transfers():
+    cfg = small_config(duration=10.0, steps=100)
+    result = simulate_v02("L", cfg)
+    assert math.isclose(
+        result["cumulative_work_replication"],
+        result["cumulative_work_replication_forward"]
+        - result["cumulative_work_replication_reverse"],
+        rel_tol=1e-8, abs_tol=1e-9,
+    )
+    assert math.isclose(
+        result["cumulative_work_maintenance"],
+        result["cumulative_work_maintenance_forward"]
+        - result["cumulative_work_maintenance_reverse"],
+        rel_tol=1e-8, abs_tol=1e-9,
+    )
+    assert abs(result["work_balance_residual"]) < 1e-5
