@@ -24,7 +24,6 @@ class Config:
     key_bits: int = 8
     initial_catalysts: int = 80
     max_catalysts: int = 500
-    residence_time: float = 1.0
     fuel_feed: float = 1.0
     fuel_outflow: float = 0.35
     delta_mu: float = 6.0
@@ -32,6 +31,7 @@ class Config:
     catalytic_gain: float = 35.0
     mismatch_scale: float = 1.5
     mutation_rate: float = 0.025
+    mutation_energy_cost: float = 2.0e-9
     reproduction_cost: float = 1.0e-8
     maintenance_cost: float = 1.0e-10
     energy_storage_efficiency: float = 0.25
@@ -148,6 +148,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
     cumulative_reproduction_energy = 0.0
     cumulative_maintenance_energy = 0.0
     cumulative_adaptive_cost = 0.0
+    cumulative_mutation_energy = 0.0
     extinct_at: int | None = None
     rows: list[dict[str, float]] = []
     target_changes = 0
@@ -181,7 +182,10 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
 
         if arm in ("D", "L") and len(population):
             # Reproduction is driven by usable chemical free energy, not entropy.
-            expected_births = available / max(cfg.reproduction_cost, 1e-12)
+            expected_mutation_cost = (cfg.key_bits * cfg.mutation_rate *
+                                      cfg.mutation_energy_cost) if arm == "L" else 0.0
+            effective_birth_cost = cfg.reproduction_cost + expected_mutation_cost
+            expected_births = available / max(effective_birth_cost, 1e-12)
             births = min(int(expected_births), max(0, cfg.max_catalysts - len(population)))
             if births > 0:
                 # Differential reproduction is based on catalytic contribution
@@ -191,7 +195,11 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
                 parent_idx = rng.choice(len(population), size=births, p=reproductive_weights)
                 offspring = population[parent_idx].copy()
                 if arm == "L":
-                    offspring = _mutate(offspring, cfg.mutation_rate, rng)
+                    mutated = _mutate(offspring, cfg.mutation_rate, rng)
+                    mutation_count = int(np.count_nonzero(mutated != offspring))
+                    mutation_cost = mutation_count * cfg.mutation_energy_cost
+                    cumulative_mutation_energy += mutation_cost
+                    offspring = mutated
                 population = np.concatenate((population, offspring), axis=0)
             # Turnover is a declared per-residence-time loss process. If usable
             # free energy cannot replace losses, the lineage can decline/extinguish.
@@ -209,11 +217,12 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             cand_score = _fitness(candidate, targets, cfg).sum(axis=1)
             for j in range(trials):
                 worst = int(np.argmin(current_score))
-                if cand_score[j] > current_score[worst] and available > cfg.adaptive_budget:
-                    population[worst] = candidate[j]
-                    current_score[worst] = cand_score[j]
+                if available > cfg.adaptive_budget:
                     available -= cfg.adaptive_budget
                     cumulative_adaptive_cost += cfg.adaptive_budget
+                    if cand_score[j] > current_score[worst]:
+                        population[worst] = candidate[j]
+                        current_score[worst] = cand_score[j]
         # M and U are fixed; D inherits without mutation; L inherits with mutation.
         if arm in ("N", "D", "L") and len(population) == 0 and extinct_at is None:
             extinct_at = step
@@ -245,6 +254,7 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
         "cumulative_reproduction_energy": cumulative_reproduction_energy,
         "cumulative_maintenance_energy": cumulative_maintenance_energy,
         "cumulative_adaptive_cost": cumulative_adaptive_cost,
+        "cumulative_mutation_energy": cumulative_mutation_energy,
         "extinct_at": extinct_at, "target_changes": target_changes,
         "late_key_distance": float(np.mean([r["mean_key_distance"] for r in tail])),
         "trajectory": rows,
