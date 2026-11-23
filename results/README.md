@@ -15,4 +15,4 @@ Mmatched, Dmatched, Amatched and Umatched are initialized at the paired L run's 
 
 The initial 8-bit pilot and short-horizon matched 16-bit pilot are retained separately as `ega-initial-exploratory-results` and `ega-matched-key16-results`. The long-horizon run uses 100 residence-time units and three environmental drift rates to allow substantially more turnover and mutational exploration.
 
-Both runs are exploratory, not confirmatory. See [MODEL_LIMITATIONS.md](../MODEL_LIMITATIONS.md).
+The final paired-drift run's interpretation is in [EXPLORATORY_FINDINGS.md](EXPLORATORY_FINDINGS.md). All runs are exploratory, not confirmatory. See [MODEL_LIMITATIONS.md](../MODEL_LIMITATIONS.md).
