@@ -1,0 +1,48 @@
+# Moved from the standalone repository on 2026-11-23. Runs inside gradient-access/.
+name: "S16 gradient access: v0.3 accounting audit and revised standing-control pilot"
+
+on:
+  pull_request:
+    paths:
+      - "gradient-access/src/ega/model_v02.py"
+      - "gradient-access/analysis/run_v02_standing_controls.py"
+      - "gradient-access/tests/test_model_v02.py"
+      - ".github/workflows/gradient-access-v03-accounting.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: gradient-access
+
+jobs:
+  validate-and-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: gradient-access/pyproject.toml
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run complete test suite
+        run: pytest -q
+      - name: Run revised 160-case standing-control pilot
+        run: python analysis/run_v02_standing_controls.py --out results/v03-initial-work-charge
+      - name: Upload revised accounting results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ega-v03-initial-work-charge
+          path: |
+            gradient-access/results/v03-initial-work-charge/replicates.csv
+            gradient-access/results/v03-initial-work-charge/matched_contrasts.csv
+            gradient-access/results/v03-initial-work-charge/summary.json
+            gradient-access/results/v03-initial-work-charge/figures/
+          if-no-files-found: error

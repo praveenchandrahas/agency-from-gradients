@@ -1,0 +1,36 @@
+# Moved from the standalone repository on 2026-11-23. Runs inside gradient-access/.
+name: "S16 gradient access: v0.2 matched standing-variation controls"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: gradient-access
+
+jobs:
+  standing-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: gradient-access/pyproject.toml
+      - name: Install project and dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run v0.2 analytic validation tests
+        run: pytest -q tests/test_model_v02.py
+      - name: Run matched standing-variation experiment
+        run: python analysis/run_v02_standing_controls.py --out results/v02-standing-controls
+      - name: Upload matched-control results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ega-v02-standing-controls
+          path: gradient-access/results/v02-standing-controls/
+          if-no-files-found: error

@@ -20,6 +20,8 @@ If you only read one result, read H2 on the [main run page](main.md). It failed,
 | [S14](s14.md) | Before the replicator: does a driven soup start copying itself? | 200 chemistries | Not supported. No closed set was even possible |
 | [S15](s15.md) | Locks: in cold, locked gradients, does life open the lock when nothing else does? | 20 per cell | "Nothing else does" fails. Life improves its key; a fire and a 100x mineral bed also open the lock |
 | [Planet](planet.md) | Three follow-ups on the paper's own model: competition, neutral markers, demography. A separate model | 20 per cell | 9 of 12 supported. Carriers win, the planet captures less, most of the rise is drift |
+| [S16](s16.md) | Gradient access: does evolving beat non-evolving catalysts at equal cost? Folded in from `evolutionary-gradient-access` | Exploratory, not preregistered | v0.1 withdrawn after its own audit. v0.2: not supported against strong fixed or standing libraries. v0.3 (equal investment) to come |
+| [Chemistry line](chemistry.md) | Catalysis before the replicator: autocatalysis, mutual catalysis, a driven open reactor with recovery. Folded in from `thermodynamic-emergence` | Exploratory, not preregistered | Model demonstrations only. A driven reactor holds and recovers, from a seed |
 
 S5, Barrow's counter-test, is **not implemented**. S0, the re-analysis of earlier genome trajectories, is implemented against an *assumed* data format and has never run on the real files.
 

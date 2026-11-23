@@ -1,0 +1,62 @@
+{
+  "model": "chemostatted_autocatalytic_network",
+  "configuration": {
+    "temperature_K": 298.15,
+    "feed_activity": 1.0,
+    "waste_activity": 1.0,
+    "degraded_activity": 1e-8,
+    "growth_equilibrium_constant": 10.0,
+    "growth_forward_rate_s": 0.1,
+    "decay_equilibrium_constant": 0.0001,
+    "decay_forward_rate_s": 0.01,
+    "initial_catalyst_activity": 0.0001,
+    "duration_s": 5000.0,
+    "time_step_s": 0.1,
+    "standard_concentration_mol_L": 1.0,
+    "background_control_feed_activity": 1e-6
+  },
+  "reaction_network": {
+    "R1": "A + X <-> 2X + W",
+    "R2": "X <-> D",
+    "interpretation": "A, W and D are chemostatted reservoirs; X is the dynamic autocatalyst.",
+    "seed_source": "The reverse R2 reaction converts reservoir D into X; this is seeded amplification, not seed-free emergence."
+  },
+  "final": {
+    "catalyst_activity": 9.000011111097296,
+    "background_control_equilibrium_activity": 9.999100170961922e-5,
+    "analytic_equilibrium_catalyst_activity": 9.000011111097395,
+    "relative_error_from_analytic_equilibrium": 1.1052873355206854e-14,
+    "catalyst_enrichment_over_background": 90008.21031110329,
+    "linear_invasion_threshold_feed_activity": 0.1,
+    "net_growth_rate_activity_s": 8.840150833577809e-15,
+    "growth_rate_activity_s": 0.0899991111109818,
+    "decay_rate_activity_s": 0.08999911111097296,
+    "growth_delta_g_J_mol": -261.1811304974181,
+    "decay_delta_g_J_mol": -28278.86638217887,
+    "growth_entropy_production_J_L_K_s": 0.0788397436985711,
+    "decay_entropy_production_J_L_K_s": 8.536216124843449,
+    "total_entropy_production_J_L_K_s": 8.61505586854202
+  },
+  "persistence_diagnostics": {
+    "last_10_percent_min_activity": 9.000011111097296,
+    "last_10_percent_max_activity": 9.000011111097296,
+    "last_10_percent_relative_range": 0.0,
+    "enriched_over_background_10x": true
+  },
+  "accounting": {
+    "entropy_production_definition": "sum_r v_r * (-DeltaG_r) / T, with activities relative to the 1 mol/L standard state",
+    "free_energy_dissipation_rate_J_L_s": 2568.5789072058033,
+    "integrated_entropy_production_J_L_K": 42076.09318280386,
+    "standard_concentration_mol_L": 1.0,
+    "warning": "Ideal-solution chemostatted reaction-network estimate, not a complete planetary entropy budget."
+  },
+  "limitations": [
+    "A, W and D are abstract species; no specific prebiotic chemistry is represented.",
+    "The model is well-mixed and has no spatial gradients, diffusion, compartments or mineral surfaces.",
+    "Chemostats hold reservoir activities fixed; their pumps and external apparatus are outside the model boundary.",
+    "The baseline starts with nonzero X and reverse R2 supplies additional X from chemostatted D; this is not seed-free emergence.",
+    "The model has autocatalysis but no heredity, mutation, lineage or Darwinian evolution.",
+    "Reaction standard free energies are implied by illustrative equilibrium constants, not measured chemical data.",
+    "Entropy production is for the specified idealized reaction network and boundary, not total entropy production of the environment."
+  ]
+}

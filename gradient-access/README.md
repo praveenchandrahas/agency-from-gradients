@@ -1,0 +1,65 @@
+> **Part of [agency-from-gradients](https://github.com/praveenchandrahas/agency-from-gradients) since 2026-11-23, as S16.** It was the standalone repository `evolutionary-gradient-access`; its history came with it. S16 is S15's successor: it compares evolving and non-evolving catalysts at equal energy and material investment (the v0.3 design). The single hypothesis register is [Hypotheses and falsifiers](https://praveenchandrahas.github.io/agency-from-gradients/docs/hypotheses/); the programme's standing is [where the hypothesis stands](https://praveenchandrahas.github.io/agency-from-gradients/docs/standing/). Run from this directory: `pip install -e ".[dev]"` then `pytest -q`. CI workflows are at the repository root, named `gradient-access-*.yml`.
+
+# Evolutionary Gradient Access
+
+Computational experiments investigating whether heritable variation and natural selection enable evolving systems to access and sustain dissipative pathways that passive and non-evolving structures cannot exploit at comparable energetic and material costs.
+
+**This is a model-based research programme, not an established thermodynamic law.** The project studies evolutionary search and catalytic gradient access. It does not claim that life is uniquely capable of dissipation, that entropy production is a fitness objective, or that life and intelligence are inevitable.
+
+## Governing hypothesis
+
+> In sufficiently constrained environments containing kinetically inaccessible free-energy gradients, systems with heritable variation and selection can sustain access to dissipative pathways that passive and non-evolving dissipative structures cannot access at comparable energetic and material costs.
+
+The subject is **evolutionary advantage**, not a unique property of life.
+
+## Experimental arms
+
+- **N:** uncatalysed passive baseline.
+- **M:** fixed random catalyst library.
+- **D:** self-maintaining catalytic population with faithful inheritance and no new mutation; selection can sort standing variation.
+- **L:** heritable variation and selection.
+- **U:** ideal designer benchmark with target-matched catalysts.
+- **A:** bounded, oracle-assisted non-replicating adaptive search control.
+- **Mmatched:** fixed random catalyst library matched to L's late-window population size.
+- **Dmatched:** faithful-copying, no-new-mutation population initialized at L's late-window population size; it can reproduce and select among its larger standing library.
+- **Amatched:** adaptive-search control matched to L's late-window population size.
+- **Umatched:** ideal target-matched catalyst population at L's late-window population size.
+
+D and L begin from the same random key library under paired seeds. Catalysts multiply forward and reverse reaction rates equally; they do not change the equilibrium constant. Selection uses usable chemical free energy after declared costs. Entropy production is recorded independently and is never included in fitness.
+
+## First executable model
+
+The initial implementation is an abstract flow-reactor model with configurable activation barriers, catalyst key landscapes, mutation, environmental drift and multiple locks. It is deliberately coarse and does not represent validated prebiotic chemistry.
+
+Install and run:
+
+```bash
+python -m pip install -e ".[dev]"
+pytest -q
+ega-run --out results/long-horizon-key16 --seeds 10 --steps 300 --duration 100
+```
+
+The current runner executes E01 (static locks), E03 (slow, medium and fast drifting locks) and E04 (multiple locks), using 16-bit keys over 100 residence-time units. It includes matched-size Mmatched, Dmatched, Amatched and Umatched controls, with matched controls initialized at the paired L run's late-window population. Dmatched can reproduce faithfully without new mutation. A is an oracle-assisted adaptive-search control. Initial construction, reproduction, maintenance, mutation and search costs are recorded separately; cumulative dissipation is reported from the same trajectories.
+
+## Interpretation limits
+
+1. A positive result supports only a conditional mechanism in this model.
+2. The bit-string key/lock landscape is a modelling choice; sensitivity to geometry is required.
+3. The population algorithm assumes replicators already exist. It does not model abiogenesis.
+4. A code audit identified blocking issues in the energy ledger, work coupling and reservoir-exchange entropy. The v0.1 energetic-cost comparisons are invalid pending redesign; see [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md).
+5. Initial runs are exploratory; no confirmatory preregistration has yet been frozen.
+6. The model does not include complete reactor engineering costs, spatial transport or finite-molecule stochastic extinction.
+
+## Research standards
+
+- Measure entropy production; never reward it through fitness.
+- Keep throughput, free-energy consumption, entropy production, stored energy and reproductive success distinct.
+- Use paired seeds, matched resource boundaries and uncertainty estimates.
+- Report extinction and negative outcomes.
+- Treat controls as causal comparisons, not decorative baselines.
+
+A separate v0.2 coupled-reaction prototype is now implemented in [src/ega/model_v02.py](src/ega/model_v02.py), with its assumptions in [MODEL_V02_IMPLEMENTATION.md](MODEL_V02_IMPLEMENTATION.md). It is a new validation model; it does not retroactively validate v0.1. The deterministic sensitivity pilot is in [analysis/run_v02_pilot.py](analysis/run_v02_pilot.py), with a dedicated [GitHub Actions workflow](.github/workflows/v02-validation.yml). Its results and interpretation are in [results/V02_PILOT_FINDINGS.md](results/V02_PILOT_FINDINGS.md). The matched standing-variation follow-up is reported in [results/V02_STANDING_CONTROLS.md](results/V02_STANDING_CONTROLS.md). See [VALIDATION_AUDIT.md](VALIDATION_AUDIT.md) for the v0.1 audit.
+
+The v0.3 equal-investment design is in [MODEL_V03_EQUAL_BUDGET_DESIGN.md](MODEL_V03_EQUAL_BUDGET_DESIGN.md). It requires initial work-pool exergy to be charged, gross forward/reverse work flows to be reported, and evolving/non-evolving arms to be compared on a common work-and-material budget frontier. The current v0.2 matched-controls result is not yet an equal-budget comparison.
+
+See [RESEARCH_CHARTER.md](RESEARCH_CHARTER.md), [HYPOTHESES.md](HYPOTHESES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ROADMAP.md](ROADMAP.md), [MODEL_LIMITATIONS.md](MODEL_LIMITATIONS.md) and [exploratory findings](results/EXPLORATORY_FINDINGS.md).

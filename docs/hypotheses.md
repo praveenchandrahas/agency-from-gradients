@@ -73,6 +73,44 @@ These came after the main run. That changes their status.
 | **Starlight** | In a minimal world, does persistence selection raise capture, and does behaviour evolve only when needed? | P1a to P1d, P2a to P2e, P3a and P3b, in `starlight/PREREGISTRATION.md` | 11 of 11 supported. Its lifeless world was a mirror, so it could not test the claim underneath |
 | **S15** | In cold, locked gradients, does life open the lock when nothing else does? | H1, H2a to H2e, in `locks/PREREGISTRATION.md` | H1 and H2a to H2d supported. H2e not: a fire and a large mineral bed opened the lock too |
 
+## Two lines folded in on 2026-11-23
+
+Two separate repositories had grown their own registers. Both now live here, and this page is the only register. Their old files are kept, frozen, with a note that points here.
+
+- **S16, gradient access** (`gradient-access/`, formerly `evolutionary-gradient-access`). The successor to S15. Its job is the comparison S15 did not make: evolving against non-evolving catalysts **at equal energy and material investment**.
+- **The chemistry line** (`chemistry/`, formerly `thermodynamic-emergence`). Seeded autocatalysis, mutual catalysis, and a driven open reactor with recovery. It belongs with S14: before the replicator.
+
+Their hypothesis numbers clashed with the ones above. They are renamed here: **H16-x** for S16, **C-x** for the chemistry line.
+
+!!! warning "Nothing below is preregistered"
+    Neither line froze a preregistration before its runs. Every result below is exploratory.
+
+### S16, gradient access
+
+| | Prediction | Status |
+|---|---|---|
+| **H16-0** | Gates: conservation, detailed balance, non-negative entropy production, convergence | v0.1 **failed its own audit** ([`VALIDATION_AUDIT.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/gradient-access/VALIDATION_AUDIT.md)): reproduction cost never added up, reproductive energy from a constant instead of the actual affinity, waste species missing from exchange entropy, populations at the cap within two steps. v0.2 closes its free-energy identity |
+| **H16-1** | No catalytic advantage at zero barrier; catalysis helps at high barriers | Holds in v0.1 throughput, which the audit leaves standing. Zero-barrier invariance is exact |
+| **H16-2** | Evolving catalysts beat fixed and standing-variation controls matched to their size | **Not supported at comparable cost** (v0.2, exploratory). Under drift, a fixed library with the same catalyst material converted about 6.6% *more* fuel, with about 20% less work. Same direction as S15's H2e |
+| **H16-3** | If oracle-assisted search matches evolution at equal cost, the advantage is adaptive search, not inheritance | Not tested at equal cost yet |
+| **H16-4** | A range of drift rates exists where evolution holds access and fixed controls lose it | Partly: mutation helps late adaptation against a *small* copying population; the gap closes against a rich standing library (v0.2). **Overlaps S15's H3a.** Run once, in S16 v0.3 |
+| **H16-5** | Evolution holds more of a multi-lock landscape | Not established in v0.1 |
+| **H16-6** | Cumulative dissipation rises only once all costs are counted | Not tested: needs v0.3 accounting |
+
+Next: the v0.3 equal-investment design ([`MODEL_V03_EQUAL_BUDGET_DESIGN.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/gradient-access/MODEL_V03_EQUAL_BUDGET_DESIGN.md)), preregistered before it runs.
+
+### The chemistry line (S14 line)
+
+| | Claim | Status |
+|---|---|---|
+| **C-1** | Sustained gradients support structures that would not persist without the flow | Model demonstration only. A driven open reactor holds a steady state; so does its uncatalysed null, at lower abundance |
+| **C-2** | Some structures maintain themselves and recover from damage | Model demonstration only. After 99% catalyst removal the open reactor restores about 99.9% of abundance, but 1% of the catalyst survives and every species is fed continuously |
+| **C-3** | Replication with heredity can arise from self-maintaining chemistry | Not tested. Same question as S14's H14a and H14b, which found no closed set possible in 0 of 200 chemistries |
+| **C-4, C-5** | Information processing, then agency, become selectable | **Superseded** by links 5 and 6 on [where the hypothesis stands](standing.md) |
+| **C-6** | Evolved organization changes planetary dissipation | **Superseded** by link 7 and the Planet albedo result |
+
+The chemistry line's evidence hierarchy is worth keeping: conceptual consistency, then mechanism, model demonstration, robustness, empirical support, generalization. Evidence at one level must not be reported at a higher one. Everything in this repository is at model demonstration or below.
+
 ## Things I chose not to claim
 
 The preregistration lists what is *exploratory*, so that no one, me included, treats it as a finding:

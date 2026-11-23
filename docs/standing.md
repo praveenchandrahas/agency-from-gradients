@@ -44,6 +44,7 @@ This holds. But in a weaker form than "each exists *because* it is a good drain.
 - In [S15](results/s15.md), a fire with a fixed key persisted on cold fuel, as long as its starting key was good enough. It never got better. It didn't need to.
 - In [S14](results/s14.md), a mineral-catalysed structure persisted while driven, and came back at once after being wiped.
 - [Horowitz and England](before-life.md) found driven networks settling at *both* extremes: some coupled strongly to the drive, some sheltered from it.
+- The [chemistry line](results/chemistry.md)'s driven open reactor held a steady state and recovered from 99% catalyst removal. So did its uncatalysed null, at lower abundance. Recovery started from a surviving seed and continuous feed.
 
 So persistence asks for a drain that pays its bills. Not the best drain. Survival is a threshold, not a ranking.
 
@@ -64,7 +65,9 @@ This is the claim underneath everything. It was tested directly in [S15](results
 
 Life did best. But a fire and a big enough rock surface opened the lock too.
 
-The [S14 re-check](results/s14.md#addendum-2026-11-23-mixing-entropy) points the same way. With mixing counted, the copier out-dissipates the mineral by about 3%. Better, but not in a different class.
+[S16](results/s16.md) v0.2 points the same way, in a separate engine. Under drift, a fixed library with the same catalyst material converted about 6.6% more fuel than the evolving arm, with about 20% less work. It is exploratory, and its equal-investment version is not built yet.
+
+The [S14 re-check](results/s14.md#addendum-2026-11-23-mixing-entropy) points the same way too. With mixing counted, the copier out-dissipates the mineral by about 3%. Better, but not in a different class.
 
 **What survives is narrower:**
 
@@ -134,7 +137,7 @@ One result cuts the other way. In Planet, the action trait fell to about 0.04 by
 
 I saw all of this after the fact, across experiments not designed to test it. So it is a lead. Two preregistered tests can check it:
 
-- **S15 H3a, the drifting lock.** A fixed key goes stale. Life's key should follow.
+- **S15 H3a, the drifting lock.** A fixed key goes stale. Life's key should follow. Now run as H16-4, at equal cost, in [S16](results/s16.md) v0.3.
 - **H13, static against variable selection,** in the ladder world.
 
 ## Lessons for method
@@ -146,6 +149,9 @@ These are now part of how every experiment here is built.
 3. **Match the controls.** S14's mineral level was a number I chose, so its comparison meant nothing. S15 matched the mineral to life's catalyst count.
 4. **Write the expectations down first, from arithmetic.** S15's outcome was visible in the arithmetic before anything ran. That is good for the engine. It is also a warning about how much a toy model can tell us.
 5. **Report two horizons.** Planet's generation 220 was the bottom of a dip.
+6. **Match on cost, not just size.** S15 matched the mineral to life's catalyst count. But life pays to copy and mutate, and a mineral pays nothing. S16 v0.3 charges every arm for the work it invests.
+7. **Audit before the headline.** S16 v0.1 reported an advantage before its audit found reproduction costs never counted. A clean conservation check is not a complete ledger.
+8. **One register.** Two repositories ran the same programme in parallel and repeated each other's mistakes. Everything now lives here.
 
 ## The revised hypothesis
 
@@ -181,11 +187,13 @@ What it adds, to be tested:
 - **Prior work.** None of the revised hypothesis is original. Smith and Morowitz, Branscomb and colleagues, Pross and Pascal, Lotka, Ulanowicz and Hannon, Kussell and Leibler, and Dyson's "hang-ups" (1971) cover its parts. What this repo adds is matched-control tests with checked accounting. A researcher map, kept outside the repo, tracks who works on what.
 - **Civilizations and the Kardashev link.** Split into *catching* (settled thermodynamics; any cold absorber does it) and *unlocking* (speculative). Four tests are proposed, none run: see [Catching against unlocking](unlocking.md).
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
+- **S16 v0.3,** the equal-investment test, is designed and not built. S15's H3a, the drifting lock, runs there.
+- **Repositories folded in.** `evolutionary-gradient-access` is now `gradient-access/` (S16), and `thermodynamic-emergence` is now `chemistry/` (the S14 line). Their old registers are frozen; [Hypotheses and falsifiers](hypotheses.md) is the only one.
 - **The blog post** "Did starlight make us smart?" now covers the lock world and the revised hypothesis.
 
 ## What would change this page
 
-- **H3a.** If life's key does not track a drifting lock better than the fixed arms, the "improvement" reading weakens badly.
+- **H3a / H16-4.** If life's key does not track a drifting lock better than fixed and standing libraries, at equal cost, the "improvement" reading weakens badly. S16 v0.2 already leans that way, exploratorily.
 - **An aggregate test.** If a population-level experiment shows heredity raising *total* capture, link 4 recovers.
 - **A fixed-flux test.** If structure raises entropy production under a fixed energy flow too, link 7 is broader than stated.
 - **The lock ladder.** If life opens a lock with no foothold as readily as an investor arm does, the case that civilizations add something distinct, beyond improvement, fails.
