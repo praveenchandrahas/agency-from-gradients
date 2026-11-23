@@ -175,12 +175,12 @@ What it adds, to be tested:
 
 - Change in the environment as the load-bearing condition.
 
-## Not yet updated
+## Still open
 
 - **The paper.** It lives in its own repository, `dissipative-agency-simulation`. A revised version 1.1, with the new chain and the Planet follow-ups, is up for review as [pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9) there.
-- **Planet** (draft PR #7) is still open. Its results are cited here from the draft.
+- **Planet** (draft PR #7) is still open. Its results are cited here, and in the paper, from the draft branch.
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
-- **The blog post** "Did starlight make us smart?" predates S15. It is being revised to match.
+- **The blog post** "Did starlight make us smart?" now covers the lock world and the revised hypothesis.
 
 ## What would change this page
 
