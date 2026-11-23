@@ -79,7 +79,7 @@ This holds for a single lineage. It fails for the whole.
 
 - **For a lineage, yes.** In [Starlight](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/starlight/RESULTS.md), the absorber converged to the best capture from both starts. In S15, life drove a locked fuel to 97% spent, the same as the designer.
 - **But not always.** In Starlight, where sensing was optional, lineages that could sense captured slightly *less*. Selection did not maximise capture there.
-- **And not for the whole.** In Planet (draft PR #7), agents carrying agency took over from 50/50, and the planet's throughput fell: 43.9 TW in the mixed world, against 134.7 for non-carriers alone. The winner shrank the pie.
+- **And not for the whole.** In [Planet](results/planet.md), agents carrying agency took over from 50/50, and the planet's throughput fell: 43.9 TW in the mixed world, against 134.7 for non-carriers alone. The winner shrank the pie.
 - **Not in the ladder world.** In S1 to S4, evolved populations reached the big deposits in 27% of runs and took 2% of their energy from them. A hand-coded forager took 50%.
 
 That last link matters for the Kardashev framing. Kardashev is about the total. The only experiment that measured the total found individual advantage lowering it.
@@ -180,7 +180,6 @@ What it adds, to be tested:
 - **The paper.** It lives in its own repository, `dissipative-agency-simulation`. Version 1.1, with the new chain and the Planet follow-ups, is merged ([pull request 9](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/9)). Version 1.2, which credits the prior work below, is merged too ([pull request 10](https://github.com/praveenchandrahas/dissipative-agency-simulation/pull/10)).
 - **Prior work.** None of the revised hypothesis is original. Smith and Morowitz, Branscomb and colleagues, Pross and Pascal, Lotka, Ulanowicz and Hannon, Kussell and Leibler, and Dyson's "hang-ups" (1971) cover its parts. What this repo adds is matched-control tests with checked accounting. A researcher map, kept outside the repo, tracks who works on what.
 - **Civilizations and the Kardashev link.** Split into *catching* (settled thermodynamics; any cold absorber does it) and *unlocking* (speculative). Four tests are proposed, none run: see [Catching against unlocking](unlocking.md).
-- **Planet** (draft PR #7) is still open. Its results are cited here, and in the paper, from the draft branch.
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
 - **The blog post** "Did starlight make us smart?" now covers the lock world and the revised hypothesis.
 

@@ -1,0 +1,5 @@
+frozen: 2026-11-16T13:45:03Z
+PREREGISTRATION.md sha256: 4545c877de3552944bc2ad011e83071dfc565becacbe98131186f0ea5e2b0ea1
+engine.py sha256: 5458088e2207c6c9e34756c0053c0aa0d5de9fa7ae6e900e459cbbc1ccb557e9
+v0_2.py sha256: bee4697fc47108901be1fe56057fcc5ebdeb54eaeacbabc4867995787c2f28df
+python 3.13.18 numpy 2.5.3 pandas 3.0.5
