@@ -1,19 +1,24 @@
-name: Python model tests
+# Moved from the standalone repository on 2026-11-23. Runs inside chemistry/.
+name: "Chemistry (S14 line): Python model tests"
 
 on:
   push:
     paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'pyproject.toml'
-      - '.github/workflows/python-tests.yml'
+      - "chemistry/src/**"
+      - "chemistry/tests/**"
+      - "chemistry/pyproject.toml"
+      - ".github/workflows/chemistry-tests.yml"
   pull_request:
     paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'pyproject.toml'
-      - '.github/workflows/python-tests.yml'
+      - "chemistry/src/**"
+      - "chemistry/tests/**"
+      - "chemistry/pyproject.toml"
+      - ".github/workflows/chemistry-tests.yml"
   workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: chemistry
 
 jobs:
   test:
