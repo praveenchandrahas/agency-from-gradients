@@ -59,9 +59,12 @@ nav:
   - Home: index.md
   - The idea:
       - The idea: idea.md
+      - Where the hypothesis stands: standing.md
       - Hypotheses and falsifiers: hypotheses.md
       - Thesis, rebuilt from the hypothesis: thesis.md
       - Why the next experiment starts before life: before-life.md
+      - "Locks (S15): the claim underneath": locks.md
+      - "Civilizations: catching against unlocking": unlocking.md
   - The simulation:
       - The world: world.md
       - World v2: world-v2.md
@@ -77,6 +80,7 @@ nav:
       - S10, dissipative adaptation: results/s10.md
       - S11, a lifeless universe: results/s11.md
       - S14, before the replicator: results/s14.md
+      - S15, locks: results/s15.md
       - Planet, three follow-ups on the paper's model: results/planet.md
   - Using the repo:
       - How to run: running.md

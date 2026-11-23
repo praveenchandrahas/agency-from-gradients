@@ -2,13 +2,13 @@
 
 <p align="center"><img src="docs/banner.png" alt="Banner: agency-from-gradients. Can agency arise without a built-in objective? Simulate, ablate, measure. A torus world with low, medium and high energy reservoirs, and agents that move, consume, invest, reproduce and die." width="100%"></p>
 
-> **Start here (blog readers):** [`starlight/`](starlight/) is a small, self-contained model of the hypothesis. 256 lines of engine, runs in minutes, with its predictions written down before the runs. Read [`starlight/README.md`](starlight/README.md) first, then [`starlight/RESULTS.md`](starlight/RESULTS.md). The rest of this repo is the longer record, including the experiments that failed.
+> **Start here (blog readers):** [`starlight/`](starlight/) is a small, self-contained model of the hypothesis. 256 lines of engine, runs in minutes, with its predictions written down before the runs. Read [`starlight/README.md`](starlight/README.md) first, then [`starlight/RESULTS.md`](starlight/RESULTS.md). The rest of this repo is the longer record, including the experiments that failed. **For where the hypothesis stands now, link by link, read [`docs/standing.md`](docs/standing.md).**
 
 <sub><i>The banner is an illustration. Its example charts are mock-ups, not results, and its design table is a sketch: the ablations actually implemented are food scarcity, heredity, mortality and succession (see below), and there is no memory ablation.</i></sub>
 
 **agency-from-gradients** is a simulation suite built on one design hypothesis: if we want artificial agency, we should reproduce the conditions under which it arose on Earth, not hand agents an objective.
 
-The argument starts from first principles. Structures that drain energy gradients persist, and each new structure feeds on what the last left unexhausted, from stars to supernovae to life. Life is the one case we know where this succession produced agents. The suite asks which of its conditions are load-bearing: a ladder of gradients, finite and contested resources, heredity with variation, a real cost of death, and succession.
+The argument, as revised on 2026-11-23 to fit the results ([`docs/standing.md`](docs/standing.md)): free energy is locked up in gradients, mostly by gravity and unfused hydrogen. Structures persist when they drain a gradient well enough to pay their bills, living or not; entropy production follows, and is not the thing selected. What heredity with variation adds is improvement, and improvement pays most when the world changes. Life is the one case we know where this produced agents. The suite asks which of its conditions are load-bearing: a ladder of gradients, finite and contested resources, heredity with variation, a real cost of death, and succession.
 
 Selection is by persistence and reproduction only. Entropy production is measured and never rewarded. Each condition is switched on and off in a factorial design, with hypotheses and falsifiers pre-registered.
 
@@ -34,6 +34,7 @@ Selection is by persistence and reproduction only. Entropy production is measure
 | S5: Barrow counter-test (efficiency pathway) | **Not implemented** |
 | S14: before the replicator. A driven, thermodynamically consistent chemistry with no agents, genomes or fitness | **Confirmatory run done** (200 chemistries): **H14a and H14b not supported; H14c and H14d not run.** A closed catalytic set was structurally possible in 0 of 200 chemistries, so the dynamics were never tested. All gates passed. See below. There is no S13: H13 is a candidate hypothesis in `docs/thesis.md` |
 | Starlight: a from-scratch minimal model of the hypothesis chain (capture, behaviour, furnace control). Separate engine in `starlight/` | **Confirmatory run done** (20 seeds per cell): 11 of 11 preregistered predictions supported. Entropy itself was not selected: a heritable furnace only drifted when free and was purged when costly. See `starlight/RESULTS.md` |
+| S15, Locks: does life open cold, locked gradients that passive and non-living dissipative structures cannot? The core hypothesis, tested against a passive counterfactual. Spec in [`locks/SPEC.md`](locks/SPEC.md); engine in `locks/` | **Confirmatory run done** (20 seeds per cell, two key lengths, eight barriers). Life beat the mineral and the fire at every cold barrier, and its lead grew with the barrier. But **"nothing else does" failed**: a fire held the lock at 78% of the designer level (key length 24), and a mineral bed 100x larger matched life. Only life improved its key. See `locks/RESULTS.md` |
 | Planet: the paper's v0.2 spatial model (from `dissipative-agency-simulation`), copied in unchanged, with three follow-ups: carriers and non-carriers on one planet, neutral marker traits, and demography. Separate engine in `planet/` | **Confirmatory run done** (20 replicates per cell, 660 generations): 9 of 12 preregistered predictions supported. Agency carriers displace non-carriers and the planet's throughput falls as they do. Most of the rise in agency traits is matched by markers that do nothing. The action trait is purged after the paper's endpoint. See `planet/RESULTS.md` |
 | Thesis document, rebuilt from the hypothesis | **Published**; hypothesis-first rewrite in `docs/thesis.md` |
 | Predictive-information probe | **Implemented in S9** (linear read-out of the hidden state; no positive control yet) |
@@ -293,6 +294,16 @@ PREREGISTRATION_S6.md, PREREGISTRATION_S7.md, PREREGISTRATION_S8.md, PREREGISTRA
 PREREGISTRATION_S14.md   S14, frozen before its confirmatory run
 ```
 
+## S15: Locks. Does life open the lock when nothing else does?
+
+Preregistered in [`locks/PREREGISTRATION.md`](locks/PREREGISTRATION.md), frozen on `main` before the run; design in [`locks/SPEC.md`](locks/SPEC.md); generated report in [`locks/RESULTS.md`](locks/RESULTS.md); plain-language reading in [`docs/results/s15.md`](docs/results/s15.md); raw runs in `s15/45129057522/` on the `ci-results` branch. A flow reactor where fuel can only be spent through a lock with barrier B. Five arms: passive (N), matched random mineral (M), fire with heritable but fixed keys (D), life with mutating keys (L), designer (U). Entropy production counts reactions plus mixing, and is never used by the dynamics.
+
+- **Gates pass**, including a steady-state free-energy balance. Expectations were written down in advance from arithmetic, and the run matched them closely.
+- **H1, H2a, H2b, H2c, H2d supported** at both key lengths. At B = 16: L − D = +262 [214, 311] (key length 24) and +603 [384, 817] (32).
+- **H2e not supported.** At key length 24 the fire reached 0.78 [0.74, 0.82] of the designer, the mineral 0.24. At 32 the fire was 0.14 [0.06, 0.24], inconclusive, and the mineral stalled at 0.04.
+- **Not preregistered:** the fire only sorts its starting library; life always climbs to the perfect key once it survives; life never survived where the fire died (0 of 20 at key length 32); a mineral bed 100x larger matched life.
+- **Reading:** "nothing else does" fails in this model. What survives: among structures of the same size, only life improves its key. It needs a foothold non-living matter already provides. The drifting lock (H3a) is next.
+
 ## S14: before the replicator (no agents, no genomes, no fitness)
 
 Preregistered in [`PREREGISTRATION_S14.md`](PREREGISTRATION_S14.md), frozen on `main` before the run; reasoning in [`docs/before-life.md`](docs/before-life.md); engine in `src/agency_gradients/soup/`; write-up in [`docs/results/s14.md`](docs/results/s14.md); raw runs in `s14/43258823346-*` on the `ci-results` branch. A flow reactor of binary polymers (length 1 to 6), a fuel and a heat bath. Every reaction is reversible and obeys local detailed balance. Entropy production is recorded from the free-energy books and is never used by the dynamics.
@@ -300,7 +311,7 @@ Preregistered in [`PREREGISTRATION_S14.md`](PREREGISTRATION_S14.md), frozen on `
 - **All gates passed**: closed-box relaxation to the Boltzmann composition, exact mass and fuel ledgers, the single-event detailed-balance identity (worst error 2e-11), agreement of flux-based entropy production with the books, no structure without a drive, and a detector that fired on 10 of 10 designed copiers and 0 of 10 "mineral" controls.
 - **H14a (copying appears): not supported.** 0 of 200 random chemistries at the top drive. H14b (more drive, more copying): not supported. H14c and H14d: not run, nothing emerged.
 - **The null is structural.** In 0 of 200 chemistries did the catalysis table contain any closed set. The dynamics were never put to the test. Post hoc and not preregistered: on fresh chemistries, a closed set is possible in 0 of 200 at one catalysed join per polymer per kind (the frozen value), 60 at two, 165 at three, 198 at five.
-- **Controls, descriptive**: the designed copier and the mineral control dissipate about the same (8,070 against 8,077 k_B per residence time). Sterilised, the mineral soup is back within one residence time; the copier stays dead for 100. Copying is not needed for dissipation here, and what can be inherited can be lost.
+- **Controls, descriptive**: counting reactions only, the designed copier and the mineral control dissipate about the same (8,070 against 8,077 k_B per residence time). **Corrected 2026-11-23:** with the mixing of the feed counted, the copier is ahead, 12,107 against 11,767 (+340 [323, 359], about 3%), in line with its higher capture; the mineral's level was still hand-set, so this does not rank them. Re-check in `src/agency_gradients/experiments/s14_mixing_recheck.py`, results in `s14/mixing-recheck/` on the `ci-results` branch. Sterilised, the mineral soup is back within one residence time; the copier stays dead for 100. Copying is not needed for dissipation here, and what can be inherited can be lost.
 - This says nothing about early Earth and does not measure agency.
 
 ## License

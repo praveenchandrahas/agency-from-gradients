@@ -78,7 +78,7 @@ footer{padding-block:40px 70px;color:var(--mute);font-size:.9rem;border-top:1px 
   <header class="hero">
     <div class="eyebrow">An explainer, with live simulations</div>
     <h1>Where does the leftover energy go?</h1>
-    <p class="lede">Stars burn fast and waste most of what they make. Life is what grew to catch the scraps. This page asks a simple question: if we want an artificial mind, should we copy the <em>conditions</em> that produced life, instead of handing it a goal?</p>
+    <p class="lede">The universe is full of energy that is locked up. Fires, rocks and living things all drain some of it. Only living things get better at it. This page asks a simple question: if we want an artificial mind, should we copy the <em>conditions</em> that produced life, instead of handing it a goal?</p>
     <p class="note">One honest note first: these are small toy worlds. They test an idea. They do not prove anything about Earth.</p>
   </header>
 
@@ -89,7 +89,7 @@ footer{padding-block:40px 70px;color:var(--mute);font-size:.9rem;border-top:1px 
     <div class="card">
       <div class="stage"><canvas id="fall" width="960" height="420" aria-label="Animation: droplets of energy falling through three pools, some caught by mills and some spilling into the dark"></canvas></div>
       <div class="slider"><label for="catch" style="color:var(--ink)">Life forms catching the spill</label><input id="catch" type="range" min="0" max="95" value="0"><div class="big" id="usedbig" aria-live="polite">0%</div></div>
-      <p class="note">Illustration, not a simulation: it shows only the idea of capture. Each pool catches the same share of what reaches it.</p>
+      <p class="note">Illustration, not a simulation: it shows only the idea of capture. Each pool catches the same share of what reaches it. Later tests found that rocks and fires catch the spill too. What only life does is get better at catching it (see <a href="#locks">below</a>).</p>
     </div>
   </section>
 
@@ -161,6 +161,19 @@ footer{padding-block:40px 70px;color:var(--mute);font-size:.9rem;border-top:1px 
 
     <div class="finding mid"><h3>One idea we tested and could not confirm.</h3>
       <p>We guessed that opening a well is a favour to everyone nearby, so selection punishes the creature that pays for it. We tested that by letting the opener keep most of the reward. It moved in the predicted direction, but not by enough to be sure it was real at 30 ponds.</p></div>
+  </section>
+
+  <section id="locks">
+    <div class="eyebrow">Underneath it all</div>
+    <h2>Does life open energy nothing else can?</h2>
+    <p>Everything here leans on one idea: life drains energy that passive matter cannot. So we tested that idea on its own, in a newer, simpler world. Fuel sits behind a lock. Rocks, a "fire" that grows but cannot change, and life that copies with small errors all try to open it. Nothing is rewarded. We wrote the predictions down first.</p>
+    <div class="finding"><h3>Life did best.</h3>
+      <p>At the coldest, hardest locks, life beat the rocks and the fire every time, and its lead grew as the lock got harder. With no lock at all, it added nothing.</p></div>
+    <div class="finding bad"><h3>But it was not alone.</h3>
+      <p>A fire that started with a decent key held the lock open at <strong>78%</strong> of the best possible. A rock surface a hundred times bigger matched life outright. So "nothing else does it" is false here.</p></div>
+    <div class="finding mid"><h3>What life alone did: it got better.</h3>
+      <p>The fire only kept the best key it started with. Life kept improving its key until it was perfect. But it never got going where the fire could not at least survive first. Life climbs. It does not start.</p></div>
+    <p class="note">Full design, predictions and numbers: <a href="https://praveenchandrahas.github.io/agency-from-gradients/docs/results/s15/">the S15 results page</a>.</p>
   </section>
 
   <section id="limits">

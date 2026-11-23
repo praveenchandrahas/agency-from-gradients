@@ -1,6 +1,6 @@
 # Planet: three follow-ups on the paper's model
 
-Preregistered in [`planet/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/planet-v02-followups/planet/PREREGISTRATION.md), frozen before the runs. 520 runs, 20 replicates per cell, 95% bootstrap intervals on replicate means. Full tables are in [`planet/RESULTS.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/planet-v02-followups/planet/RESULTS.md).
+Preregistered in [`planet/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/planet/PREREGISTRATION.md), frozen before the runs. 520 runs, 20 replicates per cell, 95% bootstrap intervals on replicate means. Full tables are in [`planet/RESULTS.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/planet/RESULTS.md).
 
 !!! abstract "Verdict"
     **9 of 12 predictions supported.** The three that failed were my own guesses, not claims from the paper. Agency carriers beat non-carriers on the same planet. But the planet captures less energy as they win. And most of the rise in agency traits is drift.
@@ -79,8 +79,8 @@ Generation 220 is also the bottom of a dip. By generation 660 strong-world throu
 
 | What | Where |
 |---|---|
-| Frozen predictions | [`planet/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/planet-v02-followups/planet/PREREGISTRATION.md) |
-| All tables | [`planet/RESULTS.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/planet-v02-followups/planet/RESULTS.md) |
+| Frozen predictions | [`planet/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/planet/PREREGISTRATION.md) |
+| All tables | [`planet/RESULTS.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/planet/RESULTS.md) |
 | Raw per-run CSVs | `planet/results/` on the same branch |
 | Code and tests | `planet/planet/`, `planet/tests/` |
 | Pull request | [#7, draft](https://github.com/praveenchandrahas/agency-from-gradients/pull/7) |

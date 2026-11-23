@@ -27,6 +27,9 @@ Remove scarcity, heredity or mortality, and big-deposit access went *up*. Not do
 
 Most of the later experiments, built to find out why, came back negative too. I report them all. A negative result you can trust is worth more than a positive one you can't.
 
+!!! tip "The hypothesis, revised"
+    On 2026-11-23 the hypothesis was revised to fit the results: [where the hypothesis stands](standing.md). The claim that life drains energy nothing else can failed when tested directly (S15). What survives: structures, living or not, persist when they drain a gradient well enough to pay their bills. What heredity with variation adds is *improvement*, and improvement pays most when the world changes.
+
 ## What each experiment found
 
 | | Question | Verdict |
@@ -42,6 +45,8 @@ Most of the later experiments, built to find out why, came back negative too. I 
 | [S10](results/s10.md) | Does England-style dissipative adaptation climb the ladder? | **Not supported** |
 | [S11](results/s11.md) | What best raises the entropy of a lifeless universe? | **A black-hole engineer**, as the literature suggests |
 | [S14](results/s14.md) | With no agents at all, does a driven soup start copying itself? | **Not supported**. In 0 of 200 chemistries was a closed set even possible |
+| [Starlight](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/starlight/RESULTS.md) | In a minimal world, does persistence selection raise capture, and does behaviour evolve only when needed? | **11 of 11 supported**. But its lifeless world was a mirror, so it could not test the claim underneath |
+| [S15](results/s15.md) | In cold, locked gradients, does life open the lock when nothing else does? | **Life does better, but not alone.** A fire and a large mineral bed also opened the lock. Only life improved its key |
 
 ## How the site is organised
 
@@ -49,6 +54,7 @@ Most of the later experiments, built to find out why, came back negative too. I 
 - **[Hypotheses and falsifiers](hypotheses.md)** lists what I wrote down before looking, and what would change my mind.
 - **[The thesis, rebuilt from the hypothesis](thesis.md)** states the claim first, derives the predictions, reads the evidence against them, and ends with the revised thesis.
 - **[Why the next experiment starts before life](before-life.md)** records the decision to move the start line back, before the replicator, and the case against it.
+- **[Locks (S15)](locks.md)** tests the claim underneath everything: does life open energy that nothing else can?
 - **[The world](world.md)** describes the simulation in plain language.
 - **[Results](results/index.md)** has every experiment, its numbers, and what it does *not* show.
 - **[How to run](running.md)** gets you from `pip install` to your own results.

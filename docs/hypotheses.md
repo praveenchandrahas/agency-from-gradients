@@ -20,6 +20,11 @@ The rebuilt argument is in [The thesis, rebuilt from the hypothesis](thesis.md).
 
 What came next is in [Why the next experiment starts before life](before-life.md). S14 is preregistered in [`PREREGISTRATION_S14.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/PREREGISTRATION_S14.md). It was frozen on `main` before its confirmatory run. [The result](results/s14.md) is a null.
 
+S15 goes underneath all of these. It tests the core claim directly: in cold, locked gradients, does life open the lock when nothing else does? It is preregistered in [`locks/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/locks/PREREGISTRATION.md), frozen on `main` before its run. The plain-language version is [Locks (S15)](locks.md). [The result](results/s15.md).
+
+!!! success "The hypothesis was revised on 2026-11-23"
+    After S15, the chain the hypotheses rest on was rewritten to fit the results. The revised version, and the evidence for each link, is on [where the hypothesis stands](standing.md). The preregistrations below are frozen records and are not changed.
+
 ## The protocol
 
 - **Confirmatory seeds:** 0 to 29, 20,000 steps, default configuration.
@@ -64,7 +69,9 @@ These came after the main run. That changes their status.
 | **S9** | Does a learned private reward produce agency? | H9a to H9d | None supported |
 | **S10** | Does dissipative adaptation, with no selection, climb the ladder? | H10a to H10e | H10a to c supported by construction, H10d and H10e not |
 | **S11** | What best raises the entropy of a lifeless universe? | H11a to H11h | Mostly supported. H11b and H11d not |
-| **S14** | With no agents, genomes or fitness, does a driven soup start copying itself? | H14a to H14d | H14a and H14b not supported. H14c and H14d not run |
+| **S14** | With no agents, genomes or fitness, does a driven soup start copying itself? | H14a to H14d | H14a and H14b not supported. H14c and H14d not run. A later re-check corrected one descriptive number: with mixing counted, the copier out-dissipates the mineral by about 3% |
+| **Starlight** | In a minimal world, does persistence selection raise capture, and does behaviour evolve only when needed? | P1a to P1d, P2a to P2e, P3a and P3b, in `starlight/PREREGISTRATION.md` | 11 of 11 supported. Its lifeless world was a mirror, so it could not test the claim underneath |
+| **S15** | In cold, locked gradients, does life open the lock when nothing else does? | H1, H2a to H2e, in `locks/PREREGISTRATION.md` | H1 and H2a to H2d supported. H2e not: a fire and a large mineral bed opened the lock too |
 
 ## Things I chose not to claim
 

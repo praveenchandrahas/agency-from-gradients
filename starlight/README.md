@@ -11,6 +11,15 @@ A from-scratch test of one chain of reasoning.
 Links 1 and 2 are assumed. Links 3 and 4 are tested. Link 5 is tested against its rival:
 that entropy production is a side effect of selection for persistence, and not the thing selected.
 
+> **Since then.** This is the chain Starlight was preregistered to test, so it stays as written. The hypothesis has since been revised (2026-11-23). Link 1 is wrong as written: most free energy is locked by gravity and unfused hydrogen, and starlight is an unlocked gradient. Link 5 was rejected as a cause. And the claim underneath link 2, that life drains energy nothing else can, failed when tested directly in S15. The revised chain:
+>
+> 1. Free energy is locked up in gradients, mostly by gravity and unfused hydrogen.
+> 2. Structures persist when they drain a gradient well enough to pay their bills, living or not. Entropy follows. It is not selected.
+> 3. What heredity with variation adds is improvement.
+> 4. Improvement pays most when the world changes. Agency-like behaviour is what improvement looks like when the gradient moves.
+>
+> The evidence for each link is in [`docs/standing.md`](../docs/standing.md).
+
 ## The world in six lines
 
 - A ring of 256 sites. Four patches of light fall on it.

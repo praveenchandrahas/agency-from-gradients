@@ -10,78 +10,43 @@ There is another answer. It says life is not so lucky. It says life follows from
 
 That is Jeremy England's claim. I am not here to defend it. I am here to test a neighbour of it, in code, and see what survives.
 
-## The argument in four steps
+## The argument, revised
 
-**Step one.** Structures that drain energy gradients persist.
+!!! info "Revised on 2026-11-23"
+    The first version of this argument had four steps, and three of them were wrong or too strong. The experiments since then are read link by link on [where the hypothesis stands](standing.md). This is the version that survived. The original is kept below it.
 
-A star drains a gas cloud. A flame drains a log. A hurricane drains a warm ocean. Each exists *because* it is a good drain.
+**Step one.** Free energy is locked up in gradients.
 
-**Step two.** Each new structure feeds on what the last one left unexhausted.
+Most of it is locked by gravity and by hydrogen that never fused. Matter began almost perfectly smooth, and for gravity that is a low-entropy state. Stars and black holes are what unlocking it looks like. Sunlight is one result. So is the heat inside a planet.
 
-Stars leave heavy elements. Heavy elements make planets. Planets hold chemistry. Chemistry holds gradients that stars alone never touched. It is a ladder, and each rung stands on the one below.
+**Step two.** Structures persist when they drain a gradient well enough to pay their bills.
 
-**Step three.** Life is the one case we know where this succession produced *agents*.
+A flame does. A hurricane does. A mineral surface that speeds up a reaction does. So does a cell. Living and non-living, it is the same test. And it is a threshold, not a ranking. Good enough survives. Best is not required.
 
-Things that move, choose, repair themselves and make copies.
+Entropy production follows from all this draining. It is a consequence. It is not the thing selected.
 
-**Step four.** So if we want artificial agency, we should reproduce those *conditions*. We should not hand the agent an objective.
+**Step three.** What heredity with variation adds is *improvement*.
 
-Step four is the hypothesis. The first three are the story that motivates it. None of them is proven here.
+A fire keeps the key it started with. A rock does too. A lineage that copies with small errors can refine how it drains a gradient. In [S15](results/s15.md), only life got better. But it needed a foothold first: something good enough to survive on.
 
-## The five conditions
+**Step four.** Improvement pays most when the world changes.
 
-If the argument is right, five ingredients should be load-bearing:
+In a still world, a decent fixed key gets most of the way. When the source moves, a fixed key goes stale. Agency-like behaviour, moving, sensing, choosing, is what improvement looks like when the gradient moves.
 
-1. **A ladder of gradients.** Easy energy at the bottom. Rich, hard-to-reach energy higher up.
-2. **Finite, contested resources.** There is not enough for everyone.
-3. **Heredity with variation.** Children resemble parents, but not exactly.
-4. **A real cost of death.** Failure removes you.
-5. **Succession.** The higher rungs appear *because* the lower ones were drained.
+**And so.** If we want artificial agency, we should reproduce those *conditions*: a gradient worth draining, heredity with variation, and a world that keeps changing. We should not hand the agent an objective.
 
-The suite switches these on and off in a factorial design. Then it asks which ones actually matter.
+That last line is the hypothesis. Steps one and two are physics, read conservatively. Steps three and four are leads from the experiments, and each has a test waiting: the drifting lock (S15 H3a) and static against variable selection (H13).
 
-## The design rule
+### The original four steps
 
-This is the part that makes the project different.
+Kept for the record. Each is marked with what happened to it.
 
-!!! info "Selection is by persistence and reproduction only"
-    Entropy production is **measured**. It is **never rewarded**.
+1. *Structures that drain energy gradients persist, because each is a good drain.* Holds only in the weaker form above.
+2. *Each new structure feeds on what the last one left unexhausted.* Survives in a smaller form: life gets in where something non-living already holds a lock slightly open.
+3. *Life is the one case we know where this succession produced agents.* Still true. But the stronger claim underneath it, that life drains energy nothing else can, failed when tested.
+4. *So reproduce the conditions, not the objective.* Kept, with the conditions revised.
 
-Why so strict?
-
-Because the moment you reward the thing you are trying to explain, you have explained nothing. You have just built it in.
-
-And I have a test for that worry. [S8](results/s8.md) reverses the rule on purpose and optimises for entropy directly. What comes out is not an agent. It is a furnace.
-
-## What counts as "agency" here?
-
-Narrowly. Deliberately so.
-
-Agency is operationalised as **viability restoration**. Take an agent. Displace it. Deplete it. Does it get itself back to a viable energy state?
-
-That is all. It is not prediction. It is not planning. It is not anything you would call a mind.
-
-I chose it because I can measure it. A bigger word would have been easier to write and harder to defend.
-
-## Where the ideas come from
-
-### Schrödinger: living things feed on order
-
-In *What Is Life?* (1944), Erwin Schrödinger asked how a living thing avoids decaying into equilibrium. His answer was metabolism. An organism produces entropy as it lives. To stay alive, it must keep exporting that entropy to its surroundings. He put it as "drinking orderliness" from the environment.
-
-Physicists objected to the phrase *negative entropy*. Schrödinger took the objection seriously. In a note to the book he says he would have used *free energy* had he been writing only for them. A friend also pointed out something important. Food matters for its energy content, not just its order. A lump of coal and oxygen is highly ordered too, yet we cannot feed on the carbon dioxide left after it burns.
-
-Notice how little he claims. Life does not break the second law. It *exports* entropy.
-
-### England: dissipation as a driving principle
-
-Jeremy England took this a step further. His formula says that when atoms are driven by an external energy source and sit in a heat bath, they tend to rearrange themselves to dissipate more energy.
-
-The reaction from physicists, as reported at the time, was split. His results were generally considered valid. His *interpretation* was the open question: that the formula describes the driving force behind a whole class of phenomena, life included.
-
-I treat it the same way. The maths is not in dispute here. The leap to life is the thing to test.
-
-[S10](results/s10.md) tests one version of it. The answer was no.
+[S10](results/s10.md) tested one version of the original: that dissipation alone, with no selection, would climb the ladder. The answer was no.
 
 ### Why not just trust the physics?
 
