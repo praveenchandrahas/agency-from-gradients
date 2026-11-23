@@ -32,13 +32,13 @@ class Config:
     catalytic_gain: float = 35.0
     mismatch_scale: float = 1.5
     mutation_rate: float = 0.025
-    reproduction_cost: float = 0.00002
-    maintenance_cost: float = 0.0000015
+    reproduction_cost: float = 1.0e-8
+    maintenance_cost: float = 1.0e-10
     energy_storage_efficiency: float = 0.25
     steps: int = 1200
     seed: int = 1
     landscape: str = "smooth"  # smooth | rugged
-    adaptive_budget: float = 0.02
+    adaptive_budget: float = 1.0e-9
     turnover_rate: float = 0.02
 
     def validate(self) -> None:
@@ -50,6 +50,10 @@ class Config:
             raise ValueError("invalid simulation horizon or population cap")
         if not 0 <= self.mutation_rate <= 1 or not 0 <= self.drift_rate <= 1:
             raise ValueError("mutation_rate and drift_rate must lie in [0, 1]")
+        if self.catalytic_gain <= 0 or self.mismatch_scale <= 0:
+            raise ValueError("catalytic_gain and mismatch_scale must be positive")
+        if self.reproduction_cost <= 0 or self.maintenance_cost < 0:
+            raise ValueError("reproduction cost must be positive and maintenance non-negative")
         if self.landscape not in ("smooth", "rugged"):
             raise ValueError("landscape must be 'smooth' or 'rugged'")
 
