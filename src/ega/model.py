@@ -222,17 +222,19 @@ def simulate(arm: str, cfg: Config) -> dict[str, Any]:
             # Non-replicating adaptive search: replace a small fraction with random
             # candidates; charge the declared search budget from usable energy.
             trials = max(1, int(0.05 * len(population)))
-            candidate = rng.integers(0, 2, size=(trials, cfg.key_bits), dtype=np.int8)
             current_score = _fitness(population, targets, cfg).sum(axis=1)
-            cand_score = _fitness(candidate, targets, cfg).sum(axis=1)
-            for j in range(trials):
+            for _ in range(trials):
+                # Pay for each candidate evaluation before generating/scoring it.
+                if available <= cfg.adaptive_budget:
+                    break
+                available -= cfg.adaptive_budget
+                cumulative_adaptive_cost += cfg.adaptive_budget
+                candidate = rng.integers(0, 2, size=(1, cfg.key_bits), dtype=np.int8)
+                cand_score = float(_fitness(candidate, targets, cfg).sum())
                 worst = int(np.argmin(current_score))
-                if available > cfg.adaptive_budget:
-                    available -= cfg.adaptive_budget
-                    cumulative_adaptive_cost += cfg.adaptive_budget
-                    if cand_score[j] > current_score[worst]:
-                        population[worst] = candidate[j]
-                        current_score[worst] = cand_score[j]
+                if cand_score > current_score[worst]:
+                    population[worst] = candidate[0]
+                    current_score[worst] = cand_score
         # M and U are fixed; D inherits without mutation; L inherits with mutation.
         if arm in ("N", "D", "L") and len(population) == 0 and extinct_at is None:
             extinct_at = step
