@@ -3,7 +3,7 @@
 !!! warning "Status: a record, as of 2026-11-23"
     This page reads every result so far against the hypothesis, one link at a time. It adds no new numbers. Each number comes from a results page linked beside it.
 
-    It ends with a **proposed** revision of the hypothesis. The proposal is not adopted. The hypothesis is the author's to change.
+    It ends with the revised hypothesis. The author **adopted** it on 2026-11-23. The pages that state the hypothesis now follow it.
 
 ## Why this page
 
@@ -145,10 +145,10 @@ These are now part of how every experiment here is built.
 4. **Write the expectations down first, from arithmetic.** S15's outcome was visible in the arithmetic before anything ran. That is good for the engine. It is also a warning about how much a toy model can tell us.
 5. **Report two horizons.** Planet's generation 220 was the bottom of a dip.
 
-## A proposed revision
+## The revised hypothesis
 
-!!! note "Proposed. Not adopted."
-    This rewrites the chain to fit the evidence above. Whether to adopt it is the author's decision. If adopted, [the idea](idea.md), the [Starlight README](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/starlight/README.md), the repo README and the paper would change to match.
+!!! success "Adopted on 2026-11-23"
+    This rewrites the chain to fit the evidence above. [The idea](idea.md), the [Starlight README](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/starlight/README.md), the repo README, the explainer pages and the paper now follow it. The original chain stays on record in the Starlight preregistration, which is frozen.
 
 > Free energy is locked up in gradients, mostly by gravity and unfused hydrogen.
 >
@@ -175,10 +175,10 @@ What it adds, to be tested:
 
 ## Not yet updated
 
-- **The paper.** It lives in its own repository, `dissipative-agency-simulation`, outside this one. Its claims about capture, succession and the Kardashev scale should be read against links 3, 4 and 6.
+- **The paper.** It lives in its own repository, `dissipative-agency-simulation`. A revised version 1.1, with the new chain and the Planet follow-ups, is up for review as a pull request there.
 - **Planet** (draft PR #7) is still open. Its results are cited here from the draft.
 - **S14's other arms** (random, no-catalysis, day/night) still count reactions only.
-- **The blog post** "Did starlight make us smart?" predates S15.
+- **The blog post** "Did starlight make us smart?" predates S15. It is being revised to match.
 
 ## What would change this page
 

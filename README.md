@@ -8,7 +8,7 @@
 
 **agency-from-gradients** is a simulation suite built on one design hypothesis: if we want artificial agency, we should reproduce the conditions under which it arose on Earth, not hand agents an objective.
 
-The argument starts from first principles. Structures that drain energy gradients persist, and each new structure feeds on what the last left unexhausted, from stars to supernovae to life. Life is the one case we know where this succession produced agents. The suite asks which of its conditions are load-bearing: a ladder of gradients, finite and contested resources, heredity with variation, a real cost of death, and succession.
+The argument, as revised on 2026-11-23 to fit the results ([`docs/standing.md`](docs/standing.md)): free energy is locked up in gradients, mostly by gravity and unfused hydrogen. Structures persist when they drain a gradient well enough to pay their bills, living or not; entropy production follows, and is not the thing selected. What heredity with variation adds is improvement, and improvement pays most when the world changes. Life is the one case we know where this produced agents. The suite asks which of its conditions are load-bearing: a ladder of gradients, finite and contested resources, heredity with variation, a real cost of death, and succession.
 
 Selection is by persistence and reproduction only. Entropy production is measured and never rewarded. Each condition is switched on and off in a factorial design, with hypotheses and falsifiers pre-registered.
 

@@ -22,6 +22,9 @@ What came next is in [Why the next experiment starts before life](before-life.md
 
 S15 goes underneath all of these. It tests the core claim directly: in cold, locked gradients, does life open the lock when nothing else does? It is preregistered in [`locks/PREREGISTRATION.md`](https://github.com/praveenchandrahas/agency-from-gradients/blob/main/locks/PREREGISTRATION.md), frozen on `main` before its run. The plain-language version is [Locks (S15)](locks.md). [The result](results/s15.md).
 
+!!! success "The hypothesis was revised on 2026-11-23"
+    After S15, the chain the hypotheses rest on was rewritten to fit the results. The revised version, and the evidence for each link, is on [where the hypothesis stands](standing.md). The preregistrations below are frozen records and are not changed.
+
 ## The protocol
 
 - **Confirmatory seeds:** 0 to 29, 20,000 steps, default configuration.

@@ -27,8 +27,8 @@ Remove scarcity, heredity or mortality, and big-deposit access went *up*. Not do
 
 Most of the later experiments, built to find out why, came back negative too. I report them all. A negative result you can trust is worth more than a positive one you can't.
 
-!!! tip "Where the hypothesis stands now"
-    One page reads every result so far against the hypothesis, link by link: [where the hypothesis stands](standing.md). In short: the claim that life drains energy nothing else can failed when tested directly (S15). What survives is narrower: only life *improves* how it drains a gradient.
+!!! tip "The hypothesis, revised"
+    On 2026-11-23 the hypothesis was revised to fit the results: [where the hypothesis stands](standing.md). The claim that life drains energy nothing else can failed when tested directly (S15). What survives: structures, living or not, persist when they drain a gradient well enough to pay their bills. What heredity with variation adds is *improvement*, and improvement pays most when the world changes.
 
 ## What each experiment found
 
