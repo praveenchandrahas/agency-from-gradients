@@ -1,7 +1,5 @@
 name: EGA long-horizon matched-control simulations
 on:
-  push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 jobs:
