@@ -1,10 +1,7 @@
 # Moved from the standalone repository on 2026-11-23. Runs inside gradient-access/.
 name: "S16 gradient access: EGA long-horizon matched-control simulations"
+# v0.1 was withdrawn after its own audit (gradient-access/VALIDATION_AUDIT.md), so it runs on demand only.
 on:
-  pull_request:
-    paths:
-      - "gradient-access/**"
-      - ".github/workflows/gradient-access-v01.yml"
   workflow_dispatch:
 defaults:
   run:

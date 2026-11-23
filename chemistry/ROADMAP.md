@@ -1,3 +1,5 @@
+> **Superseded on 2026-11-23.** Next steps for the whole programme are tracked on [where the hypothesis stands](https://praveenchandrahas.github.io/agency-from-gradients/docs/standing/) and [Hypotheses and falsifiers](https://praveenchandrahas.github.io/agency-from-gradients/docs/hypotheses/). This roadmap is kept as a record.
+
 # Research roadmap
 
 **Current phase:** Thermodynamic foundations and model-conditional open-chemistry experiments.

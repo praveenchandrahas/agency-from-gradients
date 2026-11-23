@@ -1,0 +1,25 @@
+# Unit tests for gradient-access/ (S16) on every push and pull request that touches it.
+name: "S16 gradient access: tests"
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gradient-access/**"
+      - ".github/workflows/gradient-access-tests.yml"
+  pull_request:
+    paths:
+      - "gradient-access/**"
+      - ".github/workflows/gradient-access-tests.yml"
+defaults:
+  run:
+    working-directory: gradient-access
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q

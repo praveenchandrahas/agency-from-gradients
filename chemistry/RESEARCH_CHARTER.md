@@ -1,3 +1,5 @@
+> **Superseded on 2026-11-23.** The programme's current framing is [where the hypothesis stands](https://praveenchandrahas.github.io/agency-from-gradients/docs/standing/). This charter is kept as a record and is no longer updated.
+
 # Research Charter
 ## From cosmic energy flows to dissipative organization, life and intelligence
 

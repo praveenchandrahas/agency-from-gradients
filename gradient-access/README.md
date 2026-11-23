@@ -1,3 +1,5 @@
+> **Part of [agency-from-gradients](https://github.com/praveenchandrahas/agency-from-gradients) since 2026-11-23, as S16.** It was the standalone repository `evolutionary-gradient-access`; its history came with it. S16 is S15's successor: it compares evolving and non-evolving catalysts at equal energy and material investment (the v0.3 design). The single hypothesis register is [Hypotheses and falsifiers](https://praveenchandrahas.github.io/agency-from-gradients/docs/hypotheses/); the programme's standing is [where the hypothesis stands](https://praveenchandrahas.github.io/agency-from-gradients/docs/standing/). Run from this directory: `pip install -e ".[dev]"` then `pytest -q`. CI workflows are at the repository root, named `gradient-access-*.yml`.
+
 # Evolutionary Gradient Access
 
 Computational experiments investigating whether heritable variation and natural selection enable evolving systems to access and sustain dissipative pathways that passive and non-evolving structures cannot exploit at comparable energetic and material costs.

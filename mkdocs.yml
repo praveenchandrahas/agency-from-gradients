@@ -82,6 +82,8 @@ nav:
       - S14, before the replicator: results/s14.md
       - S15, locks: results/s15.md
       - Planet, three follow-ups on the paper's model: results/planet.md
+      - S16, gradient access at matched cost: results/s16.md
+      - The chemistry line, before the replicator: results/chemistry.md
   - Using the repo:
       - How to run: running.md
       - Try it live: try-it.md

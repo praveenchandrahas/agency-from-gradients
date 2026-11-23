@@ -1,3 +1,5 @@
+> **Part of [agency-from-gradients](https://github.com/praveenchandrahas/agency-from-gradients) since 2026-11-23, in the S14 line (before the replicator).** It was the standalone repository `thermodynamic-emergence`; its history came with it. The broad framing below predates the revised hypothesis; for the current one see [where the hypothesis stands](https://praveenchandrahas.github.io/agency-from-gradients/docs/standing/). The single hypothesis register is [Hypotheses and falsifiers](https://praveenchandrahas.github.io/agency-from-gradients/docs/hypotheses/). Run from this directory: `pip install -e .` then `python -m unittest discover -s tests`. CI is at the repository root, `chemistry-tests.yml`.
+
 # Thermodynamic Emergence
 
 **From cosmic energy flows to dissipative organization, life and intelligence.**

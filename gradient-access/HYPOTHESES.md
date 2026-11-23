@@ -1,3 +1,5 @@
+> **Frozen on 2026-11-23.** This register was folded into the single register at [Hypotheses and falsifiers](https://praveenchandrahas.github.io/agency-from-gradients/docs/hypotheses/). Hypotheses here are renamed there (H16-x). This copy is kept as a record and is no longer updated.
+
 # Hypotheses and falsifiers
 
 ## H0 — Model gates
