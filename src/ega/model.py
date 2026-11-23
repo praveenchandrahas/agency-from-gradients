@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-ARMS = ("N", "M", "D", "L", "U", "A", "Mmatched", "Amatched", "Umatched")
+ARMS = ("N", "M", "D", "L", "U", "A", "Mmatched", "Dmatched", "Amatched", "Umatched")
 
 
 @dataclass(frozen=True)
@@ -36,6 +36,7 @@ class Config:
     maintenance_cost: float = 1.0e-10
     energy_storage_efficiency: float = 0.0
     steps: int = 1200
+    duration: float = 100.0  # residence-time units
     seed: int = 1
     landscape: str = "smooth"  # smooth | rugged
     adaptive_budget: float = 1.0e-9
@@ -46,7 +47,7 @@ class Config:
             raise ValueError("barriers must be a non-empty tuple of non-negative values")
         if self.locks < 1 or self.key_bits < 2 or self.initial_catalysts < 1:
             raise ValueError("locks, key_bits and initial_catalysts must be positive")
-        if self.steps < 1 or self.max_catalysts < self.initial_catalysts:
+        if self.steps < 1 or self.duration <= 0 or self.max_catalysts < self.initial_catalysts:
             raise ValueError("invalid simulation horizon or population cap")
         if not 0 <= self.mutation_rate <= 1 or not 0 <= self.drift_rate <= 1:
             raise ValueError("mutation_rate and drift_rate must lie in [0, 1]")
@@ -54,8 +55,10 @@ class Config:
             raise ValueError("catalytic_gain and mismatch_scale must be positive")
         if self.reproduction_cost <= 0 or self.maintenance_cost < 0:
             raise ValueError("reproduction cost must be positive and maintenance non-negative")
-        if self.fuel_feed <= 0 or self.fuel_outflow < 0 or self.delta_mu <= 0 or self.k0 <= 0:
-            raise ValueError("feed, affinity and kinetic rate must be positive; outflow non-negative")
+        if self.mutation_energy_cost < 0 or self.adaptive_budget < 0 or self.turnover_rate < 0:
+            raise ValueError("mutation/search costs and turnover rate must be non-negative")
+        if self.fuel_feed <= 0 or self.fuel_feed > 1 or self.fuel_outflow < 0 or self.delta_mu <= 0 or self.k0 <= 0:
+            raise ValueError("fuel_feed must be in (0,1], affinity/rate positive, outflow non-negative")
         if not 0 <= self.energy_storage_efficiency < 1:
             raise ValueError("energy_storage_efficiency must lie in [0, 1)")
         if self.energy_storage_efficiency != 0:
@@ -82,8 +85,11 @@ def _fitness(keys: np.ndarray, targets: np.ndarray, cfg: Config) -> np.ndarray:
 
 
 def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
-                   barriers: np.ndarray, cfg: Config) -> tuple[float, np.ndarray, float, float]:
+                   barriers: np.ndarray, cfg: Config, dt: float | None = None
+                   ) -> tuple[float, np.ndarray, float, float]:
     """One flow-reactor step; forward/reverse catalysis share the same multiplier."""
+    if dt is None:
+        dt = cfg.duration / cfg.steps
     nlocks = len(barriers)
     if catalysts.size:
         individual = _fitness(catalysts, targets, cfg)
@@ -108,8 +114,8 @@ def _reaction_step(fuel: float, catalysts: np.ndarray, targets: np.ndarray,
     # A single ideal feed/outflow stream at concentration fuel_feed. The
     # exchange entropy is J_ex * (mu_feed - mu_reactor)/T, with
     # J_ex = q(c_feed-c); this is non-negative for ideal activities.
-    fuel_next = float(np.clip(fuel + cfg.fuel_outflow * (cfg.fuel_feed - fuel) / cfg.steps
-                              - spent / cfg.steps, 0.0, cfg.fuel_feed))
+    fuel_next = float(np.clip(fuel + cfg.fuel_outflow * (cfg.fuel_feed - fuel) * dt
+                              - spent * dt, 0.0, cfg.fuel_feed))
     # Reaction entropy production J * affinity; reservoir exchange is a distinct
     # non-negative idealized feed/outflow term in this coarse model.
     eps = 1e-12
@@ -134,7 +140,7 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
     cfg.validate()
     if arm not in ARMS:
         raise ValueError(f"arm must be one of {ARMS}")
-    matched_arms = ("Mmatched", "Amatched", "Umatched")
+    matched_arms = ("Mmatched", "Dmatched", "Amatched", "Umatched")
     if arm in matched_arms and (fixed_population_size is None or fixed_population_size < 1
                                 or fixed_population_size > cfg.max_catalysts):
         raise ValueError(f"{arm} requires fixed_population_size in [1, max_catalysts]")
@@ -143,6 +149,7 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
     initial_count = fixed_population_size if arm in matched_arms else cfg.initial_catalysts
     rng = np.random.default_rng(cfg.seed)
     target_rng = np.random.default_rng(cfg.seed + 900_001)
+    drift_rng = np.random.default_rng(cfg.seed + 700_003)
     targets = _targets(target_rng, cfg.locks, cfg.key_bits)
     keys = rng.integers(0, 2, size=(initial_count, cfg.key_bits), dtype=np.int8)
     if arm in ("U", "Umatched"):
@@ -165,23 +172,27 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
     cumulative_maintenance_energy = 0.0
     cumulative_adaptive_cost = 0.0
     cumulative_mutation_energy = 0.0
+    initial_construction_energy = initial_population_actual * cfg.reproduction_cost
     extinct_at: int | None = None
     rows: list[dict[str, float]] = []
     target_changes = 0
+    drift_events: list[tuple[int, int, int]] = []
 
     for step in range(cfg.steps):
-        if cfg.drift_rate and step > 0 and rng.random() < cfg.drift_rate:
-            lock = int(rng.integers(0, cfg.locks))
-            bit = int(rng.integers(0, cfg.key_bits))
+        dt = cfg.duration / cfg.steps
+        drift_probability = 1.0 - math.exp(-cfg.drift_rate * dt)
+        if cfg.drift_rate and step > 0 and drift_rng.random() < drift_probability:
+            lock = int(drift_rng.integers(0, cfg.locks))
+            bit = int(drift_rng.integers(0, cfg.key_bits))
             targets[lock, bit] = 1 - targets[lock, bit]
             target_changes += 1
+            drift_events.append((step, lock, bit))
 
         fuel_before = fuel
         fuel, fluxes, sigma_rxn, sigma_mix = _reaction_step(
-            fuel, population, targets, barriers, cfg
+            fuel, population, targets, barriers, cfg, dt
         )
         sigma = sigma_rxn + sigma_mix
-        dt = 1.0 / cfg.steps
         cumulative_feed_exchange += cfg.fuel_outflow * (cfg.fuel_feed - fuel_before) * dt
         cumulative_reaction += sigma_rxn * dt
         cumulative_exchange += sigma_mix * dt
@@ -198,7 +209,7 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
         available = max((released_energy * (1.0 - cfg.energy_storage_efficiency)
                          - cfg.maintenance_cost * len(population)) * dt, 0.0)
 
-        if arm in ("D", "L") and len(population):
+        if arm in ("D", "L", "Dmatched") and len(population):
             # Reproduction is driven by usable chemical free energy, not entropy.
             expected_mutation_cost = (cfg.key_bits * cfg.mutation_rate *
                                       cfg.mutation_energy_cost) if arm == "L" else 0.0
@@ -221,7 +232,7 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
                 population = np.concatenate((population, offspring), axis=0)
             # Turnover is a declared per-residence-time loss process. If usable
             # free energy cannot replace losses, the lineage can decline/extinguish.
-            death_probability = 1.0 - math.exp(-cfg.turnover_rate / cfg.steps)
+            death_probability = 1.0 - math.exp(-cfg.turnover_rate * dt)
             deaths = int(rng.binomial(len(population), death_probability))
             if deaths:
                 keep = rng.choice(len(population), len(population) - deaths, replace=False)
@@ -244,7 +255,7 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
                     population[worst] = candidate[0]
                     current_score[worst] = cand_score
         # M and U are fixed; D inherits without mutation; L inherits with mutation.
-        if arm in ("N", "D", "L") and len(population) == 0 and extinct_at is None:
+        if arm in ("D", "L", "Dmatched") and len(population) == 0 and extinct_at is None:
             extinct_at = step
 
         mean_distance = (float(np.mean(np.min(
@@ -274,11 +285,13 @@ def simulate(arm: str, cfg: Config, fixed_population_size: int | None = None) ->
         "cumulative_feed_exchange": cumulative_feed_exchange,
         "fuel_balance_residual": fuel - initial_fuel - cumulative_feed_exchange + cumulative_spent,
         "stored_energy_final": stored_energy,
+        "initial_construction_energy": initial_construction_energy,
         "cumulative_reproduction_energy": cumulative_reproduction_energy,
         "cumulative_maintenance_energy": cumulative_maintenance_energy,
         "cumulative_adaptive_cost": cumulative_adaptive_cost,
         "cumulative_mutation_energy": cumulative_mutation_energy,
         "extinct_at": extinct_at, "target_changes": target_changes,
+        "drift_events": drift_events,
         "late_key_distance": float(np.mean([r["mean_key_distance"] for r in tail])),
         "trajectory": rows,
     }

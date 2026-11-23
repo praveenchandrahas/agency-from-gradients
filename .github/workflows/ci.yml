@@ -1,4 +1,4 @@
-name: EGA tests and matched-control simulations
+name: EGA long-horizon matched-control simulations
 on:
   push:
     branches: [main]
@@ -16,12 +16,12 @@ jobs:
           cache: pip
       - run: python -m pip install -e ".[dev]"
       - run: pytest -q
-      - name: Run 16-bit paired-seed simulations with matched controls
-        run: ega-run --out results/matched-key16 --seeds 10 --steps 300
+      - name: Run 100-residence-time paired-seed simulations
+        run: ega-run --out results/long-horizon-key16 --seeds 10 --steps 300 --duration 100
       - name: Plot paired contrasts
-        run: python analysis/plot_results.py results/matched-key16
+        run: python analysis/plot_results.py results/long-horizon-key16
       - uses: actions/upload-artifact@v4
         with:
-          name: ega-matched-key16-results
-          path: results/matched-key16/
+          name: ega-long-horizon-key16-results
+          path: results/long-horizon-key16/
           if-no-files-found: error

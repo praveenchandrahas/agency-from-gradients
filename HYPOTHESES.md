@@ -12,9 +12,9 @@ At zero barrier, catalytic arms have no material advantage over the passive base
 
 ## H2 — Evolutionary access
 
-At sufficiently high barriers, L sustains greater late-window pathway throughput and accessible free-energy release than fixed random catalysts matched to L's late-window abundance (Mmatched), and than the faithful-copying, no-new-mutation control D. Amatched tests generic adaptive search at the same catalyst abundance.
+At sufficiently high barriers, L sustains greater late-window pathway throughput and accessible free-energy release than fixed random catalysts matched to L's late-window abundance (Mmatched), and than the faithful-copying, no-new-mutation control D, which shares L's initial library, and Dmatched, which begins with a larger standing library matched to L's late abundance. Amatched tests generic adaptive search at the same catalyst abundance.
 
-**Falsifier:** paired intervals for L−Mmatched or L−D include zero or favour the non-evolving arm across the preregistered cold regime.
+**Falsifier:** paired intervals for L−Mmatched, L−D or L−Dmatched include zero or favour the no-new-mutation arm across the preregistered cold regime.
 
 ## H3 — Selection versus adaptation
 

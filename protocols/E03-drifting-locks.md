@@ -4,7 +4,7 @@
 Can evolutionary adaptation sustain access when catalytic targets change over time?
 
 ## Factor
-Per-step target-bit flip probability. The initial pilot uses a single non-zero drift setting; the confirmatory map should span static, slow, intermediate and rapid drift.
+Per-time target-bit flip hazard; converted to a per-step probability using the integration interval. The exploratory map uses slow, medium and fast drift rates of 0.005, 0.02 and 0.05 per residence-time unit over a 100-unit horizon.
 
 ## Outcomes
 Late-window throughput, cumulative dissipation, key–target distance, adaptation lag, extinction and time spent below a declared accessibility threshold.

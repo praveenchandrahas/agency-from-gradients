@@ -1,0 +1,26 @@
+# Roadmap
+
+## Completed: executable exploratory suite
+
+- Reversible lock kinetics with barrier-dependent catalysis.
+- Passive, fixed random, faithful-copying, evolving, oracle-search and designer arms.
+- Paired-seed initial libraries for D and L.
+- Matched-size Mmatched, Amatched and Umatched controls.
+- Static, slow/medium/fast drift and multi-lock experiments.
+- Independent reaction and fuel-exchange entropy diagnostics.
+- Construction, reproduction, maintenance, mutation and adaptive-search cost records.
+- Automated tests, paired bootstrap summaries, compressed trajectories and plots.
+
+## Next: scientific validation
+
+1. Derive a full multicomponent fuel/waste/reservoir ledger from explicit stoichiometry and chemical potentials.
+2. Eliminate clipping in production runs and demonstrate conservation residuals across the complete parameter grid.
+3. Compare explicit Euler with a higher-order integration scheme and test step-size convergence at the long horizon.
+4. Add equal cumulative-investment comparisons, not only equal catalyst abundance.
+5. Sweep key lengths, mutation rates, mismatch scales, population caps and smooth/rugged/epistatic landscapes.
+6. Test longer horizons and multiple initial genotype libraries.
+7. Freeze primary outcomes, parameter ranges and falsifiers before confirmatory experiments.
+
+## Interpretation rule
+
+Do not infer a universal thermodynamic law from a toy-model result. Distinguish the advantage of selection on standing variation, ongoing mutation, generic adaptive search and ideal design. A null or negative result is a valid outcome.
