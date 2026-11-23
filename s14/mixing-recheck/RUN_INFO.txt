@@ -1,0 +1,6 @@
+commit: 818507cef6e545cfeeaed325765139a1c41fe9e5
+script: src/agency_gradients/experiments/s14_mixing_recheck.py
+run: local, 2026-11-23, 2 workers (not a CI run)
+reproduces S14 run 43258823346 reaction entropy exactly (P 8070.0, M 8077.4)
+Python 3.13.18
+numpy 2.5.3
